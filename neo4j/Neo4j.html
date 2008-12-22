@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: Neo4j</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module Neo4j">
+  <h1 class="title">Module: Neo4j</h1>
+  <div class="section constants">
+  <div class="thisclass">
+  <h1>Constants</h1>
+  <dl>
+    
+      <dt id="VERSION-constant">VERSION</dt>
+      <dd>'0.0.7' unless defined?(Neo4j::VERSION)</dd>
+    
+  </dl>
+</div>
+
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#instance-class_method' title='instance'>instance</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Return a started neo instance.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#load-class_method' title='load'>load</a></span><span class='args'>(node_id)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Return a started neo instance.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#ref_node-class_method' title='ref_node'>ref_node</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the reference node, which is a &quot;starting point&quot; in the
+node space.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#running%3F-class_method' title='running?'>running?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns true if neo4j is running.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#start-class_method' title='start'>start</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Starts neo unless it is not already started.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#stop-class_method' title='stop'>stop</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Stops the current instance unless it is not started.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>instance</h3>
+</div><div id="instance-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>instance</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Return a started neo instance. It will be started if this has not already
+been done.
+</p>
+<h4>Returns</h4>
+<p>
+The neo instance
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+33
+34
+35</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span>
+  <span class='@instance ivar id'>@instance</span> <span class='opasgn op'>||=</span> <span class='start identifier id'>start</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>load</h3>
+</div><div id="load-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>load</span><span class='args'>(node_id)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Return a started neo instance. It will be started if this has not already
+been done.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">node_id&lt;String, to_i&gt;:</td><td>the unique neo id for one node
+
+</td></tr>
+</table>
+<h4>Returns</h4>
+<p>
+The node object (NodeMixin) or nil
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+64
+65
+66</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 64</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='node_id identifier id'>node_id</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='find_node identifier id'>find_node</span><span class='lparen token'>(</span><span class='node_id identifier id'>node_id</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>ref_node</h3>
+</div><div id="ref_node-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>ref_node</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns the reference node, which is a &quot;starting point&quot; in the
+node space.
+</p>
+<p>
+Usually, a client attaches relationships to this node that leads into
+various parts of the node space. For more information about common node
+space organizational patterns, see the design guide at
+http://neo4j.org/doc.
+</p>
+<h4>Returns</h4>
+<p>
+The the ReferenceNode
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+78
+79
+80</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 78</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='ref_node identifier id'>ref_node</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='ref_node identifier id'>ref_node</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>running?</h3>
+</div><div id="running%3F-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>running?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns true if neo4j is running
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+50
+51
+52</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 50</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='notop op'>!</span> <span class='@instance ivar id'>@instance</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>start</h3>
+</div><div id="start-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>start</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Starts neo unless it is not already started. Before using neo it has to be
+started and the location of the Neo database on the filesystem must have
+been configured, Neo4j::Config[:storage_path].
+</p>
+<h4>Examples</h4>
+<p>
+Neo4j::Config[:storage_path] = &#8217;/var/neo4j-db&#8217; Neo4j.start
+</p>
+<h4>Returns</h4>
+<p>
+The neo instance
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='start identifier id'>start</span>
+  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='@instance ivar id'>@instance</span>
+  <span class='@instance ivar id'>@instance</span> <span class='assign token'>=</span> <span class='Neo constant id'>Neo</span><span class='dot token'>.</span><span class='new identifier id'>new</span> 
+  <span class='@instance ivar id'>@instance</span><span class='dot token'>.</span><span class='start identifier id'>start</span>
+  <span class='at_exit identifier id'>at_exit</span> <span class='do do kw'>do</span>
+    <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span>
+  <span class='end end kw'>end</span>
+  <span class='@instance ivar id'>@instance</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>stop</h3>
+</div><div id="stop-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>stop</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Stops the current instance unless it is not started. This must be done in
+order to avoid corrupt neo database.
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+41
+42
+43
+44</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/neo.rb', line 41</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span>
+  <span class='@instance ivar id'>@instance</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span> <span class='unless unless_mod kw'>unless</span> <span class='@instance ivar id'>@instance</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='@instance ivar id'>@instance</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

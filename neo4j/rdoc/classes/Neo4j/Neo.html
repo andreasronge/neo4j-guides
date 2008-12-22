@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Neo4j::Neo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Neo4j::Neo</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/neo4j/neo_rb.html">
+                lib/neo4j/neo.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Allows run and <a href="Neo.html#M000239">stop</a> the <a
+href="../Neo4j.html">Neo4j</a> service Contains global ćonstants such as
+location of the neo storage and index files on the filesystem.
+</p>
+<p>
+A wrapper class around org.neo4j.api.core.EmbeddedNeo
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000238">_load</a>&nbsp;&nbsp;
+      <a href="#M000234">begin_transaction</a>&nbsp;&nbsp;
+      <a href="#M000233">create_node</a>&nbsp;&nbsp;
+      <a href="#M000235">find_node</a>&nbsp;&nbsp;
+      <a href="#M000236">load_node</a>&nbsp;&nbsp;
+      <a href="#M000237">load_relationship</a>&nbsp;&nbsp;
+      <a href="#M000232">start</a>&nbsp;&nbsp;
+      <a href="#M000239">stop</a>&nbsp;&nbsp;
+      <a href="#M000240">tx_manager</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">placebo_tx</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+ref_node : the reference, <a href="ReferenceNode.html">ReferenceNode</a>,
+node, wraps a org.neo4j.api.core.NeoService#getReferenceNode
+
+</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ref_node</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc">
+ref_node : the reference, <a href="ReferenceNode.html">ReferenceNode</a>,
+node, wraps a org.neo4j.api.core.NeoService#getReferenceNode
+
+</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000238" class="method-detail">
+        <a name="M000238"></a>
+
+        <div class="method-heading">
+          <a href="#M000238" class="method-signature">
+          <span class="method-name">_load</span><span class="method-args">(classname, node_or_relationship)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000238-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000238-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 165</span>
+165:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">_load</span>(<span class="ruby-identifier">classname</span>, <span class="ruby-identifier">node_or_relationship</span>)
+166:       <span class="ruby-identifier">clazz</span> = <span class="ruby-identifier">classname</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">&quot;::&quot;</span>).<span class="ruby-identifier">inject</span>(<span class="ruby-constant">Kernel</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">container</span>, <span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+167:         <span class="ruby-identifier">container</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>)
+168:       <span class="ruby-keyword kw">end</span>
+169:       <span class="ruby-identifier">clazz</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">node_or_relationship</span>)
+170:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000234" class="method-detail">
+        <a name="M000234"></a>
+
+        <div class="method-heading">
+          <a href="#M000234" class="method-signature">
+          <span class="method-name">begin_transaction</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns an internal neo transaction object. Don&#8216;t use this method -
+only for internal use.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000234-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000234-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 122</span>
+122:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">begin_transaction</span>
+123:       <span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">begin_tx</span>
+124:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000233" class="method-detail">
+        <a name="M000233"></a>
+
+        <div class="method-heading">
+          <a href="#M000233" class="method-signature">
+          <span class="method-name">create_node</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Create an internal neo node (returns a java object) Don&#8216;t use this
+method - only for internal use.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000233-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000233-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 114</span>
+114:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_node</span>
+115:       <span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">createNode</span>
+116:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000235" class="method-detail">
+        <a name="M000235"></a>
+
+        <div class="method-heading">
+          <a href="#M000235" class="method-signature">
+          <span class="method-name">find_node</span><span class="method-args">(id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns a <a href="NodeMixin.html">NodeMixin</a> object that has the given
+id or nil if it does not exist.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000235-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000235-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 130</span>
+130:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_node</span>(<span class="ruby-identifier">id</span>) 
+131:       <span class="ruby-keyword kw">begin</span>
+132:         <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">run</span> <span class="ruby-keyword kw">do</span>
+133:           <span class="ruby-identifier">neo_node</span> = <span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">getNodeById</span>(<span class="ruby-identifier">id</span>)
+134:           <span class="ruby-identifier">load_node</span>(<span class="ruby-identifier">neo_node</span>)
+135:         <span class="ruby-keyword kw">end</span>
+136:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">NotFoundException</span> 
+137:         <span class="ruby-keyword kw">nil</span>
+138:       <span class="ruby-keyword kw">end</span>
+139:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000236" class="method-detail">
+        <a name="M000236"></a>
+
+        <div class="method-heading">
+          <a href="#M000236" class="method-signature">
+          <span class="method-name">load_node</span><span class="method-args">(neo_node)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Loads a <a href="Neo.html">Neo</a> node Expects the neo property
+&#8216;classname&#8217; to exist. That property is used to load the ruby
+instance
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000236-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000236-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 148</span>
+148:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">load_node</span>(<span class="ruby-identifier">neo_node</span>)
+149:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">neo_node</span>.<span class="ruby-identifier">has_property</span>(<span class="ruby-value str">'classname'</span>)
+150:       <span class="ruby-identifier">_load</span> <span class="ruby-identifier">neo_node</span>.<span class="ruby-identifier">get_property</span>(<span class="ruby-value str">'classname'</span>), <span class="ruby-identifier">neo_node</span>
+151:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000237" class="method-detail">
+        <a name="M000237"></a>
+
+        <div class="method-heading">
+          <a href="#M000237" class="method-signature">
+          <span class="method-name">load_relationship</span><span class="method-args">(rel)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Loads a <a href="Neo.html">Neo</a> relationship If the neo property
+&#8216;classname&#8217; to exist it will use that to create an instance of
+that class. Otherwise it will create an instance of <a
+href="Relations/DynamicRelation.html">Neo4j::Relations::DynamicRelation</a>
+that represent &#8216;rel&#8216;
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000237-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000237-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 159</span>
+159:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">load_relationship</span>(<span class="ruby-identifier">rel</span>)
+160:       <span class="ruby-identifier">classname</span> = <span class="ruby-identifier">rel</span>.<span class="ruby-identifier">get_property</span>(<span class="ruby-value str">'classname'</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rel</span>.<span class="ruby-identifier">has_property</span>(<span class="ruby-value str">'classname'</span>)
+161:       <span class="ruby-identifier">classname</span> = <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">Relations</span><span class="ruby-operator">::</span><span class="ruby-constant">DynamicRelation</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">classname</span>.<span class="ruby-identifier">nil?</span>
+162:       <span class="ruby-identifier">_load</span> <span class="ruby-identifier">classname</span>, <span class="ruby-identifier">rel</span>
+163:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000232" class="method-detail">
+        <a name="M000232"></a>
+
+        <div class="method-heading">
+          <a href="#M000232" class="method-signature">
+          <span class="method-name">start</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000232-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000232-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 97</span>
+ 97:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start</span>
+ 98:       <span class="ruby-ivar">@neo</span> = <span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">EmbeddedNeo</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">Config</span>[<span class="ruby-identifier">:storage_path</span>])
+ 99:       <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">run</span> { <span class="ruby-ivar">@ref_node</span> = <span class="ruby-constant">ReferenceNode</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">getReferenceNode</span>()) }
+100:       <span class="ruby-identifier">$NEO_LOGGER</span>.<span class="ruby-identifier">info</span>{ <span class="ruby-node">&quot;Started neo. Database storage located at '#{@db_storage}'&quot;</span>}
+101: 
+102:       <span class="ruby-comment cmt"># get the placebo transaction</span>
+103:       <span class="ruby-comment cmt"># the second time we create an transaction the placebo transaction will</span>
+104:       <span class="ruby-comment cmt"># be returned from neo. We need to know if we are using real transaction or a placebo.</span>
+105:       <span class="ruby-identifier">tx</span> = <span class="ruby-identifier">begin_transaction</span>
+106:       <span class="ruby-ivar">@placebo_tx</span> = <span class="ruby-identifier">begin_transaction</span>
+107:       <span class="ruby-identifier">tx</span>.<span class="ruby-identifier">finish</span>
+108:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000239" class="method-detail">
+        <a name="M000239"></a>
+
+        <div class="method-heading">
+          <a href="#M000239" class="method-signature">
+          <span class="method-name">stop</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Stop neo Must be done before the program stops
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000239-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000239-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 176</span>
+176:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stop</span>
+177:       <span class="ruby-identifier">$NEO_LOGGER</span>.<span class="ruby-identifier">info</span> {<span class="ruby-node">&quot;stop neo #{@neo}&quot;</span>}
+178:       <span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">shutdown</span>  
+179:       <span class="ruby-ivar">@neo</span> = <span class="ruby-keyword kw">nil</span>
+180:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000240" class="method-detail">
+        <a name="M000240"></a>
+
+        <div class="method-heading">
+          <a href="#M000240" class="method-signature">
+          <span class="method-name">tx_manager</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000240-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000240-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/neo.rb, line 184</span>
+184:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">tx_manager</span>
+185:       <span class="ruby-ivar">@neo</span>.<span class="ruby-identifier">getConfig</span>().<span class="ruby-identifier">getTxModule</span>().<span class="ruby-identifier">getTxManager</span>()
+186:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

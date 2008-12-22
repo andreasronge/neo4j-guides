@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Lucene::QueryDSL</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Lucene::QueryDSL</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/lucene/query_dsl_rb.html">
+                lib/lucene/query_dsl.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000080">&amp;</a>&nbsp;&nbsp;
+      <a href="#M000079">&lt;=&gt;</a>&nbsp;&nbsp;
+      <a href="#M000078">==</a>&nbsp;&nbsp;
+      <a href="#M000075">find</a>&nbsp;&nbsp;
+      <a href="#M000077">method_missing</a>&nbsp;&nbsp;
+      <a href="#M000074">new</a>&nbsp;&nbsp;
+      <a href="#M000076">parse</a>&nbsp;&nbsp;
+      <a href="#M000082">to_s</a>&nbsp;&nbsp;
+      <a href="#M000081">|</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">stack</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <a href="#M000075" class="method-signature">
+          <span class="method-name">find</span><span class="method-args">(field_infos = IndexInfo.new(:id), &amp;expr)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000075-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000075-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 79</span>
+79:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">field_infos</span> = <span class="ruby-constant">IndexInfo</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">:id</span>), <span class="ruby-operator">&amp;</span><span class="ruby-identifier">expr</span>) 
+80:       <span class="ruby-identifier">exp</span> = <span class="ruby-constant">QueryDSL</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">expr</span>)
+81:       <span class="ruby-identifier">exp</span>.<span class="ruby-identifier">to_lucene</span>(<span class="ruby-identifier">field_infos</span>)
+82:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
+
+        <div class="method-heading">
+          <a href="#M000074" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000074-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000074-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 74</span>
+74:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
+75:       <span class="ruby-ivar">@stack</span> = []
+76:       <span class="ruby-comment cmt">#yield self</span>
+77:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
+
+        <div class="method-heading">
+          <a href="#M000076" class="method-signature">
+          <span class="method-name">parse</span><span class="method-args">(&amp;query)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000076-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000076-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 86</span>
+86:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">query</span>)
+87:       <span class="ruby-identifier">query_dsl</span> = <span class="ruby-constant">QueryDSL</span>.<span class="ruby-identifier">new</span>
+88:       <span class="ruby-identifier">query_dsl</span>.<span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">query</span>)
+89:       <span class="ruby-identifier">query_dsl</span>.<span class="ruby-identifier">stack</span>.<span class="ruby-identifier">last</span>
+90:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000080" class="method-detail">
+        <a name="M000080"></a>
+
+        <div class="method-heading">
+          <a href="#M000080" class="method-signature">
+          <span class="method-name">&amp;</span><span class="method-args">(other)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000080-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000080-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 109</span>
+109:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&amp;</span>(<span class="ruby-identifier">other</span>)
+110:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected at least two expression on stack, got #{@stack.size}&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">2</span>
+111:       <span class="ruby-identifier">right</span> = <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">pop</span>
+112:       <span class="ruby-identifier">left</span> = <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">pop</span>
+113:       <span class="ruby-identifier">expr</span> = <span class="ruby-constant">Expression</span>.<span class="ruby-identifier">new_complete</span>(<span class="ruby-identifier">left</span>, <span class="ruby-identifier">:&amp;</span>, <span class="ruby-identifier">right</span>)
+114:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">expr</span>
+115:       <span class="ruby-keyword kw">self</span>
+116:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000079" class="method-detail">
+        <a name="M000079"></a>
+
+        <div class="method-heading">
+          <a href="#M000079" class="method-signature">
+          <span class="method-name">&lt;=&gt;</span><span class="method-args">(to)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000079-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000079-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 102</span>
+102:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;=&gt;</span>(<span class="ruby-identifier">to</span>)
+103:       <span class="ruby-identifier">from</span> = <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">right</span>
+104:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">right</span> = <span class="ruby-constant">Range</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from</span>, <span class="ruby-identifier">to</span>)
+105:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">last</span>
+106:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000078" class="method-detail">
+        <a name="M000078"></a>
+
+        <div class="method-heading">
+          <a href="#M000078" class="method-signature">
+          <span class="method-name">==</span><span class="method-args">(other)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000078-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000078-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 98</span>
+ 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">other</span>)
+ 99:       <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;WRONG == '#{other}'&quot;</span>
+100:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
+
+        <div class="method-heading">
+          <a href="#M000077" class="method-signature">
+          <span class="method-name">method_missing</span><span class="method-args">(methodname, *args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000077-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000077-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 92</span>
+92:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">methodname</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+93:       <span class="ruby-identifier">expr</span> = <span class="ruby-constant">Expression</span>.<span class="ruby-identifier">new_uncomplete</span>(<span class="ruby-identifier">methodname</span>, <span class="ruby-keyword kw">self</span>)
+94:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">expr</span>
+95:       <span class="ruby-identifier">expr</span>
+96:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000082" class="method-detail">
+        <a name="M000082"></a>
+
+        <div class="method-heading">
+          <a href="#M000082" class="method-signature">
+          <span class="method-name">to_s</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000082-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000082-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 127</span>
+127:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+128:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">to_s</span>
+129:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000081" class="method-detail">
+        <a name="M000081"></a>
+
+        <div class="method-heading">
+          <a href="#M000081" class="method-signature">
+          <span class="method-name">|</span><span class="method-args">(other)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000081-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000081-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/query_dsl.rb, line 118</span>
+118:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">|</span>(<span class="ruby-identifier">other</span>)
+119:       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Expected at least two expression on stack, got #{@stack.size}&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">2</span>
+120:       <span class="ruby-identifier">right</span> = <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">pop</span>
+121:       <span class="ruby-identifier">left</span> = <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">pop</span>
+122:       <span class="ruby-identifier">expr</span> = <span class="ruby-constant">Expression</span>.<span class="ruby-identifier">new_complete</span>(<span class="ruby-identifier">left</span>, <span class="ruby-identifier">:|</span>, <span class="ruby-identifier">right</span>)
+123:       <span class="ruby-ivar">@stack</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">expr</span>
+124:       <span class="ruby-keyword kw">self</span>
+125:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

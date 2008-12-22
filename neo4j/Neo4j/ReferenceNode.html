@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Neo4j::ReferenceNode</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Neo4j_ReferenceNode">
+  <h1 class="title">Class: Neo4j::ReferenceNode</h1>
+  <div class="section docstring">
+  <p>
+Holds references to all other nodes The classname of the nodes are used as
+the name of the relationship to those nodes. There is only one reference
+node in a neo space, which can always been found (Neo4j::Neo#:ref_node)
+</p>
+
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'>(internal_node)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+15
+16
+17</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/reference_node.rb', line 15</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='internal_node identifier id'>internal_node</span><span class='rparen token'>)</span>
+  <span class='@internal_node ivar id'>@internal_node</span> <span class='assign token'>=</span> <span class='internal_node identifier id'>internal_node</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#connect-instance_method' title='#connect'>#connect</a></span><span class='args'>(node, type = node.class.root_class)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Connects the given node with the reference node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#relations-instance_method' title='#relations'>#relations</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns a relatio traverser for traversing all types of relation from and
+to this node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>connect</h3>
+</div><div id="connect-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>connect</span><span class='args'>(node, type = node.class.root_class)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Connects the given node with the reference node. The type of the
+relationship will be the same as the class name of the specified node
+unless the optional parameter type is specified. This method is used
+internally to keep a reference to all node instances in the node space
+(useful for example for reindexing all nodes by traversing the node space).
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">node&lt;Neo4j::NodeMixin&gt;:</td><td>Connect the reference node with this node
+
+</td></tr>
+<tr><td valign="top">type&lt;String&gt;:</td><td>Optinal, the type of the relationship we want to create
+
+</td></tr>
+</table>
+<h4>Returns</h4>
+<p>
+nil
+</p>
+<p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+43
+44
+45
+46</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/reference_node.rb', line 43</span>
+
+<span class='def def kw'>def</span> <span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='node identifier id'>node</span><span class='comma token'>,</span> <span class='type identifier id'>type</span> <span class='assign token'>=</span> <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='root_class identifier id'>root_class</span><span class='rparen token'>)</span>
+  <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='createRelationshipTo identifier id'>createRelationshipTo</span><span class='lparen token'>(</span><span class='node identifier id'>node</span><span class='dot token'>.</span><span class='internal_node identifier id'>internal_node</span><span class='comma token'>,</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Relations constant id'>Relations</span><span class='colon2 op'>::</span><span class='RelationshipType constant id'>RelationshipType</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='lparen token'>(</span><span class='type identifier id'>type</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>relations</h3>
+</div><div id="relations-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>relations</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns a relatio traverser for traversing all types of relation from and
+to this node
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="see">
+  <h3>See Also:</h3>
+  <dl>
+    <dt></dt>
+    <dd>
+      <span class='desc'>
+        <tt>Neo4j::Relations::RelationTraverser
+
+:api: public</tt>
+      </span>
+    </dd>
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+25
+26
+27</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/reference_node.rb', line 25</span>
+
+<span class='def def kw'>def</span> <span class='relations identifier id'>relations</span>
+  <span class='Relations constant id'>Relations</span><span class='colon2 op'>::</span><span class='RelationTraverser constant id'>RelationTraverser</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@internal_node ivar id'>@internal_node</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

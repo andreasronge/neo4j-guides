@@ -1,0 +1,1183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Neo4j::Transaction</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Neo4j_Transaction">
+  <h1 class="title">Class: Neo4j::Transaction</h1>
+  <div class="section docstring">
+  <p>
+Wraps a Neo4j java transaction and lucene transactions. There can only be
+one transaction per thread.
+</p>
+
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        <tr>
+          <th class="name">neo_tx</td>
+          <td class="readwrite">
+            [<span id='neo_tx-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>neo_tx</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'>(neo_tx)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <hr size="10"></hr><p>
+Instance methods
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='AlreadyInTransactionError.html' title='AlreadyInTransactionError'>AlreadyInTransactionError</a></tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 137</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='neo_tx identifier id'>neo_tx</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='AlreadyInTransactionError constant id'>AlreadyInTransactionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='if if_mod kw'>if</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='@neo_tx ivar id'>@neo_tx</span> <span class='assign token'>=</span> <span class='neo_tx identifier id'>neo_tx</span>
+  <span class='@@counter ivar id'>@@counter</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+  <span class='@id ivar id'>@id</span> <span class='assign token'>=</span> <span class='@@counter ivar id'>@@counter</span>
+  <span class='@failure ivar id'>@failure</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>      
+  <span class='@nodes_to_be_reindexed ivar id'>@nodes_to_be_reindexed</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:transaction</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='self self kw'>self</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;create #{self.to_s}&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#called-class_method' title='called'>called</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+debugging method.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#current-class_method' title='current'>current</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#failure%3F-class_method' title='failure?'>failure?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#placebo%3F-class_method' title='placebo?'>placebo?</a></span><span class='args'>(tx)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#run-class_method' title='run'>run</a></span><span class='args'></span>
+        <span class='block'>{|The| ... }</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Runs a block in a Neo4j transaction.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#running%3F-class_method' title='running?'>running?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#failure-instance_method' title='#failure'>#failure</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Marks this transaction as failed, which means that it will inexplicably be
+rolled back upon invocation of finish().
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#failure%3F-instance_method' title='#failure?'>#failure?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#finish-instance_method' title='#finish'>#finish</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Commits or marks this transaction for rollback, depending on whether
+success() or failure() has been previously invoked.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#placebo-instance_method' title='#placebo'>#placebo</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#placebo%3F-instance_method' title='#placebo?'>#placebo?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#reindex-instance_method' title='#reindex'>#reindex</a></span><span class='args'>(node)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Marks a node to be reindexed before the transaction ends.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#success-instance_method' title='#success'>#success</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Marks this transaction as successful, which means that it will be commited
+upon invocation of finish() unless failure() has or will be invoked before
+then.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#to_s-instance_method' title='#to_s'>#to_s</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>called</h3>
+</div><div id="called-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>called</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+debugging method
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 36</span>
+
+<span class='def def kw'>def</span> <span class='called identifier id'>called</span>
+  <span class='res identifier id'>res</span> <span class='assign token'>=</span> <span class='string val'>&quot;&quot;</span>
+  <span class='for for kw'>for</span> <span class='i identifier id'>i</span> <span class='in in kw'>in</span> <span class='float val'>2</span><span class='dot2 op'>..</span><span class='integer val'>7</span> <span class='do do kw'>do</span>
+    <span class='res identifier id'>res</span> <span class='lshft op'>&lt;&lt;</span> <span class='regexp val'>/\`([^\']+)\'/</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='caller identifier id'>caller</span><span class='lparen token'>(</span><span class='i identifier id'>i</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
+    <span class='res identifier id'>res</span> <span class='lshft op'>&lt;&lt;</span> <span class='string val'>', '</span> <span class='unless unless_mod kw'>unless</span> <span class='i identifier id'>i</span> <span class='eq op'>==</span> <span class='integer val'>4</span>
+  <span class='end end kw'>end</span>
+  <span class='res identifier id'>res</span>
+<span class='end end kw'>end</span> 
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>current</h3>
+</div><div id="current-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>current</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+117
+118
+119</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='current identifier id'>current</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:transaction</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>failure?</h3>
+</div><div id="failure%3F-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>failure?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+125
+126
+127</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 125</span>
+
+<span class='def def kw'>def</span> <span class='failure? fid id'>failure?</span>
+  <span class='current identifier id'>current</span><span class='dot token'>.</span><span class='failure? fid id'>failure?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>placebo?</h3>
+</div><div id="placebo%3F-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>placebo?</span><span class='args'>(tx)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+45
+46
+47</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 45</span>
+
+<span class='def def kw'>def</span> <span class='placebo? fid id'>placebo?</span><span class='lparen token'>(</span><span class='tx identifier id'>tx</span><span class='rparen token'>)</span>
+  <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='placebo_tx identifier id'>placebo_tx</span> <span class='eq op'>==</span> <span class='tx identifier id'>tx</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>run</h3>
+</div><div id="run-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>run</span><span class='args'></span>
+    <span class='block'>{|The| ... }</span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Runs a block in a Neo4j transaction
+</p>
+<p>
+Most operations on neo requires an transaction. In Neo4j all read and write
+operations are wrapped automatically in an transaction. You will get much
+better performance if one transaction is wrapped around several neo
+operation instead of running one transaction per neo operation. If one
+transaction is already running then a &#8216;placebo&#8217; transaction
+will be created. Performing a finish on a placebo transaction will not
+finish the &#8216;real&#8217; transaction.
+</p>
+<h4>Params</h4>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yieldparam">
+  <h3>Yield Parameters:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='' title='Neo4j::Transaction'>Neo4j::Transaction</a></tt>]</span>
+      
+      
+        <span class='name'>The</span>
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+transaction
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+<div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>ArgumentError</tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 96</span>
+
+<span class='def def kw'>def</span> <span class='run identifier id'>run</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='info identifier id'>info</span><span class='lbrace token'>{</span><span class='string val'>&quot;new transaction &quot;</span> <span class='plus op'>+</span> <span class='called identifier id'>called</span><span class='rbrace token'>}</span>
+  <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Expected a block to run in Transaction.run&quot;</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='block_given? fid id'>block_given?</span>
+
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+    
+  <span class='begin begin kw'>begin</span>
+    <span class='tx identifier id'>tx</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+    <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='yield yield kw'>yield</span> <span class='tx identifier id'>tx</span>
+    <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='success identifier id'>success</span> <span class='unless unless_mod kw'>unless</span> <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='failure? fid id'>failure?</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='Exception constant id'>Exception</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>  
+    <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;Neo transaction rolled back because of an exception, #{e}&quot;</span><span class='rbrace token'>}</span>
+    <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span><span class='lbrace token'>{</span><span class='e identifier id'>e</span><span class='dot token'>.</span><span class='backtrace identifier id'>backtrace</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+    <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span>
+    <span class='raise identifier id'>raise</span> <span class='e identifier id'>e</span>  
+  <span class='ensure ensure kw'>ensure</span>  
+    <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='finish identifier id'>finish</span>  
+  <span class='end end kw'>end</span>      
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>  
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>running?</h3>
+</div><div id="running%3F-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>running?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+121
+122
+123</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 121</span>
+
+<span class='def def kw'>def</span> <span class='running? fid id'>running?</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='current identifier id'>current</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span> <span class='andop op'>&amp;&amp;</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='neo_tx identifier id'>neo_tx</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>failure</h3>
+</div><div id="failure-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>failure</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Marks this transaction as failed, which means that it will inexplicably be
+rolled back upon invocation of finish().
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='NotInTransactionError.html' title='NotInTransactionError'>NotInTransactionError</a></tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+210
+211
+212
+213
+214
+215</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 210</span>
+
+<span class='def def kw'>def</span> <span class='failure identifier id'>failure</span>
+  <span class='raise identifier id'>raise</span> <span class='NotInTransactionError constant id'>NotInTransactionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='unless unless_mod kw'>unless</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='@neo_tx ivar id'>@neo_tx</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span>
+  <span class='@failure ivar id'>@failure</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='info identifier id'>info</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;failure #{self.to_s}&quot;</span><span class='rbrace token'>}</span>                        
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>failure?</h3>
+</div><div id="failure%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>failure?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+153
+154
+155</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 153</span>
+
+<span class='def def kw'>def</span> <span class='failure? fid id'>failure?</span>
+  <span class='@failure ivar id'>@failure</span> <span class='eq op'>==</span> <span class='true true kw'>true</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>finish</h3>
+</div><div id="finish-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>finish</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Commits or marks this transaction for rollback, depending on whether
+success() or failure() has been previously invoked.
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='NotInTransactionError.html' title='NotInTransactionError'>NotInTransactionError</a></tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 181</span>
+
+<span class='def def kw'>def</span> <span class='finish identifier id'>finish</span>
+  <span class='raise identifier id'>raise</span> <span class='NotInTransactionError constant id'>NotInTransactionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='unless unless_mod kw'>unless</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='unless unless kw'>unless</span> <span class='failure? fid id'>failure?</span>
+    <span class='@nodes_to_be_reindexed ivar id'>@nodes_to_be_reindexed</span><span class='dot token'>.</span><span class='each_value identifier id'>each_value</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='node identifier id'>node</span><span class='bitor op'>|</span> <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='reindex! fid id'>reindex!</span><span class='rbrace token'>}</span>
+    <span class='@nodes_to_be_reindexed ivar id'>@nodes_to_be_reindexed</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='end end kw'>end</span>
+  
+  <span class='@neo_tx ivar id'>@neo_tx</span><span class='dot token'>.</span><span class='finish identifier id'>finish</span>
+  <span class='@neo_tx ivar id'>@neo_tx</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:transaction</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  
+  <span class='if if kw'>if</span> <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+    <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;LUCENE TX running failure: #{failure?}&quot;</span><span class='rbrace token'>}</span>
+    
+    <span class='comment val'># mark lucene transaction for failure if the neo transaction fails</span>
+    <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span> <span class='if if_mod kw'>if</span> <span class='failure? fid id'>failure?</span>
+    <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span> 
+  <span class='else else kw'>else</span>
+    <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='string val'>&quot;NO LUCENE TX running&quot;</span><span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
+      
+  
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='info identifier id'>info</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;finished #{self.to_s}&quot;</span><span class='rbrace token'>}</span>                  
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>placebo</h3>
+</div><div id="placebo-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>placebo</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+161
+162
+163</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 161</span>
+
+<span class='def def kw'>def</span> <span class='placebo identifier id'>placebo</span>
+  <span class='@placebo ivar id'>@placebo</span> <span class='opasgn op'>||=</span> <span class='PlaceboTransaction constant id'>PlaceboTransaction</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>placebo?</h3>
+</div><div id="placebo%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>placebo?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+157
+158
+159</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 157</span>
+
+<span class='def def kw'>def</span> <span class='placebo? fid id'>placebo?</span>
+  <span class='@neo_tx ivar id'>@neo_tx</span> <span class='eq op'>==</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='placebo_tx identifier id'>placebo_tx</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>reindex</h3>
+</div><div id="reindex-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>reindex</span><span class='args'>(node)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Marks a node to be reindexed before the transaction ends
+</p>
+<p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+220
+221
+222</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 220</span>
+
+<span class='def def kw'>def</span> <span class='reindex identifier id'>reindex</span><span class='lparen token'>(</span><span class='node identifier id'>node</span><span class='rparen token'>)</span>
+  <span class='@nodes_to_be_reindexed ivar id'>@nodes_to_be_reindexed</span><span class='lbrack token'>[</span><span class='node identifier id'>node</span><span class='dot token'>.</span><span class='neo_node_id identifier id'>neo_node_id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='node identifier id'>node</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>success</h3>
+</div><div id="success-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>success</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Marks this transaction as successful, which means that it will be commited
+upon invocation of finish() unless failure() has or will be invoked before
+then.
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='NotInTransactionError.html' title='NotInTransactionError'>NotInTransactionError</a></tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+170
+171
+172
+173
+174</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 170</span>
+
+<span class='def def kw'>def</span> <span class='success identifier id'>success</span>
+  <span class='raise identifier id'>raise</span> <span class='NotInTransactionError constant id'>NotInTransactionError</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='unless unless_mod kw'>unless</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='info identifier id'>info</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;success #{self.to_s}&quot;</span><span class='rbrace token'>}</span>      
+  <span class='@neo_tx ivar id'>@neo_tx</span><span class='dot token'>.</span><span class='success identifier id'>success</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_s</h3>
+</div><div id="to_s-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>to_s</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+148
+149
+150</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/transaction.rb', line 148</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;Transaction: placebo: #{placebo?}, #{@id} failure: #{failure?}, running #{Transaction.running?}, thread: #{Thread.current.to_s} #{@neo_tx}&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

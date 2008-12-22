@@ -1,0 +1,1602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: Neo4j::NodeMixin</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module Neo4j_NodeMixin">
+  <h1 class="title">Module: Neo4j::NodeMixin</h1>
+  <div class="section docstring">
+  <p>
+Represent a node in the Neo4j space.
+</p>
+<p>
+Is a wrapper around a Java neo node
+</p>
+
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        <tr>
+          <th class="name">internal_node</td>
+          <td class="readwrite">
+            [<span id='internal_node-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>internal_node</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  
+</div><div class="section constants">
+  
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#included-class_method' title='included'>included</a></span><span class='args'>(c)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Adds classmethods in the ClassMethods module.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#%3D%3D-instance_method' title='#=='>#==</a></span><span class='args'>(o)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#classname-instance_method' title='#classname'>#classname</a></span><span class='args'>=(value)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+:api: private.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#delete-instance_method' title='#delete'>#delete</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Deletes this node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#eql%3F-instance_method' title='#eql?'>#eql?</a></span><span class='args'>(o)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#get_property-instance_method' title='#get_property'>#get_property</a></span><span class='args'>(name)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the value of the given neo property.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#hash-instance_method' title='#hash'>#hash</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#init_with_node-instance_method' title='#init_with_node'>#init_with_node</a></span><span class='args'>(node)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Inits this node with the specified java neo node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#init_without_node-instance_method' title='#init_without_node'>#init_without_node</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Inits when no neo java node exists.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#lucene_index-instance_method' title='#lucene_index'>#lucene_index</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#neo_node_id-instance_method' title='#neo_node_id'>#neo_node_id</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns an unique id Calls getId on the neo node java object.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#property%3F-instance_method' title='#property?'>#property?</a></span><span class='args'>(name)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Checks if the given neo property exists.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#props-instance_method' title='#props'>#props</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns a hash of all properties.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#reindex-instance_method' title='#reindex'>#reindex</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Mark this node to be reindex by lucene after the transaction finishes.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#reindex%21-instance_method' title='#reindex!'>#reindex!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Reindex this node now.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#relations-instance_method' title='#relations'>#relations</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns a relation traverser for traversing all types of relation from and
+to this node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#remove_property-instance_method' title='#remove_property'>#remove_property</a></span><span class='args'>(name)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Removes the property from this node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#set_property-instance_method' title='#set_property'>#set_property</a></span><span class='args'>(name, value)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Sets a neo property on this node.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#to_param-instance_method' title='#to_param'>#to_param</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Same as neo_node_id but returns a String intead of a Fixnum.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#update-instance_method' title='#update'>#update</a></span><span class='args'>(struct_or_hash)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Updates this node&#8217;s properties by using the provided struct/hash.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#value_object-instance_method' title='#value_object'>#value_object</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Creates a struct class containig all properties of this class.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>included</h3>
+</div><div id="included-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>included</span><span class='args'>(c)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Adds classmethods in the ClassMethods module
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 300</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='included identifier id'>included</span><span class='lparen token'>(</span><span class='c identifier id'>c</span><span class='rparen token'>)</span>
+  <span class='comment val'># all subclasses share the same index, declared properties and index_updaters</span>
+  <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='instance_eval identifier id'>instance_eval</span> <span class='do do kw'>do</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:ROOT_CLASS</span><span class='comma token'>,</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:LUCENE_INDEX_PATH</span><span class='comma token'>,</span> <span class='string val'>&quot;/&quot;</span> <span class='plus op'>+</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'::'</span><span class='comma token'>,</span> <span class='string val'>'/'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:INDEX_UPDATERS</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:INDEX_TRIGGERS</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:RELATIONS_INFO</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    <span class='const_set identifier id'>const_set</span><span class='lparen token'>(</span><span class='symbol val'>:PROPERTIES_INFO</span><span class='comma token'>,</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span> <span class='unless unless_mod kw'>unless</span> <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='const_defined? fid id'>const_defined?</span><span class='lparen token'>(</span><span class='symbol val'>:ROOT_CLASS</span><span class='rparen token'>)</span>
+  
+  <span class='c identifier id'>c</span><span class='dot token'>.</span><span class='extend identifier id'>extend</span> <span class='ClassMethods constant id'>ClassMethods</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>==</h3>
+</div><div id="%3D%3D-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>==</span><span class='args'>(o)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+214
+215
+216</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 214</span>
+
+<span class='def def kw'>def</span> <span class='eq op'>==</span><span class='lparen token'>(</span><span class='o identifier id'>o</span><span class='rparen token'>)</span>
+  <span class='eql? fid id'>eql?</span><span class='lparen token'>(</span><span class='o identifier id'>o</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>classname</h3>
+</div><div id="classname-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>classname</span><span class='args'>=(value)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+261
+262
+263</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 261</span>
+
+<span class='def def kw'>def</span> <span class='classname= identifier id'>classname=</span><span class='lparen token'>(</span><span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='string val'>'classname'</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>delete</h3>
+</div><div id="delete-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>delete</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Deletes this node. Invoking any methods on this node after delete() has
+returned is invalid and may lead to unspecified behavior. Runs in a new
+transaction if one is not already running.
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+248
+249
+250
+251
+252
+253</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 248</span>
+
+<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='fire_event identifier id'>fire_event</span><span class='lparen token'>(</span><span class='NodeDeletedEvent constant id'>NodeDeletedEvent</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='r identifier id'>r</span><span class='bitor op'>|</span> <span class='r identifier id'>r</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='rbrace token'>}</span>
+  <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+  <span class='lucene_index identifier id'>lucene_index</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='neo_node_id identifier id'>neo_node_id</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>eql?</h3>
+</div><div id="eql%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>eql?</span><span class='args'>(o)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+210
+211
+212</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 210</span>
+
+<span class='def def kw'>def</span> <span class='eql? fid id'>eql?</span><span class='lparen token'>(</span><span class='o identifier id'>o</span><span class='rparen token'>)</span>
+  <span class='o identifier id'>o</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='NodeMixin constant id'>NodeMixin</span><span class='rparen token'>)</span> <span class='andop op'>&amp;&amp;</span> <span class='o identifier id'>o</span><span class='dot token'>.</span><span class='internal_node identifier id'>internal_node</span> <span class='eq op'>==</span> <span class='internal_node identifier id'>internal_node</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>get_property</h3>
+</div><div id="get_property-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>get_property</span><span class='args'>(name)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns the value of the given neo property.
+</p>
+<h4>Returns</h4>
+<p>
+the value of the property or nil if the property does not exist
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 127</span>
+
+<span class='def def kw'>def</span> <span class='get_property identifier id'>get_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;get property '#{name}'&quot;</span><span class='rbrace token'>}</span>
+  
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span> <span class='property? fid id'>property?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='get_property identifier id'>get_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='marshal? fid id'>marshal?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='Marshal constant id'>Marshal</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='String constant id'>String</span><span class='dot token'>.</span><span class='from_java_bytes identifier id'>from_java_bytes</span><span class='lparen token'>(</span><span class='value identifier id'>value</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='else else kw'>else</span>
+    <span class='value identifier id'>value</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>hash</h3>
+</div><div id="hash-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>hash</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+218
+219
+220</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 218</span>
+
+<span class='def def kw'>def</span> <span class='hash identifier id'>hash</span>
+  <span class='internal_node identifier id'>internal_node</span><span class='dot token'>.</span><span class='hashCode identifier id'>hashCode</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>init_with_node</h3>
+</div><div id="init_with_node-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>init_with_node</span><span class='args'>(node)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Inits this node with the specified java neo node
+</p>
+<p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+51
+52
+53
+54
+55</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 51</span>
+
+<span class='def def kw'>def</span> <span class='init_with_node identifier id'>init_with_node</span><span class='lparen token'>(</span><span class='node identifier id'>node</span><span class='rparen token'>)</span>
+  <span class='@internal_node ivar id'>@internal_node</span> <span class='assign token'>=</span> <span class='node identifier id'>node</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='classname identifier id'>classname</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='unless unless_mod kw'>unless</span> <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='hasProperty identifier id'>hasProperty</span><span class='lparen token'>(</span><span class='string val'>&quot;classname&quot;</span><span class='rparen token'>)</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span> <span class='lbrace token'>{</span><span class='dstring node'>&quot;loading node '#{self.class.to_s}' node id #{@internal_node.getId()}&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>init_without_node</h3>
+</div><div id="init_without_node-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>init_without_node</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Inits when no neo java node exists. Must create a new neo java node first.
+</p>
+<p>
+:api: private
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66
+67</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 60</span>
+
+<span class='def def kw'>def</span> <span class='init_without_node identifier id'>init_without_node</span>
+  <span class='@internal_node ivar id'>@internal_node</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='create_node identifier id'>create_node</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='classname identifier id'>classname</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='dot token'>.</span><span class='ref_node identifier id'>ref_node</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span> 
+
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='fire_event identifier id'>fire_event</span> <span class='NodeCreatedEvent constant id'>NodeCreatedEvent</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span>      
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span> <span class='lbrace token'>{</span><span class='dstring node'>&quot;created new node '#{self.class.to_s}' node id: #{@internal_node.getId()}&quot;</span><span class='rbrace token'>}</span>        
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>lucene_index</h3>
+</div><div id="lucene_index-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>lucene_index</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+239
+240
+241</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 239</span>
+
+<span class='def def kw'>def</span> <span class='lucene_index identifier id'>lucene_index</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='lucene_index identifier id'>lucene_index</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>neo_node_id</h3>
+</div><div id="neo_node_id-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>neo_node_id</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns an unique id Calls getId on the neo node java object
+</p>
+<h4>Returns</h4>
+<table>
+<tr><td valign="top">Fixnum:</td><td>the unique neo id of the node.
+
+</td></tr>
+</table>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+197
+198
+199</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 197</span>
+
+<span class='def def kw'>def</span> <span class='neo_node_id identifier id'>neo_node_id</span>
+  <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='getId identifier id'>getId</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>property?</h3>
+</div><div id="property%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>property?</span><span class='args'>(name)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Checks if the given neo property exists.
+</p>
+<h4>Returns</h4>
+<p>
+true if the property exists
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+146
+147
+148</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 146</span>
+
+<span class='def def kw'>def</span> <span class='property? fid id'>property?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='has_property identifier id'>has_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>props</h3>
+</div><div id="props-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>props</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns a hash of all properties.
+</p>
+<h4>Returns</h4>
+<table>
+<tr><td valign="top">Hash:</td><td>property key and property value
+
+</td></tr>
+</table>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+228
+229
+230
+231
+232
+233
+234
+235
+236</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 228</span>
+
+<span class='def def kw'>def</span> <span class='props identifier id'>props</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='iter identifier id'>iter</span> <span class='assign token'>=</span> <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='getPropertyKeys identifier id'>getPropertyKeys</span><span class='dot token'>.</span><span class='iterator identifier id'>iterator</span>
+  <span class='while while kw'>while</span> <span class='lparen token'>(</span><span class='iter identifier id'>iter</span><span class='dot token'>.</span><span class='hasNext identifier id'>hasNext</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
+    <span class='key identifier id'>key</span> <span class='assign token'>=</span> <span class='iter identifier id'>iter</span><span class='dot token'>.</span><span class='next identifier id'>next</span>
+    <span class='ret identifier id'>ret</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='getProperty identifier id'>getProperty</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>reindex</h3>
+</div><div id="reindex-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>reindex</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Mark this node to be reindex by lucene after the transaction finishes
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+277
+278
+279</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 277</span>
+
+<span class='def def kw'>def</span> <span class='reindex identifier id'>reindex</span>
+  <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='reindex identifier id'>reindex</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>reindex!</h3>
+</div><div id="reindex%21-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>reindex!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Reindex this node now
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+284
+285
+286
+287
+288
+289
+290</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 284</span>
+
+<span class='def def kw'>def</span> <span class='reindex! fid id'>reindex!</span>
+  <span class='doc identifier id'>doc</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='neo_node_id identifier id'>neo_node_id</span> <span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='index_updaters identifier id'>index_updaters</span><span class='dot token'>.</span><span class='each_value identifier id'>each_value</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='updater identifier id'>updater</span><span class='bitor op'>|</span>
+    <span class='updater identifier id'>updater</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='doc identifier id'>doc</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='lucene_index identifier id'>lucene_index</span> <span class='lshft op'>&lt;&lt;</span> <span class='doc identifier id'>doc</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>relations</h3>
+</div><div id="relations-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>relations</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns a relation traverser for traversing all types of relation from and
+to this node
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="see">
+  <h3>See Also:</h3>
+  <dl>
+    <dt></dt>
+    <dd>
+      <span class='desc'>
+        <tt>Neo4j::Relations::RelationTraverser
+
+:api: public</tt>
+      </span>
+    </dd>
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+270
+271
+272</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 270</span>
+
+<span class='def def kw'>def</span> <span class='relations identifier id'>relations</span>
+  <span class='Relations constant id'>Relations</span><span class='colon2 op'>::</span><span class='RelationTraverser constant id'>RelationTraverser</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@internal_node ivar id'>@internal_node</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>remove_property</h3>
+</div><div id="remove_property-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>remove_property</span><span class='args'>(name)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Removes the property from this node. For more information see JavaDoc
+PropertyContainer#removeProperty
+</p>
+<h4>Example</h4>
+<pre class="code">
+  <span class='a identifier id'>a</span> <span class='assign token'>=</span> <span class='Node constant id'>Node</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='string val'>'foo'</span><span class='comma token'>,</span><span class='integer val'>2</span><span class='rparen token'>)</span>
+  <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='remove_property identifier id'>remove_property</span><span class='lparen token'>(</span><span class='string val'>'foo'</span><span class='rparen token'>)</span>
+  <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='get_property identifier id'>get_property</span><span class='lparen token'>(</span><span class='string val'>'foo'</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; nil</span>
+</pre>
+<h4>Returns</h4>
+<p>
+true if the property was removed, false otherwise
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+116
+117
+118</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 116</span>
+
+<span class='def def kw'>def</span> <span class='remove_property identifier id'>remove_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='notop op'>!</span><span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='removeProperty identifier id'>removeProperty</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>set_property</h3>
+</div><div id="set_property-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>set_property</span><span class='args'>(name, value)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Sets a neo property on this node. This property does not have to be
+declared first. If the value of the property is nil the property will be
+removed.
+</p>
+<p>
+Runs in a new transaction if there is not one already running, otherwise it
+will run in the existing transaction.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">name&lt;String&gt;:</td><td>the name of the property to be set
+
+</td></tr>
+<tr><td valign="top">value&lt;Object&gt;:</td><td>the value of the property to be set.
+
+</td></tr>
+</table>
+<h4>Example</h4>
+<pre class="code">
+  <span class='n identifier id'>n</span> <span class='assign token'>=</span> <span class='Node constant id'>Node</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>'hej'</span>
+</pre>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 85</span>
+
+<span class='def def kw'>def</span> <span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='$NEO_LOGGER gvar id'>$NEO_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;set property '#{name}'='#{value}'&quot;</span><span class='rbrace token'>}</span>      
+  <span class='old_value identifier id'>old_value</span> <span class='assign token'>=</span> <span class='get_property identifier id'>get_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+
+  <span class='if if kw'>if</span> <span class='value identifier id'>value</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='remove_property identifier id'>remove_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='marshal? fid id'>marshal?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='Marshal constant id'>Marshal</span><span class='dot token'>.</span><span class='dump identifier id'>dump</span><span class='lparen token'>(</span><span class='value identifier id'>value</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span><span class='rparen token'>)</span>
+  <span class='else else kw'>else</span>
+    <span class='@internal_node ivar id'>@internal_node</span><span class='dot token'>.</span><span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='name identifier id'>name</span> <span class='neq op'>!=</span> <span class='string val'>'classname'</span><span class='rparen token'>)</span>  <span class='comment val'># do not want events on internal properties</span>
+    <span class='event identifier id'>event</span> <span class='assign token'>=</span> <span class='PropertyChangedEvent constant id'>PropertyChangedEvent</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span><span class='comma token'>,</span> <span class='old_value identifier id'>old_value</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='fire_event identifier id'>fire_event</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_param</h3>
+</div><div id="to_param-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>to_param</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Same as neo_node_id but returns a String intead of a Fixnum. Used by Ruby
+on Rails.
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+206
+207
+208</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 206</span>
+
+<span class='def def kw'>def</span> <span class='to_param identifier id'>to_param</span>
+  <span class='neo_node_id identifier id'>neo_node_id</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>update</h3>
+</div><div id="update-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>update</span><span class='args'>(struct_or_hash)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Updates this node&#8217;s properties by using the provided struct/hash.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">struct_or_hash&lt;#each_pair&gt;:</td><td>the key and value to be set
+
+</td></tr>
+</table>
+<h4>Returns</h4>
+<p>
+self
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+181
+182
+183
+184
+185
+186
+187</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 181</span>
+
+<span class='def def kw'>def</span> <span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='struct_or_hash identifier id'>struct_or_hash</span><span class='rparen token'>)</span>
+  <span class='struct_or_hash identifier id'>struct_or_hash</span><span class='dot token'>.</span><span class='each_pair identifier id'>each_pair</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='comma token'>,</span><span class='value identifier id'>value</span><span class='bitor op'>|</span>
+    <span class='method identifier id'>method</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;#{key}=&quot;</span><span class='dot token'>.</span><span class='to_sym identifier id'>to_sym</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='method identifier id'>method</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='method identifier id'>method</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>value_object</h3>
+</div><div id="value_object-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>value_object</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Creates a struct class containig all properties of this class. This value
+object can be used from Ruby on Rails RESTful routing.
+</p>
+<h4>Example</h4>
+<p>
+h = Person.value_object.new h.name # =&gt; nil h.name=&#8217;kalle&#8217;
+h[:name] # =&gt; &#8216;kalle&#8217;
+</p>
+<h4>Returns</h4>
+<p>
+a value object struct
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+165
+166
+167
+168
+169</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/node.rb', line 165</span>
+
+<span class='def def kw'>def</span> <span class='value_object identifier id'>value_object</span>
+  <span class='vo identifier id'>vo</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='value_object identifier id'>value_object</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='vo identifier id'>vo</span><span class='dot token'>.</span><span class='_update identifier id'>_update</span><span class='lparen token'>(</span><span class='props identifier id'>props</span><span class='rparen token'>)</span>
+  <span class='vo identifier id'>vo</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

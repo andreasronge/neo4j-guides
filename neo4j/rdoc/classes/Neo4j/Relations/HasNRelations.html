@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Neo4j::Relations::HasNRelations</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Neo4j::Relations::HasNRelations</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/neo4j/relations/has_n_relations_rb.html">
+                lib/neo4j/relations/has_n_relations.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Enables traversal of nodes of a specific type that one node has. Used for
+traversing relationship of a specific type. <a
+href="../NodeMixin.html">Neo4j::NodeMixin</a> can declare
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000185">&lt;&lt;</a>&nbsp;&nbsp;
+      <a href="#M000183">each</a>&nbsp;&nbsp;
+      <a href="#M000182">new</a>&nbsp;&nbsp;
+      <a href="#M000184">new</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name">Enumerable</span>
+      </div>
+    </div>
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Class <a href="HasNRelations/DepthStopEvaluator.html" class="link">Neo4j::Relations::HasNRelations::DepthStopEvaluator</a><br />
+
+    </div>
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000182" class="method-detail">
+        <a name="M000182"></a>
+
+        <div class="method-heading">
+          <a href="#M000182" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(node, type, &amp;filter)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+TODO other_node_class not used ?
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000182-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000182-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/neo4j/relations/has_n_relations.rb, line 13</span>
+13:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">filter</span>)
+14:         <span class="ruby-ivar">@node</span> = <span class="ruby-identifier">node</span>
+15:         <span class="ruby-ivar">@type</span> = <span class="ruby-constant">RelationshipType</span>.<span class="ruby-identifier">instance</span>(<span class="ruby-identifier">type</span>)
+16:         <span class="ruby-ivar">@filter</span> = <span class="ruby-identifier">filter</span>
+17:         <span class="ruby-ivar">@depth</span> = <span class="ruby-value">1</span>
+18:         <span class="ruby-ivar">@info</span> = <span class="ruby-identifier">node</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_sym</span>]
+19: 
+20:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@info</span>[<span class="ruby-identifier">:outgoing</span>]
+21:           <span class="ruby-ivar">@direction</span> = <span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">Direction</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTGOING</span>
+22:           <span class="ruby-ivar">@type</span> = <span class="ruby-constant">RelationshipType</span>.<span class="ruby-identifier">instance</span>(<span class="ruby-identifier">type</span>)
+23:         <span class="ruby-keyword kw">else</span>
+24:           <span class="ruby-ivar">@direction</span> = <span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">Direction</span><span class="ruby-operator">::</span><span class="ruby-constant">INCOMING</span>
+25:           <span class="ruby-identifier">other_class_type</span> = <span class="ruby-ivar">@info</span>[<span class="ruby-identifier">:type</span>].<span class="ruby-identifier">to_s</span>
+26:           <span class="ruby-ivar">@type</span> = <span class="ruby-constant">RelationshipType</span>.<span class="ruby-identifier">instance</span>(<span class="ruby-identifier">other_class_type</span>)
+27:         <span class="ruby-keyword kw">end</span>
+28:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000185" class="method-detail">
+        <a name="M000185"></a>
+
+        <div class="method-heading">
+          <a href="#M000185" class="method-signature">
+          <span class="method-name">&lt;&lt;</span><span class="method-args">(other)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a relationship between this and the other node. Returns self so
+that we can add several nodes like this:
+</p>
+<pre>
+  n1 = Node.new # Node has declared having a friend type of relationship
+  n2 = Node.new
+  n3 = NodeMixin.new
+
+  n1 &lt;&lt; n2 &lt;&lt; n3
+</pre>
+<p>
+This is the same as:
+</p>
+<pre>
+  n1.friends.new(n2)
+  n1.friends.new(n3)
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000185-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000185-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/neo4j/relations/has_n_relations.rb, line 82</span>
+82:       <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;&lt;</span>(<span class="ruby-identifier">other</span>)
+83:         <span class="ruby-identifier">from</span>, <span class="ruby-identifier">to</span> = <span class="ruby-ivar">@node</span>, <span class="ruby-identifier">other</span>
+84:         <span class="ruby-identifier">from</span>,<span class="ruby-identifier">to</span> = <span class="ruby-identifier">to</span>,<span class="ruby-identifier">from</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@info</span>[<span class="ruby-identifier">:outgoing</span>]
+85: 
+86:         <span class="ruby-identifier">r</span> = <span class="ruby-identifier">from</span>.<span class="ruby-identifier">internal_node</span>.<span class="ruby-identifier">createRelationshipTo</span>(<span class="ruby-identifier">to</span>.<span class="ruby-identifier">internal_node</span>, <span class="ruby-ivar">@type</span>)
+87:         <span class="ruby-identifier">from</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new_relation</span>(<span class="ruby-ivar">@type</span>.<span class="ruby-identifier">name</span>,<span class="ruby-identifier">r</span>)
+88:         <span class="ruby-identifier">from</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">fire_event</span>(<span class="ruby-constant">RelationshipAddedEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from</span>, <span class="ruby-identifier">to</span>, <span class="ruby-ivar">@type</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">r</span>.<span class="ruby-identifier">getId</span>()))
+89:         <span class="ruby-identifier">other</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">fire_event</span>(<span class="ruby-constant">RelationshipAddedEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">to</span>, <span class="ruby-identifier">from</span>, <span class="ruby-ivar">@type</span>.<span class="ruby-identifier">name</span>, <span class="ruby-identifier">r</span>.<span class="ruby-identifier">getId</span>()))
+90:         <span class="ruby-keyword kw">self</span>
+91:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000183" class="method-detail">
+        <a name="M000183"></a>
+
+        <div class="method-heading">
+          <a href="#M000183" class="method-signature">
+          <span class="method-name">each</span><span class="method-args">() {|node| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000183-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000183-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/neo4j/relations/has_n_relations.rb, line 31</span>
+31:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each</span>
+32:         <span class="ruby-identifier">stop</span> = <span class="ruby-constant">DepthStopEvaluator</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@depth</span>)
+33:         <span class="ruby-identifier">traverser</span> = <span class="ruby-ivar">@node</span>.<span class="ruby-identifier">internal_node</span>.<span class="ruby-identifier">traverse</span>(<span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">Traverser</span><span class="ruby-operator">::</span><span class="ruby-constant">Order</span><span class="ruby-operator">::</span><span class="ruby-constant">BREADTH_FIRST</span>,
+34:           <span class="ruby-identifier">stop</span>,
+35:           <span class="ruby-identifier">org</span>.<span class="ruby-identifier">neo4j</span>.<span class="ruby-identifier">api</span>.<span class="ruby-identifier">core</span>.<span class="ruby-constant">ReturnableEvaluator</span><span class="ruby-operator">::</span><span class="ruby-constant">ALL_BUT_START_NODE</span>,
+36:           <span class="ruby-ivar">@type</span>,
+37:           <span class="ruby-ivar">@direction</span>)
+38:         <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">run</span> <span class="ruby-keyword kw">do</span>
+39:           <span class="ruby-identifier">iter</span> = <span class="ruby-identifier">traverser</span>.<span class="ruby-identifier">iterator</span>
+40:           <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">iter</span>.<span class="ruby-identifier">hasNext</span>) <span class="ruby-keyword kw">do</span>
+41:             <span class="ruby-identifier">node</span> = <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">load_node</span>(<span class="ruby-identifier">iter</span>.<span class="ruby-identifier">next</span>)
+42:             <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@filter</span>.<span class="ruby-identifier">nil?</span>
+43:               <span class="ruby-identifier">res</span> =  <span class="ruby-identifier">node</span>.<span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-ivar">@filter</span>)
+44:               <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">res</span>
+45:             <span class="ruby-keyword kw">end</span>
+46:             <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">node</span>
+47:           <span class="ruby-keyword kw">end</span>
+48:         <span class="ruby-keyword kw">end</span>
+49:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000184" class="method-detail">
+        <a name="M000184"></a>
+
+        <div class="method-heading">
+          <a href="#M000184" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(other)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a relationship instance between this and the other node. If a class
+for the relationship has not been specified it will be of type <a
+href="DynamicRelation.html">DynamicRelation</a>. To set a relationship type
+see <a href="../../Neo4j.html">Neo4j</a>::relations
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000184-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000184-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/neo4j/relations/has_n_relations.rb, line 56</span>
+56:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">other</span>)
+57:         <span class="ruby-identifier">from</span>, <span class="ruby-identifier">to</span> = <span class="ruby-ivar">@node</span>, <span class="ruby-identifier">other</span>
+58:         <span class="ruby-identifier">from</span>,<span class="ruby-identifier">to</span> = <span class="ruby-identifier">to</span>,<span class="ruby-identifier">from</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@info</span>[<span class="ruby-identifier">:outgoing</span>]
+59: 
+60:         <span class="ruby-identifier">r</span> = <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">run</span> {
+61:           <span class="ruby-identifier">from</span>.<span class="ruby-identifier">internal_node</span>.<span class="ruby-identifier">createRelationshipTo</span>(<span class="ruby-identifier">to</span>.<span class="ruby-identifier">internal_node</span>, <span class="ruby-ivar">@type</span>)
+62:         }
+63:         <span class="ruby-identifier">from</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">relations_info</span>[<span class="ruby-ivar">@type</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>][<span class="ruby-identifier">:relation</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">r</span>)
+64:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

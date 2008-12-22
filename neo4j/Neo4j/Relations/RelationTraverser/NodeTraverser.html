@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../../../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../../../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Neo4j::Relations::RelationTraverser::NodeTraverser</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Neo4j_Relations_RelationTraverser_NodeTraverser">
+  <h1 class="title">Class: Neo4j::Relations::RelationTraverser::NodeTraverser</h1>
+  <div class="section mixins">
+  <h1>Included Modules</h1>
+  <p>Enumerable</p>
+</div><div class="section docstring">
+  <p>
+Used from RelationTraverser when traversing nodes instead of relationships.
+</p>
+
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'>(relations)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+77
+78
+79</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/relations/relation_traverser.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='relations identifier id'>relations</span><span class='rparen token'>)</span>
+  <span class='@relations ivar id'>@relations</span> <span class='assign token'>=</span> <span class='relations identifier id'>relations</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#each-instance_method' title='#each'>#each</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>each</h3>
+</div><div id="each-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>each</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+81
+82
+83
+84
+85</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/relations/relation_traverser.rb', line 81</span>
+
+<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
+  <span class='@relations ivar id'>@relations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='relation identifier id'>relation</span><span class='bitor op'>|</span>
+    <span class='yield yield kw'>yield</span> <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='other_node identifier id'>other_node</span><span class='lparen token'>(</span><span class='@relations ivar id'>@relations</span><span class='dot token'>.</span><span class='internal_node identifier id'>internal_node</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

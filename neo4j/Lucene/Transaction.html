@@ -1,0 +1,910 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Lucene::Transaction</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Lucene_Transaction">
+  <h1 class="title">Class: Lucene::Transaction</h1>
+  <div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="raise">
+  <h3>Raises:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href='TransactionAlreadyRunningException.html' title='TransactionAlreadyRunningException'>TransactionAlreadyRunningException</a></tt>]</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 8</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+  <span class='raise identifier id'>raise</span> <span class='TransactionAlreadyRunningException constant id'>TransactionAlreadyRunningException</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='if if_mod kw'>if</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:lucene_transaction</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='self self kw'>self</span>
+  
+  <span class='@rollback ivar id'>@rollback</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@commited ivar id'>@commited</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@indexes ivar id'>@indexes</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span> <span class='comment val'># key is the path to index, value is the index instance</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='string val'>&quot;Created lucene transaction&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#current-class_method' title='current'>current</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the current transaction or nil.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#run-class_method' title='run'>run</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#running%3F-class_method' title='running?'>running?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#commit-instance_method' title='#commit'>#commit</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Commits all registered Indexes.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#deregister_all_indexes-instance_method' title='#deregister_all_indexes'>#deregister_all_indexes</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Deregister all indexes, used for testing purpose.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#deregister_index-instance_method' title='#deregister_index'>#deregister_index</a></span><span class='args'>(index)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Deregister the index so that it will not be part of the transaction any
+longer.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#failure-instance_method' title='#failure'>#failure</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#index-instance_method' title='#index'>#index</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#index%3F-instance_method' title='#index?'>#index?</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#register_index-instance_method' title='#register_index'>#register_index</a></span><span class='args'>(key, index)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Registers an index to take part of this transaction.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#rollback%21-instance_method' title='#rollback!'>#rollback!</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#rollback%3F-instance_method' title='#rollback?'>#rollback?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#to_s-instance_method' title='#to_s'>#to_s</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>current</h3>
+</div><div id="current-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>current</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns the current transaction or nil
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+109
+110
+111</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 109</span>
+
+<span class='def def kw'>def</span> <span class='current identifier id'>current</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:lucene_transaction</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>run</h3>
+</div><div id="run-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>run</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 91</span>
+
+<span class='def def kw'>def</span> <span class='run identifier id'>run</span>
+  <span class='tx identifier id'>tx</span> <span class='assign token'>=</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='begin begin kw'>begin</span>
+    <span class='yield yield kw'>yield</span> <span class='tx identifier id'>tx</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ex identifier id'>ex</span>
+    <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span>
+    <span class='comment val'># TODO reuse of error handling and logging</span>
+    <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;Got exception #{ex}&quot;</span><span class='rbrace token'>}</span>      
+    <span class='ex identifier id'>ex</span><span class='dot token'>.</span><span class='backtrace identifier id'>backtrace</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='t identifier id'>t</span><span class='bitor op'>|</span> <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+    <span class='raise identifier id'>raise</span> <span class='ex identifier id'>ex</span>
+  <span class='ensure ensure kw'>ensure</span>
+    <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span> <span class='unless unless_mod kw'>unless</span> <span class='tx identifier id'>tx</span><span class='dot token'>.</span><span class='rollback? fid id'>rollback?</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>running?</h3>
+</div><div id="running%3F-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>running?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+114
+115
+116</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 114</span>
+
+<span class='def def kw'>def</span> <span class='running? fid id'>running?</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='current identifier id'>current</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span> 
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>commit</h3>
+</div><div id="commit-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>commit</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Commits all registered Indexes. Stops this transaction (running? will be
+false)
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 26</span>
+
+<span class='def def kw'>def</span> <span class='commit identifier id'>commit</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='@rollback ivar id'>@rollback</span>
+    <span class='@indexes ivar id'>@indexes</span><span class='dot token'>.</span><span class='each_value identifier id'>each_value</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='index identifier id'>index</span><span class='bitor op'>|</span> 
+      <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;BEGIN: Commit index #{index} txt #{to_s}&quot;</span><span class='rbrace token'>}</span>        
+      <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span>
+      <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;END: Commited index #{index} txt #{to_s}&quot;</span><span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span> 
+  <span class='end end kw'>end</span>
+  <span class='@commited ivar id'>@commited</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Index was not removed from commited transaction: #{@indexes.inspect}&quot;</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='@indexes ivar id'>@indexes</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='andop op'>&amp;&amp;</span> <span class='notop op'>!</span><span class='@rollback ivar id'>@rollback</span> 
+  <span class='@indexes ivar id'>@indexes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='Thread constant id'>Thread</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='lbrack token'>[</span><span class='symbol val'>:lucene_transaction</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>deregister_all_indexes</h3>
+</div><div id="deregister_all_indexes-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>deregister_all_indexes</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Deregister all indexes, used for testing purpose.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+73
+74
+75
+76</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 73</span>
+
+<span class='def def kw'>def</span> <span class='deregister_all_indexes identifier id'>deregister_all_indexes</span>
+  <span class='@indexes ivar id'>@indexes</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;Deregistered all index, #{@indexes.inspect}&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>deregister_index</h3>
+</div><div id="deregister_index-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>deregister_index</span><span class='args'>(index)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Deregister the index so that it will not be part of the transaction any
+longer.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+65
+66
+67
+68</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 65</span>
+
+<span class='def def kw'>def</span> <span class='deregister_index identifier id'>deregister_index</span><span class='lparen token'>(</span><span class='index identifier id'>index</span><span class='rparen token'>)</span>
+  <span class='@indexes ivar id'>@indexes</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='path identifier id'>path</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;Deregistered index for #{index}&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>failure</h3>
+</div><div id="failure-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>failure</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+40
+41
+42
+43</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 40</span>
+
+<span class='def def kw'>def</span> <span class='failure identifier id'>failure</span>
+  <span class='@rollback ivar id'>@rollback</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='string val'>&quot;Rollback Lucene Transaction&quot;</span><span class='rbrace token'>}</span>      
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>index</h3>
+</div><div id="index-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>index</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+83
+84
+85</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 83</span>
+
+<span class='def def kw'>def</span> <span class='index identifier id'>index</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='@indexes ivar id'>@indexes</span><span class='lbrack token'>[</span><span class='path identifier id'>path</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>index?</h3>
+</div><div id="index%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>index?</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+79
+80
+81</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 79</span>
+
+<span class='def def kw'>def</span> <span class='index? fid id'>index?</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='@indexes ivar id'>@indexes</span><span class='lbrack token'>[</span><span class='path identifier id'>path</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>register_index</h3>
+</div><div id="register_index-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>register_index</span><span class='args'>(key, index)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Registers an index to take part of this transaction
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+56
+57
+58
+59</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 56</span>
+
+<span class='def def kw'>def</span> <span class='register_index identifier id'>register_index</span><span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='index identifier id'>index</span><span class='rparen token'>)</span>
+  <span class='@indexes ivar id'>@indexes</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span><span class='lbrace token'>{</span><span class='dstring node'>&quot;Registered index for #{index}&quot;</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>rollback!</h3>
+</div><div id="rollback%21-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>rollback!</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+49
+50
+51</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 49</span>
+
+<span class='def def kw'>def</span> <span class='rollback! fid id'>rollback!</span>
+  <span class='@rollback ivar id'>@rollback</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>rollback?</h3>
+</div><div id="rollback%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>rollback?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+45
+46
+47</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 45</span>
+
+<span class='def def kw'>def</span> <span class='rollback? fid id'>rollback?</span>
+  <span class='@rollback ivar id'>@rollback</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_s</h3>
+</div><div id="to_s-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>to_s</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+18
+19
+20</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/transaction.rb', line 18</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;Transaction [commited=#@commited, rollback=#@rollback, indexes=#{@indexes.size}, object_id=#{object_id}]&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

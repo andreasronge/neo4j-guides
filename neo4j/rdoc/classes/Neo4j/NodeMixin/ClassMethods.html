@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Neo4j::NodeMixin::ClassMethods</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Neo4j::NodeMixin::ClassMethods</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/neo4j/mixins/node_rb.html">
+                lib/neo4j/mixins/node.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <hr size="10"></hr><p>
+<a href="../NodeMixin.html">NodeMixin</a> class methods
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000153">all</a>&nbsp;&nbsp;
+      <a href="#M000156">create_value_class</a>&nbsp;&nbsp;
+      <a href="#M000155">find</a>&nbsp;&nbsp;
+      <a href="#M000143">fire_event</a>&nbsp;&nbsp;
+      <a href="#M000152">has_n</a>&nbsp;&nbsp;
+      <a href="#M000151">has_one</a>&nbsp;&nbsp;
+      <a href="#M000146">index</a>&nbsp;&nbsp;
+      <a href="#M000149">index_property</a>&nbsp;&nbsp;
+      <a href="#M000150">index_relation</a>&nbsp;&nbsp;
+      <a href="#M000140">index_triggers</a>&nbsp;&nbsp;
+      <a href="#M000139">index_updaters</a>&nbsp;&nbsp;
+      <a href="#M000138">lucene_index</a>&nbsp;&nbsp;
+      <a href="#M000154">new_relation</a>&nbsp;&nbsp;
+      <a href="#M000144">properties</a>&nbsp;&nbsp;
+      <a href="#M000142">properties_info</a>&nbsp;&nbsp;
+      <a href="#M000141">relations_info</a>&nbsp;&nbsp;
+      <a href="#M000147">remove_index</a>&nbsp;&nbsp;
+      <a href="#M000137">root_class</a>&nbsp;&nbsp;
+      <a href="#M000148">update_index</a>&nbsp;&nbsp;
+      <a href="#M000145">value_object</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000153" class="method-detail">
+        <a name="M000153"></a>
+
+        <div class="method-heading">
+          <a href="#M000153" class="method-signature">
+          <span class="method-name">all</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns node instances of this class.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000153-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000153-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 491</span>
+491:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">all</span>
+492:         <span class="ruby-identifier">ref</span> = <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">instance</span>.<span class="ruby-identifier">ref_node</span>
+493:         <span class="ruby-identifier">ref</span>.<span class="ruby-identifier">relations</span>.<span class="ruby-identifier">outgoing</span>(<span class="ruby-identifier">root_class</span>)
+494:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000156" class="method-detail">
+        <a name="M000156"></a>
+
+        <div class="method-heading">
+          <a href="#M000156" class="method-signature">
+          <span class="method-name">create_value_class</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a new value object class (a Struct) represeting this class.
+</p>
+<p>
+The struct will have the Ruby on Rails method: model_name and new_record?
+so that it can be used for restful routing.
+</p>
+<p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000156-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000156-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 527</span>
+527:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_value_class</span>
+528:         <span class="ruby-comment cmt"># the name of the class we want to create</span>
+529:         <span class="ruby-identifier">name</span> = <span class="ruby-node">&quot;#{self.to_s}ValueObject&quot;</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-value str">&quot;::&quot;</span>, <span class="ruby-value str">'_'</span>)
+530: 
+531:         <span class="ruby-comment cmt"># remove previous class if exists</span>
+532:         <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">instance_eval</span> <span class="ruby-keyword kw">do</span>
+533:           <span class="ruby-identifier">remove_const</span> <span class="ruby-identifier">name</span>
+534:         <span class="ruby-keyword kw">end</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">const_defined?</span>(<span class="ruby-identifier">name</span>)
+535: 
+536:         <span class="ruby-comment cmt"># get the properties we want in the new class</span>
+537:         <span class="ruby-identifier">props</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">properties_info</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span> <span class="ruby-node">&quot;:#{k}&quot;</span>}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>)
+538:         <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">module_eval</span> <span class="ruby-node">%Q[class #{name} &lt; Struct.new(#{props}); end]</span>
+539: 
+540:         <span class="ruby-comment cmt"># get reference to the new class</span>
+541:         <span class="ruby-identifier">clazz</span> = <span class="ruby-constant">Neo4j</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">name</span>)
+542: 
+543:         <span class="ruby-comment cmt"># make it more Ruby on Rails friendly - try adding model_name method</span>
+544:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:model_name</span>)
+545:           <span class="ruby-identifier">model</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">model_name</span>.<span class="ruby-identifier">clone</span>
+546:           (<span class="ruby-keyword kw">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">clazz</span>; <span class="ruby-keyword kw">self</span>; <span class="ruby-keyword kw">end</span>).<span class="ruby-identifier">instance_eval</span> <span class="ruby-keyword kw">do</span>
+547:             <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">:model_name</span>) {<span class="ruby-identifier">model</span>}
+548:           <span class="ruby-keyword kw">end</span>
+549:         <span class="ruby-keyword kw">end</span>
+550: 
+551:         <span class="ruby-comment cmt"># by calling the _update method we change the state of the struct</span>
+552:         <span class="ruby-comment cmt"># so that new_record returns false - Ruby on Rails</span>
+553:         <span class="ruby-identifier">clazz</span>.<span class="ruby-identifier">instance_eval</span> <span class="ruby-keyword kw">do</span>
+554:           <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">:_update</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hash</span><span class="ruby-operator">|</span>
+555:             <span class="ruby-ivar">@_updated</span> = <span class="ruby-keyword kw">true</span>
+556:             <span class="ruby-identifier">hash</span>.<span class="ruby-identifier">each_pair</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">key</span>,<span class="ruby-identifier">value</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_sym</span>] = <span class="ruby-identifier">value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">members</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>) }
+557:           <span class="ruby-keyword kw">end</span>
+558:           <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">:new_record?</span>) { <span class="ruby-operator">!</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-ivar">@_updated</span> }
+559:         <span class="ruby-keyword kw">end</span>
+560: 
+561:         <span class="ruby-identifier">clazz</span>
+562:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000155" class="method-detail">
+        <a name="M000155"></a>
+
+        <div class="method-heading">
+          <a href="#M000155" class="method-signature">
+          <span class="method-name">find</span><span class="method-args">(query=nil, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Finds <a href="ClassMethods.html#M000153">all</a> nodes of this type (and
+ancestors of this type) having the specified property values.
+</p>
+<h2>Example</h2>
+<pre>
+  MyNode.find(:name =&gt; 'foo', :company =&gt; 'bar')
+</pre>
+<p>
+Or using a DSL query
+</p>
+<pre>
+  MyNode.find{(name == 'foo') &amp; (company == 'bar')}
+</pre>
+<p>
+See the lucene module for more information how to do a query.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000155-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000155-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 516</span>
+516:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find</span>(<span class="ruby-identifier">query</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+517:         <span class="ruby-constant">SearchResult</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">lucene_index</span>, <span class="ruby-identifier">query</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>
+518:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000143" class="method-detail">
+        <a name="M000143"></a>
+
+        <div class="method-heading">
+          <a href="#M000143" class="method-signature">
+          <span class="method-name">fire_event</span><span class="method-args">(event)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000143-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000143-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 320</span>
+320:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fire_event</span>(<span class="ruby-identifier">event</span>)
+321:         <span class="ruby-identifier">index_triggers</span>.<span class="ruby-identifier">each_value</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">trigger</span><span class="ruby-operator">|</span> <span class="ruby-identifier">trigger</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">event</span>.<span class="ruby-identifier">node</span>, <span class="ruby-identifier">event</span>)}
+322:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000152" class="method-detail">
+        <a name="M000152"></a>
+
+        <div class="method-heading">
+          <a href="#M000152" class="method-signature">
+          <span class="method-name">has_n</span><span class="method-args">(rel_type)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Specifies a relationship between two node classes. Example
+</p>
+<pre>
+  class Order
+     has_n(:order_lines).to(Product).relation(OrderLine)
+  end
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000152-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000152-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 480</span>
+480:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_n</span>(<span class="ruby-identifier">rel_type</span>)
+481:         <span class="ruby-identifier">module_eval</span>(<span class="ruby-node">%Q{def #{rel_type}(&amp;block)
+482:                         Relations::HasNRelations.new(self,'#{rel_type.to_s}', &amp;block)
+483:                     end}</span>,  <span class="ruby-keyword kw">__FILE__</span>, <span class="ruby-keyword kw">__LINE__</span>)
+484:         <span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">rel_type</span>] = <span class="ruby-constant">Relations</span><span class="ruby-operator">::</span><span class="ruby-constant">RelationInfo</span>.<span class="ruby-identifier">new</span>
+485:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000151" class="method-detail">
+        <a name="M000151"></a>
+
+        <div class="method-heading">
+          <a href="#M000151" class="method-signature">
+          <span class="method-name">has_one</span><span class="method-args">(rel_type)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Specifies a relationship between two node classes. Example
+</p>
+<pre>
+  class Order
+     has_one(:customer).of_class(Customer)
+  end
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000151-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000151-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 457</span>
+457:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_one</span>(<span class="ruby-identifier">rel_type</span>)
+458: 
+459:         <span class="ruby-identifier">module_eval</span>(<span class="ruby-node">%Q{def #{rel_type}=(value)
+460:                         r = Relations::HasNRelations.new(self,'#{rel_type.to_s}')
+461:                         r &lt;&lt; value
+462:                     end}</span>,  <span class="ruby-keyword kw">__FILE__</span>, <span class="ruby-keyword kw">__LINE__</span>)
+463:         
+464:         <span class="ruby-identifier">module_eval</span>(<span class="ruby-node">%Q{def #{rel_type}
+465:                         r = Relations::HasNRelations.new(self,'#{rel_type.to_s}')
+466:                         r.to_a[0]
+467:                     end}</span>,  <span class="ruby-keyword kw">__FILE__</span>, <span class="ruby-keyword kw">__LINE__</span>)
+468:         <span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">rel_type</span>] = <span class="ruby-constant">Relations</span><span class="ruby-operator">::</span><span class="ruby-constant">RelationInfo</span>.<span class="ruby-identifier">new</span>
+469:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000146" class="method-detail">
+        <a name="M000146"></a>
+
+        <div class="method-heading">
+          <a href="#M000146" class="method-signature">
+          <span class="method-name">index</span><span class="method-args">(*rel_type_props)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Index a property a relationship. If the rel_prop arg contains a
+&#8217;.&#8217; then it will <a href="ClassMethods.html#M000146">index</a>
+the relationship. For example &quot;friends.name&quot; will <a
+href="ClassMethods.html#M000146">index</a> each node with property name in
+the relationship friends. For example &quot;name&quot; will <a
+href="ClassMethods.html#M000146">index</a> the name property of this <a
+href="../NodeMixin.html">NodeMixin</a> class.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000146-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000146-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 367</span>
+367:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">rel_type_props</span>)
+368:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rel_type_props</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">rel_type_props</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Hash</span>)
+369:           <span class="ruby-identifier">rel_type_props</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>,<span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+370:             <span class="ruby-identifier">idx</span> = <span class="ruby-identifier">rel_type_props</span>[<span class="ruby-value">0</span>]
+371:             <span class="ruby-identifier">lucene_index</span>.<span class="ruby-identifier">field_infos</span>[<span class="ruby-identifier">idx</span>.<span class="ruby-identifier">to_sym</span>][<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
+372:           <span class="ruby-keyword kw">end</span>
+373:           <span class="ruby-identifier">rel_type_props</span> = <span class="ruby-identifier">rel_type_props</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>]
+374:         <span class="ruby-keyword kw">end</span>
+375:         <span class="ruby-identifier">rel_type_props</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rel_type_prop</span><span class="ruby-operator">|</span>
+376:           <span class="ruby-identifier">rel_type</span>, <span class="ruby-identifier">prop</span> = <span class="ruby-identifier">rel_type_prop</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">'.'</span>)
+377:           <span class="ruby-identifier">index_property</span>(<span class="ruby-identifier">rel_type</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">prop</span>.<span class="ruby-identifier">nil?</span>
+378:           <span class="ruby-identifier">index_relation</span>(<span class="ruby-identifier">rel_type_prop</span>, <span class="ruby-identifier">rel_type</span>, <span class="ruby-identifier">prop</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">prop</span>.<span class="ruby-identifier">nil?</span>
+379:         <span class="ruby-keyword kw">end</span>
+380:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000149" class="method-detail">
+        <a name="M000149"></a>
+
+        <div class="method-heading">
+          <a href="#M000149" class="method-signature">
+          <span class="method-name">index_property</span><span class="method-args">(prop)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000149-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000149-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 407</span>
+407:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index_property</span>(<span class="ruby-identifier">prop</span>)
+408:         <span class="ruby-identifier">updater</span> = <span class="ruby-identifier">lambda</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">node</span>, <span class="ruby-identifier">doc</span><span class="ruby-operator">|</span>
+409:           <span class="ruby-identifier">doc</span>[<span class="ruby-identifier">prop</span>] = <span class="ruby-identifier">node</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">prop</span>)
+410:         <span class="ruby-keyword kw">end</span>
+411:         <span class="ruby-identifier">index_updaters</span>[<span class="ruby-identifier">prop</span>] = <span class="ruby-identifier">updater</span>
+412:         
+413:         <span class="ruby-identifier">trigger</span> = <span class="ruby-identifier">lambda</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">node</span>, <span class="ruby-identifier">event</span><span class="ruby-operator">|</span>
+414:           <span class="ruby-identifier">node</span>.<span class="ruby-identifier">reindex</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">PropertyChangedEvent</span>.<span class="ruby-identifier">trigger?</span>(<span class="ruby-identifier">event</span>, <span class="ruby-identifier">:property</span>, <span class="ruby-identifier">prop</span>)
+415:         <span class="ruby-keyword kw">end</span>
+416:         <span class="ruby-identifier">index_triggers</span>[<span class="ruby-identifier">prop</span>] = <span class="ruby-identifier">trigger</span>
+417:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000150" class="method-detail">
+        <a name="M000150"></a>
+
+        <div class="method-heading">
+          <a href="#M000150" class="method-signature">
+          <span class="method-name">index_relation</span><span class="method-args">(index_key, rel_type, prop)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000150-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000150-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 422</span>
+422:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index_relation</span>(<span class="ruby-identifier">index_key</span>, <span class="ruby-identifier">rel_type</span>, <span class="ruby-identifier">prop</span>)
+423:         <span class="ruby-identifier">clazz</span> = <span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">rel_type</span>.<span class="ruby-identifier">to_sym</span>][<span class="ruby-identifier">:class</span>]
+424:         
+425:         <span class="ruby-identifier">type</span> = <span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">rel_type</span>.<span class="ruby-identifier">to_sym</span>][<span class="ruby-identifier">:type</span>]  <span class="ruby-comment cmt"># this or the other node we index ?</span>
+426:         <span class="ruby-identifier">rel_type</span> = <span class="ruby-identifier">type</span>.<span class="ruby-identifier">to_sym</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">type</span>.<span class="ruby-identifier">nil?</span>
+427:         
+428:         <span class="ruby-comment cmt"># updater - called when index needs to be updated</span>
+429:         <span class="ruby-identifier">updater</span> = <span class="ruby-identifier">lambda</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">my_node</span>, <span class="ruby-identifier">doc</span><span class="ruby-operator">|</span>
+430:           <span class="ruby-identifier">values</span> = []
+431:           <span class="ruby-identifier">relations</span> = <span class="ruby-identifier">my_node</span>.<span class="ruby-identifier">relations</span>.<span class="ruby-identifier">both</span>(<span class="ruby-identifier">rel_type</span>).<span class="ruby-identifier">nodes</span>
+432:           <span class="ruby-identifier">relations</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">other_node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">values</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">other_node</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">prop</span>)}
+433:           <span class="ruby-identifier">doc</span>[<span class="ruby-identifier">index_key</span>] = <span class="ruby-identifier">values</span>
+434:         <span class="ruby-keyword kw">end</span>
+435:         <span class="ruby-identifier">index_updaters</span>[<span class="ruby-identifier">index_key</span>] = <span class="ruby-identifier">updater</span>
+436:       
+437:         <span class="ruby-comment cmt"># trigger - knows if an index needs to be updated</span>
+438:         <span class="ruby-identifier">trigger</span> = <span class="ruby-identifier">lambda</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">other_node</span>, <span class="ruby-identifier">event</span><span class="ruby-operator">|</span>
+439:           <span class="ruby-keyword kw">if</span> (<span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">PropertyChangedEvent</span>.<span class="ruby-identifier">trigger?</span>(<span class="ruby-identifier">event</span>, <span class="ruby-identifier">:property</span>, <span class="ruby-identifier">prop</span>) <span class="ruby-keyword kw">or</span>
+440:                 <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">RelationshipEvent</span>.<span class="ruby-identifier">trigger?</span>(<span class="ruby-identifier">event</span>) <span class="ruby-keyword kw">or</span>
+441:                 <span class="ruby-constant">Neo4j</span><span class="ruby-operator">::</span><span class="ruby-constant">NodeLifecycleEvent</span>.<span class="ruby-identifier">trigger?</span>(<span class="ruby-identifier">event</span>))
+442:             <span class="ruby-identifier">relations</span> = <span class="ruby-identifier">other_node</span>.<span class="ruby-identifier">relations</span>.<span class="ruby-identifier">both</span>(<span class="ruby-identifier">rel_type</span>).<span class="ruby-identifier">nodes</span>
+443:             <span class="ruby-identifier">relations</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">:reindex</span>)}
+444:           <span class="ruby-keyword kw">end</span>
+445:         <span class="ruby-keyword kw">end</span>
+446:         <span class="ruby-identifier">clazz</span>.<span class="ruby-identifier">index_triggers</span>[<span class="ruby-identifier">index_key</span>] = <span class="ruby-identifier">trigger</span>
+447:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000140" class="method-detail">
+        <a name="M000140"></a>
+
+        <div class="method-heading">
+          <a href="#M000140" class="method-signature">
+          <span class="method-name">index_triggers</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000140-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000140-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 299</span>
+299:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index_triggers</span>
+300:         <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">INDEX_TRIGGERS</span>
+301:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000139" class="method-detail">
+        <a name="M000139"></a>
+
+        <div class="method-heading">
+          <a href="#M000139" class="method-signature">
+          <span class="method-name">index_updaters</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000139-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000139-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 293</span>
+293:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index_updaters</span>
+294:         <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">INDEX_UPDATERS</span>
+295:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000138" class="method-detail">
+        <a name="M000138"></a>
+
+        <div class="method-heading">
+          <a href="#M000138" class="method-signature">
+          <span class="method-name">lucene_index</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000138-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000138-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 287</span>
+287:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">lucene_index</span>
+288:         <span class="ruby-constant">Lucene</span><span class="ruby-operator">::</span><span class="ruby-constant">Index</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">LUCENE_INDEX_PATH</span>)
+289:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000154" class="method-detail">
+        <a name="M000154"></a>
+
+        <div class="method-heading">
+          <a href="#M000154" class="method-signature">
+          <span class="method-name">new_relation</span><span class="method-args">(rel_name, internal_relation)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a new relation. The relation must be outgoing. @api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000154-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000154-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 498</span>
+498:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new_relation</span>(<span class="ruby-identifier">rel_name</span>, <span class="ruby-identifier">internal_relation</span>)
+499:         <span class="ruby-identifier">relations_info</span>[<span class="ruby-identifier">rel_name</span>.<span class="ruby-identifier">to_sym</span>][<span class="ruby-identifier">:relation</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">internal_relation</span>) <span class="ruby-comment cmt"># internal_relation is a java neo object</span>
+500:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000144" class="method-detail">
+        <a name="M000144"></a>
+
+        <div class="method-heading">
+          <a href="#M000144" class="method-signature">
+          <span class="method-name">properties</span><span class="method-args">(*props)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Declares <a href="../../Neo4j.html">Neo4j</a> node <a
+href="ClassMethods.html#M000144">properties</a>. You need to declare <a
+href="ClassMethods.html#M000144">properties</a> in order to set them unless
+you include the <a
+href="../DynamicAccessorMixin.html">Neo4j::DynamicAccessorMixin</a> mixin.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000144-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000144-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 331</span>
+331:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">properties</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">props</span>)
+332:         <span class="ruby-identifier">props</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">prop</span><span class="ruby-operator">|</span>
+333:           <span class="ruby-identifier">properties_info</span>[<span class="ruby-identifier">prop</span>.<span class="ruby-identifier">to_sym</span>] = <span class="ruby-keyword kw">true</span>
+334:           <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">prop</span>) <span class="ruby-keyword kw">do</span> 
+335:             <span class="ruby-identifier">get_property</span>(<span class="ruby-identifier">prop</span>.<span class="ruby-identifier">to_s</span>)
+336:           <span class="ruby-keyword kw">end</span>
+337: 
+338:           <span class="ruby-identifier">name</span> = (<span class="ruby-identifier">prop</span>.<span class="ruby-identifier">to_s</span>() <span class="ruby-operator">+</span><span class="ruby-value str">&quot;=&quot;</span>)
+339:           <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">name</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+340:             <span class="ruby-identifier">set_property</span>(<span class="ruby-identifier">prop</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">value</span>)
+341:           <span class="ruby-keyword kw">end</span>
+342:         <span class="ruby-keyword kw">end</span>
+343:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000142" class="method-detail">
+        <a name="M000142"></a>
+
+        <div class="method-heading">
+          <a href="#M000142" class="method-signature">
+          <span class="method-name">properties_info</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000142-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000142-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 311</span>
+311:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">properties_info</span>
+312:         <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">PROPERTIES_INFO</span>
+313:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000141" class="method-detail">
+        <a name="M000141"></a>
+
+        <div class="method-heading">
+          <a href="#M000141" class="method-signature">
+          <span class="method-name">relations_info</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Contains information of <a href="ClassMethods.html#M000153">all</a>
+relationships, name, type, and multiplicity
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000141-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000141-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 307</span>
+307:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">relations_info</span>
+308:         <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">RELATIONS_INFO</span>
+309:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000147" class="method-detail">
+        <a name="M000147"></a>
+
+        <div class="method-heading">
+          <a href="#M000147" class="method-signature">
+          <span class="method-name">remove_index</span><span class="method-args">(*keys)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Remote one or more specified indexes. This indexes will not be updated
+anymore, old indexes will still exist until the <a
+href="ClassMethods.html#M000148">update_index</a> method is called.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000147-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000147-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 387</span>
+387:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remove_index</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">keys</span>)
+388:         <span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+389:           <span class="ruby-identifier">index_updaters</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>
+390:           <span class="ruby-identifier">index_triggers</span>.<span class="ruby-identifier">delete</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>
+391:         <span class="ruby-keyword kw">end</span>
+392:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000137" class="method-detail">
+        <a name="M000137"></a>
+
+        <div class="method-heading">
+          <a href="#M000137" class="method-signature">
+          <span class="method-name">root_class</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+@api private
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000137-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000137-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 281</span>
+281:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">root_class</span>
+282:         <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">ROOT_CLASS</span>
+283:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000148" class="method-detail">
+        <a name="M000148"></a>
+
+        <div class="method-heading">
+          <a href="#M000148" class="method-signature">
+          <span class="method-name">update_index</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Traverse <a href="ClassMethods.html#M000153">all</a> nodes and update the
+lucene <a href="ClassMethods.html#M000146">index</a>. Can be used for
+example if it is neccessarly to change the <a
+href="ClassMethods.html#M000146">index</a> on a class
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000148-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000148-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 399</span>
+399:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update_index</span>
+400:         <span class="ruby-identifier">all</span>.<span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+401:           <span class="ruby-identifier">n</span>.<span class="ruby-identifier">reindex!</span>
+402:         <span class="ruby-keyword kw">end</span>
+403:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000145" class="method-detail">
+        <a name="M000145"></a>
+
+        <div class="method-heading">
+          <a href="#M000145" class="method-signature">
+          <span class="method-name">value_object</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a struct class containig <a
+href="ClassMethods.html#M000153">all</a> <a
+href="ClassMethods.html#M000144">properties</a> of this class.
+</p>
+<h4>Example</h4>
+<p>
+h = Person.value_object.new h.name # =&gt; nil h.name=&#8217;kalle&#8217;
+h[:name] # =&gt; &#8216;kalle&#8216;
+</p>
+<h4>Returns</h4>
+<p>
+a struct
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000145-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000145-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/neo4j/mixins/node.rb, line 357</span>
+357:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">value_object</span>
+358:         <span class="ruby-ivar">@value_class</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">create_value_class</span>
+359:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

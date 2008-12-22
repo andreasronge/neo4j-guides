@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Neo4j::RelationshipEvent</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Neo4j_RelationshipEvent">
+  <h1 class="title">Class: Neo4j::RelationshipEvent</h1>
+  <div class="section inheritance">
+  <ul>
+  <li><a href='Event.html' title='Neo4j::Event'>Neo4j::Event</a></li><ul><li>Neo4j::RelationshipEvent</li>
+  </ul></ul>
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        <tr>
+          <th class="name">relation_id</td>
+          <td class="readwrite">
+            [<span id='relation_id-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>relation_id</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+        <tr>
+          <th class="name">relation_name</td>
+          <td class="readwrite">
+            [<span id='relation_name-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>relation_name</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+        <tr>
+          <th class="name">to_node</td>
+          <td class="readwrite">
+            [<span id='to_node-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>to_node</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'>(from_node, to_node, relation_name, relation_id)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+43
+44
+45
+46
+47
+48</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/events.rb', line 43</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='from_node identifier id'>from_node</span><span class='comma token'>,</span> <span class='to_node identifier id'>to_node</span><span class='comma token'>,</span> <span class='relation_name identifier id'>relation_name</span><span class='comma token'>,</span> <span class='relation_id identifier id'>relation_id</span><span class='rparen token'>)</span>
+  <span class='@to_node ivar id'>@to_node</span> <span class='assign token'>=</span> <span class='to_node identifier id'>to_node</span>
+  <span class='@relation_name ivar id'>@relation_name</span> <span class='assign token'>=</span> <span class='relation_name identifier id'>relation_name</span>
+  <span class='@relation_id ivar id'>@relation_id</span> <span class='assign token'>=</span> <span class='relation_id identifier id'>relation_id</span>
+  <span class='super super kw'>super</span> <span class='from_node identifier id'>from_node</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <div class="inherited">
+  
+  <div>
+    <h1>Public Class Methods Inherited from <a href='Event.html' title='Neo4j::Event'>Neo4j::Event</a></h1>
+    <p><span class='name'><a href='Event.html#trigger%3F-class_method' title='trigger?'>trigger?</a></span></p>
+  </div>
+  
+</div>
+<div class="clear"></div>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#to_s-instance_method' title='#to_s'>#to_s</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_s</h3>
+</div><div id="to_s-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>to_s</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+50
+51
+52</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/events.rb', line 50</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='super super kw'>super</span> <span class='plus op'>+</span> <span class='dstring node'>&quot; relation_name: #{@relation_name} id: #{@relation_id} to_node:#{@to_node}&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

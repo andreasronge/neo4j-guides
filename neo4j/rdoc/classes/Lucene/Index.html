@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Lucene::Index</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Lucene::Index</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/lucene/index_rb.html">
+                lib/lucene/index.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Represents a <a href="../Lucene.html">Lucene</a> <a
+href="Index.html">Index</a>. The index is written/updated only when the <a
+href="Index.html#M000058">commit</a> method is called. This is done since
+writing to the index file should be done as a batch operation. (Performace
+will be bad otherwise).
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000052">&lt;&lt;</a>&nbsp;&nbsp;
+      <a href="#M000050">clear</a>&nbsp;&nbsp;
+      <a href="#M000051">clear</a>&nbsp;&nbsp;
+      <a href="#M000058">commit</a>&nbsp;&nbsp;
+      <a href="#M000055">delete</a>&nbsp;&nbsp;
+      <a href="#M000056">deleted?</a>&nbsp;&nbsp;
+      <a href="#M000048">field_infos</a>&nbsp;&nbsp;
+      <a href="#M000059">find</a>&nbsp;&nbsp;
+      <a href="#M000053">id_field</a>&nbsp;&nbsp;
+      <a href="#M000047">new</a>&nbsp;&nbsp;
+      <a href="#M000049">new</a>&nbsp;&nbsp;
+      <a href="#M000060">to_s</a>&nbsp;&nbsp;
+      <a href="#M000054">update</a>&nbsp;&nbsp;
+      <a href="#M000057">updated?</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">path</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">uncommited</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
+
+        <div class="method-heading">
+          <a href="#M000051" class="method-signature">
+          <span class="method-name">clear</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+See instance method <a href="Index.html#M000050">Index.clear</a>
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000051-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000051-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 98</span>
+ 98:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">clear</span>(<span class="ruby-identifier">path</span>)
+ 99:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">running?</span>
+100:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">index?</span>(<span class="ruby-identifier">path</span>)
+101:       <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">clear</span>
+102:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <a href="#M000047" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(path, index_info)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000047-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000047-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 31</span>
+31:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">index_info</span>)
+32:       <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">path</span> <span class="ruby-comment cmt"># a key (i.e. filepath) where the index is stored on disk/or RAM              </span>
+33:       <span class="ruby-ivar">@index_info</span> = <span class="ruby-identifier">index_info</span> <span class="ruby-comment cmt"># the actual storage of the index</span>
+34:       <span class="ruby-ivar">@uncommited</span> = {}  <span class="ruby-comment cmt"># documents to be commited, a hash of Document</span>
+35:       <span class="ruby-ivar">@deleted_ids</span> = [] <span class="ruby-comment cmt"># documents to be deleted</span>
+36:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
+
+        <div class="method-heading">
+          <a href="#M000049" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns an <a href="Index.html">Index</a> instance for the current running
+transaction.
+</p>
+<p>
+Tries to reuse an <a href="Index.html">Index</a> instance for the current
+running transaction. If a <a
+href="Transaction.html">Lucene::Transaction</a> is running it will register
+this index in that transaction if this has not already been done. When it
+has been registered in the transaction the transaction will <a
+href="Index.html#M000058">commit</a> the index when the transaction is
+finished. The configuration (kept in the <a
+href="Index.html#M000048">field_infos</a>) for this index will be the same
+for all indexes with the same path/key.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">path&lt;String&gt;:</td><td>The key or location where the index should be stored (relative <a
+href="Config.html">Lucene::Config</a>[:storage_path]
+
+</td></tr>
+</table>
+<h4>Examples</h4>
+<p>
+<a href="Index.html#M000047">Index.new</a> &#8216;foo/lucene-db&#8216;
+</p>
+<h4>Returns</h4>
+<p>
+Returns a <a href="Index.html#M000047">new</a> or an already existing <a
+href="Index.html">Index</a>
+</p>
+<p>
+:api: public
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000049-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000049-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 62</span>
+62:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span>)
+63:       <span class="ruby-comment cmt"># make sure no one modifies the index specified at given path</span>
+64:       <span class="ruby-identifier">lock</span>(<span class="ruby-identifier">path</span>).<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+65:         <span class="ruby-comment cmt"># create a new transaction if needed      </span>
+66:         <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">running?</span>
+67: 
+68:         <span class="ruby-comment cmt"># create a new instance only if it does not already exist in the current transaction</span>
+69:         <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">index?</span>(<span class="ruby-identifier">path</span>)
+70:           <span class="ruby-identifier">$LUCENE_LOGGER</span>.<span class="ruby-identifier">debug</span>{<span class="ruby-node">&quot;Index#new #{path} not in current transaction =&gt; new index&quot;</span>}
+71:           <span class="ruby-identifier">info</span> = <span class="ruby-constant">IndexInfo</span>.<span class="ruby-identifier">instance</span>(<span class="ruby-identifier">path</span>)
+72:           <span class="ruby-identifier">index</span> = <span class="ruby-keyword kw">super</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">info</span>)
+73:           <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">register_index</span>(<span class="ruby-identifier">path</span>, <span class="ruby-identifier">index</span>) 
+74:         <span class="ruby-keyword kw">end</span>
+75: 
+76:         <span class="ruby-identifier">$LUCENE_LOGGER</span>.<span class="ruby-identifier">debug</span>{<span class="ruby-node">&quot;Index#new '#{path}' #{Transaction.current.index(path)}&quot;</span>}
+77:         <span class="ruby-comment cmt"># return the index for the current transaction</span>
+78:         <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">path</span>)
+79:       <span class="ruby-keyword kw">end</span>
+80:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <a href="#M000052" class="method-signature">
+          <span class="method-name">&lt;&lt;</span><span class="method-args">(key_values)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Creates a <a href="Index.html#M000047">new</a> document from the given hash
+of values. This document will be stored in this instance till it is
+commited.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">path&lt;String&gt;:</td><td>The key or location where the index should be stored (relative <a
+href="Config.html">Lucene::Config</a>[:storage_path]
+
+</td></tr>
+</table>
+<h4>Examples</h4>
+<p>
+index = <a
+href="Index.html#M000047">Index.new</a>(&#8216;name_or_path_to_index&#8217;)
+index &lt;&lt; {:id=&gt;&#8217;1&#8217;, :name=&gt;&#8217;foo&#8217;}
+</p>
+<h4>Returns</h4>
+<p>
+Returns the index instance so that this method can be chained
+</p>
+<p>
+:api: public
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000052-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000052-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 118</span>
+118:     <span class="ruby-keyword kw">def</span> <span class="ruby-operator">&lt;&lt;</span>(<span class="ruby-identifier">key_values</span>)
+119:       <span class="ruby-identifier">doc</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">field_infos</span>, <span class="ruby-identifier">key_values</span>)
+120:       <span class="ruby-identifier">lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+121:         <span class="ruby-ivar">@uncommited</span>[<span class="ruby-identifier">doc</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-identifier">doc</span>
+122:       <span class="ruby-keyword kw">end</span>
+123:       <span class="ruby-keyword kw">self</span>
+124:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
+
+        <div class="method-heading">
+          <a href="#M000050" class="method-signature">
+          <span class="method-name">clear</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Delete all uncommited documents. Also deregister this index from the
+current transaction (if there is one transaction)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000050-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000050-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 88</span>
+88:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear</span>
+89:       <span class="ruby-identifier">lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+90:         <span class="ruby-ivar">@uncommited</span>.<span class="ruby-identifier">clear</span>
+91:       <span class="ruby-keyword kw">end</span>
+92:       <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">deregister_index</span> <span class="ruby-keyword kw">self</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">running?</span>
+93:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
+
+        <div class="method-heading">
+          <a href="#M000058" class="method-signature">
+          <span class="method-name">commit</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Writes to the index files Open and closes an lucene IndexWriter Close the
+<a href="IndexSearcher.html">IndexSearcher</a> so that it will read the
+updated index next time. This method will automatically be called from a <a
+href="Transaction.html">Lucene::Transaction</a> if it was running when the
+index was created.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000058-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 168</span>
+168:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">commit</span>
+169:       <span class="ruby-comment cmt"># TODO not enough to block threads here, since the @uncommited and @deleted_ids may change</span>
+170:       <span class="ruby-comment cmt"># Need to synchronize </span>
+171:       <span class="ruby-identifier">lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+172:         <span class="ruby-identifier">$LUCENE_LOGGER</span>.<span class="ruby-identifier">debug</span> <span class="ruby-value str">&quot;  BEGIN: COMMIT&quot;</span>
+173:         <span class="ruby-identifier">delete_documents</span> <span class="ruby-comment cmt"># deletes all docuements given @deleted_ids</span>
+174:       
+175:         <span class="ruby-comment cmt"># are any updated document deleted ?</span>
+176:         <span class="ruby-identifier">deleted_ids</span> = <span class="ruby-ivar">@uncommited</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">&amp;</span> <span class="ruby-ivar">@deleted_ids</span>
+177:         <span class="ruby-comment cmt"># delete them those</span>
+178:         <span class="ruby-identifier">deleted_ids</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@uncommited</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">id</span>)}
+179:       
+180:         <span class="ruby-comment cmt"># update the remaining documents that has not been deleted</span>
+181:         <span class="ruby-identifier">update_documents</span> <span class="ruby-comment cmt"># update @documents</span>
+182:         
+183:         <span class="ruby-ivar">@uncommited</span>.<span class="ruby-identifier">clear</span>  <span class="ruby-comment cmt"># TODO: should we do this in an ensure block ?</span>
+184:         <span class="ruby-ivar">@deleted_ids</span>.<span class="ruby-identifier">clear</span>
+185:         
+186:         <span class="ruby-comment cmt"># if we are running in a transaction remove this so it will not be commited twice</span>
+187:         <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">current</span>.<span class="ruby-identifier">deregister_index</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Transaction</span>.<span class="ruby-identifier">running?</span>
+188:         <span class="ruby-identifier">$LUCENE_LOGGER</span>.<span class="ruby-identifier">debug</span> <span class="ruby-value str">&quot;  END: COMMIT&quot;</span>        
+189:       <span class="ruby-keyword kw">end</span>
+190:     <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">ex</span>
+191:       <span class="ruby-identifier">$LUCENE_LOGGER</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">ex</span>)
+192:       <span class="ruby-comment cmt">#      ex.backtrace.each{|x| $LUCENE_LOGGER.error(x)}</span>
+193:       <span class="ruby-identifier">raise</span> <span class="ruby-identifier">ex</span>
+194:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
+
+        <div class="method-heading">
+          <a href="#M000055" class="method-signature">
+          <span class="method-name">delete</span><span class="method-args">(id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Delete the specified document. The index file not be updated until the
+transaction commits. The id of the deleted document is stored in memory
+till the transaction commits.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000055-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000055-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 146</span>
+146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete</span>(<span class="ruby-identifier">id</span>)
+147:       <span class="ruby-identifier">lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+148:         <span class="ruby-ivar">@deleted_ids</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>
+149:       <span class="ruby-keyword kw">end</span>
+150:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
+
+        <div class="method-heading">
+          <a href="#M000056" class="method-signature">
+          <span class="method-name">deleted?</span><span class="method-args">(id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000056-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 153</span>
+153:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">deleted?</span>(<span class="ruby-identifier">id</span>)
+154:       <span class="ruby-ivar">@deleted_ids</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>)
+155:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
+
+        <div class="method-heading">
+          <a href="#M000048" class="method-signature">
+          <span class="method-name">field_infos</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000048-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000048-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 38</span>
+38:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">field_infos</span>
+39:       <span class="ruby-constant">IndexInfo</span>.<span class="ruby-identifier">instance</span>(<span class="ruby-ivar">@path</span>)
+40:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
+
+        <div class="method-heading">
+          <a href="#M000059" class="method-signature">
+          <span class="method-name">find</span><span class="method-args">(*query, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Delegetes to the <a
+href="IndexSearcher.html#M000042">IndexSearcher.find</a> method
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000059-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 200</span>
+200:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">query</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+201:       <span class="ruby-comment cmt"># new method is a factory method, does not create if it already exists</span>
+202:       <span class="ruby-identifier">searcher</span> = <span class="ruby-constant">IndexSearcher</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@index_info</span>.<span class="ruby-identifier">storage</span>)
+203:       
+204:       <span class="ruby-comment cmt"># check sorting parameters</span>
+205:       <span class="ruby-identifier">query</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:sort_by</span>
+206:       <span class="ruby-identifier">query</span>.<span class="ruby-identifier">find</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:sort_by</span>}
+207:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">nil?</span>
+208:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">query</span>.<span class="ruby-identifier">first</span>
+209:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>
+210:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">searcher</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@index_info</span>, <span class="ruby-identifier">query</span>)           
+211:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Hash</span>
+212:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">searcher</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@index_info</span>, <span class="ruby-identifier">query</span>.<span class="ruby-identifier">first</span>) 
+213:         <span class="ruby-keyword kw">end</span>
+214:       <span class="ruby-keyword kw">else</span>
+215:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">searcher</span>.<span class="ruby-identifier">find_dsl</span>(<span class="ruby-ivar">@index_info</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) 
+216:       <span class="ruby-keyword kw">end</span>
+217:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <a href="#M000053" class="method-signature">
+          <span class="method-name">id_field</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000053-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000053-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 126</span>
+126:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">id_field</span>
+127:       <span class="ruby-ivar">@index_info</span>.<span class="ruby-identifier">id_field</span>
+128:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
+
+        <div class="method-heading">
+          <a href="#M000060" class="method-signature">
+          <span class="method-name">to_s</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000060-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 220</span>
+220:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+221:       <span class="ruby-node">&quot;Index [path: '#@path', #{@uncommited.size} documents]&quot;</span>
+222:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
+
+        <div class="method-heading">
+          <a href="#M000054" class="method-signature">
+          <span class="method-name">update</span><span class="method-args">(doc)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Updates the specified document. The index file will not be updated until
+the transaction commits. The doc is stored in memory till the transaction
+commits.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000054-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000054-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 135</span>
+135:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">doc</span>)
+136:       <span class="ruby-identifier">lock</span>.<span class="ruby-identifier">synchronize</span> <span class="ruby-keyword kw">do</span>
+137:         <span class="ruby-ivar">@uncommited</span>[<span class="ruby-identifier">doc</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-identifier">doc</span>
+138:       <span class="ruby-keyword kw">end</span>
+139:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
+
+        <div class="method-heading">
+          <a href="#M000057" class="method-signature">
+          <span class="method-name">updated?</span><span class="method-args">(id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000057-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/lucene/index.rb, line 157</span>
+157:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">updated?</span>(<span class="ruby-identifier">id</span>)
+158:       <span class="ruby-ivar">@uncommited</span>[<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>]
+159:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

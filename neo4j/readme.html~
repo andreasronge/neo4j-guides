@@ -1,0 +1,1472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <title>README</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section docstring readme">
+        <h1>Neo4j.rb</h1>
+<p>
+Neo4j.rb is a graph database framework for JRuby.
+</p>
+<p>
+It provides:
+</p>
+<ul>
+<li>Mapping of ruby objects to nodes in networks rather than in tables.
+
+</li>
+<li>Storage of ruby object to a file system.
+
+</li>
+<li>Fast traversal of relationships between nodes in a hugh node space.
+
+</li>
+<li>Transaction with rollbacks support.
+
+</li>
+<li>Indexing and querying of ruby objects.
+
+</li>
+<li>Can be used instead of ActiveRecord in Ruby on Rails or Merb
+
+</li>
+</ul>
+<p>
+It uses two powerful and mature java libraries:
+</p>
+<ul>
+<li>Neo4J (<a href='http://www.neo4j.org/'>http://www.neo4j.org/</a>) - for persistance and traversal of the graph
+
+</li>
+<li>Lucene (<a href='http://lucene.apache.org/java/docs/index.html'>http://lucene.apache.org/java/docs/index.html</a>) for quering and
+indexing.
+
+</li>
+</ul>
+<h3>Status</h3>
+<ul>
+<li>There are over 200 RSpecs.
+
+</li>
+<li>Has been tested with a simple rails application, used Neo4j.rb instead of
+ActiveRecord
+
+</li>
+<li>Has been load tested (loaded 18000 nodes and done queries/travesal in
+several threads.)
+
+</li>
+<li>Has not been used in production yet (as far as I know).
+
+</li>
+</ul>
+<h3>Project information</h3>
+<ul>
+<li>GitHub - <a href="http://github.com/andreasronge/neo4j/tree/master">http://github.com/andreasronge/neo4j/tree/master</a>
+
+</li>
+<li>Issue Tracking - <a href="http://neo4j.lighthouseapp.com">http://neo4j.lighthouseapp.com</a>
+
+</li>
+<li>Twitter - <a href="http://twitter.com/ronge">http://twitter.com/ronge</a>
+
+</li>
+<li>API Yard Documentation - <a href="http://neo4j.rubyforge.org/">http://neo4j.rubyforge.org/</a>
+
+</li>
+<li>Source repo - git://github.com/andreasronge/neo4j.git
+
+</li>
+</ul>
+<h3>Copyright</h3>
+<p>
+Neo4j.rb was created in 2008 by Andreas Ronge (andreas -DOT- ronge -AT-
+gmail -DOT- com) and is licensed under the MIT license. Please see the
+LICENSE for more information.
+</p>
+<h3>Content</h3>
+<p>
+This page contains the following information:
+</p>
+<ul>
+<li><a href="#ch0">Installation guide</a>
+
+</li>
+<li><a href="#ch1">Ten Minute Tutorial</a>
+
+</li>
+<li><a href="#ch2">Lucene API Documentation</a>
+
+</li>
+<li><a href="#ch3">Neo4j API Documentation</a>
+
+</li>
+<li><a href="#ch4">Ruby on Rails with Neo4j.rb</a>
+
+</li>
+</ul>
+<h2><a name="ch0">Installation<a></h2>
+<p>
+To install it:
+</p>
+<pre class="code">
+   <span class='gem identifier id'>gem</span> <span class='install identifier id'>install</span> <span class='neo4j identifier id'>neo4j</span>
+</pre>
+<p>
+To install from the latest source:
+</p>
+<pre class="code">
+  <span class='git identifier id'>git</span> <span class='clone identifier id'>clone</span> <span class='git identifier id'>git</span><span class='symbol val'>:/</span><span class='regexp val'>/github.com/</span><span class='andreasronge identifier id'>andreasronge</span><span class='div op'>/</span><span class='neo4j identifier id'>neo4j</span><span class='dot token'>.</span><span class='git identifier id'>git</span>
+  <span class='cd identifier id'>cd</span> <span class='neo4j identifier id'>neo4j</span>
+  <span class='rake identifier id'>rake</span> <span class='gem identifier id'>gem</span><span class='symbol val'>:install</span>
+</pre>
+<p>
+JRuby version 1.1.4 does not work with Neo4j.rb because of a JRuby bug.
+This bug is fixed in JRuby 1.1.5.
+</p>
+<h2><a name="ch1">Ten Minute Tutorial</a></h2>
+<h3>Creating a model</h3>
+<pre class="code">
+  <span class='require identifier id'>require</span> <span class='string val'>&quot;rubygems&quot;</span>
+  <span class='require identifier id'>require</span> <span class='string val'>&quot;neo4j&quot;</span>
+
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+
+    <span class='comment val'># define Neo4j properties</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:salary</span><span class='dot token'>.</span>
+
+    <span class='comment val'># define an one way relationship to any other Person node</span>
+    <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:friends</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to identifier id'>to</span><span class='lparen token'>(</span><span class='Person constant id'>Person</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># adds a lucene index on the following properties</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:salary</span>
+    <span class='index identifier id'>index</span> <span class='string val'>'friends.age'</span> <span class='comment val'># index each friend age as well</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+The example above specifies how to map a Neo node to a ruby Person
+instance. Neo properties and relationships are declared using the
+&#8216;property&#8217; and &#8216;has_n&#8217;/&#8217;has_one&#8217;
+NodeMixin class method. In the example above a lucene index will be updated
+when the name or salary property changes. The salary of all friends are
+also indexed which means we can query for people who has friends with a
+certain salary.
+</p>
+<h3>Creating a node</h3>
+<p>
+Creating a Person node instance
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+</pre>
+<h3>Setting properties</h3>
+<p>
+Setting a property:
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'kalle'</span>
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='salary identifier id'>salary</span>  <span class='assign token'>=</span> <span class='integer val'>10000</span>
+</pre>
+<p>
+If a transaction is not specified then the operation will automatically be
+wrapped in a transaction. Neo4j does handle primitive properties of type
+like String, Fixnum, Float.
+</p>
+<h3>Queries</h3>
+<p>
+There are different ways to write queries. Using a hash:
+</p>
+<pre class="code">
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='comma token'>,</span> <span class='symbol val'>:age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='float val'>20</span><span class='dot2 op'>..</span><span class='integer val'>30</span><span class='rparen token'>)</span>  <span class='comment val'># find people with name kalle and age between 20 and 30</span>
+</pre>
+<p>
+or using the lucene query language:
+</p>
+<pre class="code">
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;name:kalle AND salary:[10000 TO 30000]&quot;</span><span class='rparen token'>)</span>
+</pre>
+<p>
+The Lucene query language supports wildcard, grouping, boolean, fuzzy
+queries, etc&#8230; For more information see:
+http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
+</p>
+<h3>Sorting, example</h3>
+<pre class="code">
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort_by identifier id'>sort_by</span><span class='lparen token'>(</span><span class='symbol val'>:salary</span><span class='rparen token'>)</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort_by identifier id'>sort_by</span><span class='lparen token'>(</span><span class='Desc constant id'>Desc</span><span class='lbrack token'>[</span><span class='symbol val'>:salary</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='Asc constant id'>Asc</span><span class='lbrack token'>[</span><span class='symbol val'>:country</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort_by identifier id'>sort_by</span><span class='lparen token'>(</span><span class='Desc constant id'>Desc</span><span class='lbrack token'>[</span><span class='symbol val'>:salary</span><span class='comma token'>,</span> <span class='symbol val'>:country</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+<h3>Search Results</h3>
+<p>
+The query is not performed until the search result is requested. Example of
+using the search result.
+</p>
+<pre class="code">
+  <span class='res identifier id'>res</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span>
+  <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='size identifier id'>size</span>  <span class='comment val'># =&gt; 10</span>
+  <span class='res identifier id'>res</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='x identifier id'>x</span><span class='bitor op'>|</span> <span class='puts identifier id'>puts</span> <span class='x identifier id'>x</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrace token'>}</span>
+  <span class='res identifier id'>res</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'sune'</span>
+</pre>
+<h3>Relationships</h3>
+<p>
+Adding a relationship between two nodes:
+</p>
+<pre class="code">
+  <span class='person2 identifier id'>person2</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span> <span class='lshft op'>&lt;&lt;</span> <span class='person2 identifier id'>person2</span>
+</pre>
+<p>
+Traversing relationships
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='dot3 op'>...</span> <span class='rbrace token'>}</span>
+</pre>
+<p>
+Traversing using a filter
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span><span class='lbrace token'>{</span> <span class='salary identifier id'>salary</span> <span class='eq op'>==</span> <span class='integer val'>10000</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='dot3 op'>...</span><span class='rbrace token'>}</span>
+</pre>
+<p>
+Deleting a relationship
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='lbrack token'>[</span><span class='person2 identifier id'>person2</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+</pre>
+<p>
+Deleting a node (and all its relationships)
+</p>
+<pre class="code">
+  <span class='person identifier id'>person</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+</pre>
+<h3>Example on Relationships</h3>
+<p>
+A more complecated example that shows how to navigate from incomming and
+outgoing relationships.
+</p>
+<pre class="code">
+      <span class='class class kw'>class</span> <span class='Role constant id'>Role</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='RelationMixin constant id'>RelationMixin</span>
+        <span class='property identifier id'>property</span> <span class='symbol val'>:name</span>
+      <span class='end end kw'>end</span>
+
+      <span class='class class kw'>class</span> <span class='Actor constant id'>Actor</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+        <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:acted_in</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to identifier id'>to</span><span class='lparen token'>(</span><span class='Movie constant id'>Movie</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='relation identifier id'>relation</span><span class='lparen token'>(</span><span class='Role constant id'>Role</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='class class kw'>class</span> <span class='Movie constant id'>Movie</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+        <span class='property identifier id'>property</span> <span class='symbol val'>:title</span>
+        <span class='property identifier id'>property</span> <span class='symbol val'>:year</span>
+
+        <span class='comment val'># defines a method for traversing incoming acted_in relationships from Actor</span>
+        <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:actors</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='from identifier id'>from</span><span class='lparen token'>(</span><span class='Actor constant id'>Actor</span><span class='comma token'>,</span> <span class='symbol val'>:acted_in</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+</pre>
+<p>
+Notice that relationships also can have properties. Creating a new Customer
+Order relationship can be done like this
+</p>
+<pre class="code">
+      <span class='keanu_reeves identifier id'>keanu_reeves</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='matrix identifier id'>matrix</span>       <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='keanu_reeves identifier id'>keanu_reeves</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span> <span class='lshft op'>&lt;&lt;</span> <span class='matrix identifier id'>matrix</span>
+</pre>
+<p>
+or you can also specify this relationship on the incoming node
+</p>
+<pre class="code">
+      <span class='keanu_reeves identifier id'>keanu_reeves</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='matrix identifier id'>matrix</span>       <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='matrix identifier id'>matrix</span><span class='dot token'>.</span><span class='actors identifier id'>actors</span> <span class='lshft op'>&lt;&lt;</span> <span class='keanu_reeves identifier id'>keanu_reeves</span>
+</pre>
+<p>
+Example of accessing the Role between an Actor and a Movie
+</p>
+<pre class="code">
+      <span class='keanu_reeves identifier id'>keanu_reeves</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='matrix identifier id'>matrix</span>       <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='role identifier id'>role</span> <span class='assign token'>=</span> <span class='keanu_reeves identifier id'>keanu_reeves</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='matrix identifier id'>matrix</span><span class='rparen token'>)</span>
+      <span class='role identifier id'>role</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'neo'</span>
+</pre>
+<p>
+or
+</p>
+<pre class="code">
+      <span class='keanu_reeves identifier id'>keanu_reeves</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='matrix identifier id'>matrix</span>       <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='keanu_reeves identifier id'>keanu_reeves</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span> <span class='lshft op'>&lt;&lt;</span> <span class='matrix identifier id'>matrix</span>
+      <span class='keanu_reeves identifier id'>keanu_reeves</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span>
+      <span class='keanu_reeves identifier id'>keanu_reeves</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='outgoing identifier id'>outgoing</span><span class='lparen token'>(</span><span class='symbol val'>:acted_in</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='matrix identifier id'>matrix</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'neo'</span>
+</pre>
+<p>
+More information about neo4j can be found after the Lucene section below.
+</p>
+<h2 id="ch2">The Lucene Module</h2>
+<p>
+You can use this module without using the Neo4j module.
+</p>
+<p>
+Example of how to write a document and find it: (a document is like a
+record or row in a relation database).
+</p>
+<pre class="code">
+    <span class='require identifier id'>require</span> <span class='string val'>'lucene'</span>
+
+    <span class='include identifier id'>include</span> <span class='Lucene constant id'>Lucene</span>
+
+    <span class='comment val'># the var/myindex parameter is either a path where to store the index or</span>
+    <span class='comment val'># just a key if index is kept in memory (see below)</span>
+    <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'var/myindex'</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># add one document (a document is like a record or row in a relation database)</span>
+    <span class='index identifier id'>index</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:id=</span><span class='gt op'>&gt;</span><span class='string val'>'1'</span><span class='comma token'>,</span> <span class='symbol val'>:name=</span><span class='gt op'>&gt;</span><span class='string val'>'foo'</span><span class='rbrace token'>}</span>
+
+    <span class='comment val'># write to the index file</span>
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span>
+
+    <span class='comment val'># find a document with name foo</span>
+    <span class='comment val'># hits is a ruby Enumeration of documents</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lbrace token'>{</span><span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='string val'>'foo'</span><span class='rbrace token'>}</span>
+
+    <span class='comment val'># show the id of the first document (document 0) found</span>
+    <span class='comment val'># (the document contains all stored fields - see below)</span>
+    <span class='hits identifier id'>hits</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span>   <span class='comment val'># =&gt; '1'</span>
+</pre>
+<p>
+Notice that you have to call the commit method in order to update the index
+on the disk/RAM. By performing several update and delete operations before
+a commit will be much faster then performing commit after each operation.
+</p>
+<h3>Keep indexing on disk</h3>
+<p>
+By default Neo4j::Lucene keeps indexes in memory. That means that when the
+application restarts the index will be gone and you have to reindex
+everything again.
+</p>
+<p>
+To keep indexes in memory:
+</p>
+<pre class="code">
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:store_on_file</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:storage_path</span><span class='rbrack token'>]</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'/home/neo/lucene-db'</span>
+</pre>
+<p>
+When creating a new index the location of the index will be the
+Lucene::Config[:storage_path] + index path Example:
+</p>
+<pre class="code">
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:store_on_file</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:storage_path</span><span class='rbrack token'>]</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'/home/neo/lucene-db'</span>
+   <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'/foo/lucene'</span><span class='rparen token'>)</span>
+</pre>
+<p>
+The example above will store the index at /home/neo/lucene-db/foo/lucene
+</p>
+<h3>Indexing several values with the same key</h3>
+<p>
+Let say a person can have several phone numbers. How do we index that ?
+</p>
+<pre class="code">
+  <span class='index identifier id'>index</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:id=</span><span class='gt op'>&gt;</span><span class='string val'>'1'</span><span class='comma token'>,</span> <span class='symbol val'>:name=</span><span class='gt op'>&gt;</span><span class='string val'>'adam'</span><span class='comma token'>,</span> <span class='symbol val'>:phone</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>'987-654'</span><span class='comma token'>,</span> <span class='string val'>'1234-5678'</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span>
+</pre>
+<h3>Id field</h3>
+<p>
+All Documents must have one id field. If one is not specified it is :id of
+type String. A different id can be specified using the field_infos id_field
+property on the index:
+</p>
+<pre class="code">
+  <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'some/path/to/the/index'</span><span class='rparen token'>)</span>
+  <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='dot token'>.</span><span class='id_field identifier id'>id_field</span> <span class='assign token'>=</span> <span class='symbol val'>:my_id</span>
+</pre>
+<p>
+To change the type of the my_id from String to a different type see below.
+</p>
+<h3>Conversion of types</h3>
+<p>
+Lucene.rb can handle type conversion for you. (The java lucene library
+stores all the fields as Strings) For example if you want the id field to
+be a fixnum
+</p>
+<pre class="code">
+    <span class='require identifier id'>require</span> <span class='string val'>'lucene'</span>
+    <span class='include identifier id'>include</span> <span class='Lucene constant id'>Lucene</span>
+
+    <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'var/myindex'</span><span class='rparen token'>)</span>  <span class='comment val'># store the index at dir: var/myindex</span>
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Fixnum constant id'>Fixnum</span>
+
+    <span class='index identifier id'>index</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:id=</span><span class='gt op'>&gt;</span><span class='integer val'>1</span><span class='comma token'>,</span> <span class='symbol val'>:name=</span><span class='gt op'>&gt;</span><span class='string val'>'foo'</span><span class='rbrace token'>}</span> <span class='comment val'># notice 1 is not a string now</span>
+
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span>
+
+    <span class='comment val'># find that document, hits is a ruby Enumeration of documents</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># show the id of the first document (document 0) found</span>
+    <span class='comment val'># (the document contains all stored fields - see below)</span>
+    <span class='doc identifier id'>doc</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span>   <span class='comment val'># =&gt; 1</span>
+</pre>
+<p>
+If the field_info type parameter is not set then it has a default value of
+String.
+</p>
+<h3>Storage of fields</h3>
+<p>
+By default only the id field will be stored. That means that in the example
+above the :name field will not be included in the document.
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+    <span class='doc identifier id'>doc</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='rparen token'>)</span>
+    <span class='doc identifier id'>doc</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span>   <span class='comment val'># =&gt; 1</span>
+    <span class='doc identifier id'>doc</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span> <span class='comment val'># =&gt; nil</span>
+</pre>
+<p>
+Use the field info :store=true if you want a field to be stored in the
+index (otherwise it will only be searchable).
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+    <span class='require identifier id'>require</span> <span class='string val'>'lucene'</span>
+    <span class='include identifier id'>include</span> <span class='Lucene constant id'>Lucene</span>
+
+    <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'var/myindex'</span><span class='rparen token'>)</span>  <span class='comment val'># store the index at dir: var/myindex</span>
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Fixnum constant id'>Fixnum</span>
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:store</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='comment val'># store this field</span>
+
+    <span class='index identifier id'>index</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrace token'>{</span><span class='symbol val'>:id=</span><span class='gt op'>&gt;</span><span class='integer val'>1</span><span class='comma token'>,</span> <span class='symbol val'>:name=</span><span class='gt op'>&gt;</span><span class='string val'>'foo'</span><span class='rbrace token'>}</span> <span class='comment val'># notice 1 is not a string now</span>
+
+    <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='commit identifier id'>commit</span>
+
+    <span class='comment val'># find that document, hits is a ruby Enumeration of documents</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># let say hits only contains one document so we can use doc[0] for that one</span>
+    <span class='comment val'># that document contains all stored fields (see below)</span>
+    <span class='doc identifier id'>doc</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span>   <span class='comment val'># =&gt; 1</span>
+    <span class='doc identifier id'>doc</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span> <span class='comment val'># =&gt; 'foo'</span>
+</pre>
+<h3>Setting field infos</h3>
+<p>
+As shown above you can set field infos like this
+</p>
+<pre class="code">
+  <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Fixnum constant id'>Fixnum</span>
+</pre>
+<p>
+Or you can set several properties like this:
+</p>
+<pre class="code">
+  <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='field_infos identifier id'>field_infos</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Fixnum constant id'>Fixnum</span><span class='comma token'>,</span> <span class='symbol val'>:store</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rbrace token'>}</span>
+</pre>
+<h3>Simple Queries</h3>
+<p>
+Lucene.rb support search in several fields: Example
+</p>
+<pre class="code">
+    <span class='comment val'># finds all document having both name 'foo' and age 42</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:age=</span><span class='gt op'>&gt;</span><span class='integer val'>42</span><span class='rparen token'>)</span>
+</pre>
+<p>
+Range queries
+</p>
+<pre class="code">
+    <span class='comment val'># finds all document having both name 'foo' and age between 3 and 30</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:age=</span><span class='gt op'>&gt;</span><span class='float val'>3</span><span class='dot2 op'>..</span><span class='integer val'>30</span><span class='rparen token'>)</span>
+</pre>
+<h3>Lucene Queries</h3>
+<p>
+If the query is string then the string is a lucene query.
+</p>
+<pre class="code">
+  <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name:foo'</span><span class='rparen token'>)</span>
+</pre>
+<p>
+For more information see:
+http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
+</p>
+<h3>Advanced Queries (DSL)</h3>
+<p>
+The queries above can also be written in a lucene.rb DSL:
+</p>
+<pre class="code">
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='lparen token'>(</span><span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='string val'>'andreas'</span><span class='rparen token'>)</span> <span class='bitand op'>&amp;</span> <span class='lparen token'>(</span><span class='foo identifier id'>foo</span> <span class='eq op'>==</span> <span class='string val'>'bar'</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+</pre>
+<p>
+Expression with OR (|) is supported, example
+</p>
+<pre class="code">
+   <span class='comment val'># find all documents with name 'andreas' or age between 30 and 40</span>
+    <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lbrace token'>{</span> <span class='lparen token'>(</span><span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='string val'>'andreas'</span><span class='rparen token'>)</span> <span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='age identifier id'>age</span> <span class='eq op'>==</span> <span class='float val'>30</span><span class='dot2 op'>..</span><span class='integer val'>40</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+</pre>
+<h3>Sorting</h3>
+<p>
+Sorting is specified by the &#8216;sort_by&#8217; parameter Example
+</p>
+<pre class="code">
+  <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:sort_by=</span><span class='gt op'>&gt;</span><span class='symbol val'>:category</span><span class='rparen token'>)</span>
+</pre>
+<p>
+To sort by several fields:
+</p>
+<pre class="code">
+  <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:sort_by=</span><span class='gt op'>&gt;</span><span class='lbrack token'>[</span><span class='symbol val'>:category</span><span class='comma token'>,</span> <span class='symbol val'>:country</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+<p>
+Example sort order
+</p>
+<pre class="code">
+  <span class='hits identifier id'>hits</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:sort_by=</span><span class='gt op'>&gt;</span><span class='lbrack token'>[</span><span class='Desc constant id'>Desc</span><span class='lbrack token'>[</span><span class='symbol val'>:category</span><span class='comma token'>,</span> <span class='symbol val'>:country</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='Asc constant id'>Asc</span><span class='lbrack token'>[</span><span class='symbol val'>:city</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+<h3>Thread-safety</h3>
+<p>
+The Lucene::Index is thread safe. It guarantees that an index is not
+updated from two thread at the same time.
+</p>
+<h3>Lucene Transactions</h3>
+<p>
+Use the Lucene::Transaction in order to do atomic commits. By using a
+transaction you do not need to call the Index.commit method.
+</p>
+<p>
+Example:
+</p>
+<pre class="code">
+    <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='run identifier id'>run</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='t identifier id'>t</span><span class='bitor op'>|</span>
+      <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'var/index/foo'</span><span class='rparen token'>)</span>
+      <span class='index identifier id'>index</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrace token'>{</span> <span class='id identifier id'>id</span><span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='integer val'>42</span><span class='comma token'>,</span> <span class='symbol val'>:name=</span><span class='gt op'>&gt;</span><span class='string val'>'andreas'</span><span class='rbrace token'>}</span>
+      <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span>  <span class='comment val'># rollback</span>
+    <span class='end end kw'>end</span>
+
+    <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'andreas'</span><span class='rparen token'>)</span>
+    <span class='result identifier id'>result</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='dot token'>.</span><span class='should identifier id'>should</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+</pre>
+<p>
+You can find which documents are uncommited by using the uncommited index
+property.
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+      <span class='index identifier id'>index</span> <span class='assign token'>=</span> <span class='Index constant id'>Index</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'var/index/foo'</span><span class='rparen token'>)</span>
+      <span class='index identifier id'>index</span><span class='dot token'>.</span><span class='uncommited identifier id'>uncommited</span> <span class='comment val'>#=&gt; [document1, document2]</span>
+</pre>
+<p>
+Notice that even if it looks like a new Index instance object was created
+the index.uncommited may return an not empty array. This is because
+Index.new is a singleton - a new instance object is not created.
+</p>
+<h2 id="ch3">The Neo4j Module</h2>
+<h3>Start and Stop of the Neo Database</h3>
+<p>
+By default lucene indexes are kept in memory. Keeping index in memory will
+increase the performance of lucene operations (such as updating the index).
+</p>
+<p>
+Example to configure Lucene to store indexes on disk instead
+</p>
+<pre class="code">
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:store_on_file</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+   <span class='Lucene constant id'>Lucene</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:storage_path</span><span class='rbrack token'>]</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'/home/neo/lucene-db'</span>
+</pre>
+<p>
+Before using Neo4j the location where the database is stored on disk must
+be configured:
+</p>
+<pre class="code">
+   <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='lbrack token'>[</span><span class='symbol val'>:storage_path</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>'/home/neo/neodb'</span>
+</pre>
+<p>
+To stop the neo database - you do not need to do this since it will be done
+automatically when the virtual machine exits.
+</p>
+<pre class="code">
+   <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span>
+</pre>
+<h3>Neo4j::NodeMixin</h3>
+<p>
+Neo4j::NodeMixin is a mixin that lets instances to be stored as a node in
+the neo node space on disk. A node can have properties and relationships to
+other nodes.
+</p>
+<p>
+Example of how declare a class that has this behaviour:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='MyNode constant id'>MyNode</span>
+     <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+  <span class='end end kw'>end</span>
+</pre>
+<h3>Index in Memory instead of disk</h3>
+<p>
+If index is stored in memory then one needs to reindex all nodes when the
+application starts up again.
+</p>
+<pre class="code">
+   <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='update_index identifier id'>update_index</span> <span class='comment val'># will traverse all MyNode instances and (re)create the lucene index in memory.</span>
+</pre>
+<h3>Create a Node</h3>
+<p>
+If a block is provided then the creation of the instance will be performed
+in an transaction, see below for more information on transactions.
+</p>
+<pre class="code">
+  <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span> <span class='rbrace token'>}</span>
+</pre>
+<h3>Delete a Node</h3>
+<p>
+The Neo4j::NodeMixin mixin defines a delete method that will delete the
+node and all its relationships.
+</p>
+<p>
+Example:
+</p>
+<pre class="code">
+  <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+</pre>
+<p>
+The node in the example above will be removed from the neo database on the
+filesystem and the lucene index
+</p>
+<h3>Node Properties</h3>
+<p>
+In order to use properties they have to be declared first
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='MyNode constant id'>MyNode</span>
+     <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+     <span class='property identifier id'>property</span> <span class='symbol val'>:foo</span><span class='comma token'>,</span> <span class='symbol val'>:bar</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+These properties (foo and bar) will be stored in the Neo database. You can
+set those properties:
+</p>
+<pre class="code">
+  <span class='comment val'># create a node with two properties in one transaction</span>
+  <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span>
+     <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='integer val'>123</span>
+     <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='bar identifier id'>bar</span> <span class='assign token'>=</span> <span class='float val'>3.14</span>
+  <span class='rbrace token'>}</span>
+
+  <span class='comment val'># access those properties</span>
+  <span class='puts identifier id'>puts</span> <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span>
+</pre>
+<p>
+You can also set a property like this:
+</p>
+<pre class="code">
+    <span class='f identifier id'>f</span> <span class='assign token'>=</span> <span class='SomeNode constant id'>SomeNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+    <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='integer val'>123</span>
+</pre>
+<p>
+Neo4j.rb supports properties to by of type String, Fixnum, Float and
+true/false
+</p>
+<h3>Property Types and Marshalling</h3>
+<p>
+If you want to set a property of a different type then String, Fixnum,
+Float or true/false you have to specify its type.
+</p>
+<p>
+Example, to set a property to any type
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='MyNode constant id'>MyNode</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:foo</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Object constant id'>Object</span>
+  <span class='end end kw'>end</span>
+
+  <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='integer val'>1</span><span class='comma token'>,</span><span class='string val'>&quot;3&quot;</span><span class='comma token'>,</span> <span class='float val'>3.14</span><span class='rbrack token'>]</span>
+
+  <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='node identifier id'>node</span><span class='dot token'>.</span><span class='neo_node_id identifier id'>neo_node_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='comment val'># =&gt; Array</span>
+</pre>
+<h3>Property of type Date and DateTime</h3>
+<p>
+Example of using Date queries:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='MyNode constant id'>MyNode</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:since</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Date constant id'>Date</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:since</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Date constant id'>Date</span>
+  <span class='end end kw'>end</span>
+
+  <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='since identifier id'>since</span> <span class='assign token'>=</span> <span class='Date constant id'>Date</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='integer val'>2008</span><span class='comma token'>,</span><span class='integer val'>05</span><span class='comma token'>,</span><span class='integer val'>06</span>
+  <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;born:[20080427 TO 20100203]&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='since identifier id'>since</span> <span class='comment val'># =&gt; Date 2008,05,06</span>
+</pre>
+<p>
+Example of using DateTime queries:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='MyNode constant id'>MyNode</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:since</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='DateTime constant id'>DateTime</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:since</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='DateTime constant id'>DateTime</span>
+  <span class='end end kw'>end</span>
+
+  <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='since identifier id'>since</span> <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='civil identifier id'>civil</span> <span class='integer val'>2008</span><span class='comma token'>,</span><span class='integer val'>04</span><span class='comma token'>,</span><span class='integer val'>27</span><span class='comma token'>,</span><span class='integer val'>15</span><span class='comma token'>,</span><span class='integer val'>25</span><span class='comma token'>,</span><span class='integer val'>59</span>
+  <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;since:[200804271504 TO 201002031534]&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='since identifier id'>since</span> <span class='comment val'># =&gt; DateTime ...</span>
+</pre>
+<p>
+Only UTC timezone is allowed.
+</p>
+<h3>Finding all nodes</h3>
+<p>
+To find all nodes of a specific type use the all method. Example
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Car constant id'>Car</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Node constant id'>Node</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:wheels</span>
+  <span class='end end kw'>end</span>
+
+  <span class='class class kw'>class</span> <span class='Volvo constant id'>Volvo</span> <span class='lt op'>&lt;</span> <span class='Car constant id'>Car</span>
+  <span class='end end kw'>end</span>
+
+  <span class='v identifier id'>v</span> <span class='assign token'>=</span> <span class='Volvo constant id'>Volvo</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='c identifier id'>c</span> <span class='assign token'>=</span> <span class='Car constant id'>Car</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+  <span class='Car constant id'>Car</span><span class='dot token'>.</span><span class='all identifier id'>all</span>   <span class='comment val'># will return all relationships from the reference node to car obejcts</span>
+  <span class='Volvo constant id'>Volvo</span><span class='dot token'>.</span><span class='all identifier id'>all</span> <span class='comment val'># will return the same as Car.all</span>
+</pre>
+<p>
+To return nodes (just like the relations method)
+</p>
+<pre class="code">
+  <span class='Car constant id'>Car</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span>    <span class='comment val'># =&gt; [c,v]</span>
+  <span class='Volvo constant id'>Volvo</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span>  <span class='comment val'># =&gt; [c,v]</span>
+</pre>
+<h3>Relationship has_n</h3>
+<p>
+Neo relationships are none symmetrical. That means that if A has a relation
+to B then it may not be true that B has a relation to A.
+</p>
+<p>
+Relationships has to be declared by using the &#8216;relations&#8217; class
+method. For example, let say that Person can have a relationship to other
+nodes with the type &#8216;friends&#8217;:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+     <span class='include identifier id'>include</span> <span class='Neo constant id'>Neo</span><span class='colon2 op'>::</span><span class='Node constant id'>Node</span>
+     <span class='has_n identifier id'>has_n</span> <span class='symbol val'>:knows</span>  <span class='comment val'># will generate a knows method for outgoing relationships</span>
+     <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:known_by</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='from identifier id'>from</span><span class='lparen token'>(</span><span class='symbol val'>:knows</span><span class='rparen token'>)</span>  <span class='comment val'>#  will generate a known_by method for incomming knows relationship</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+Example how to add a relation to another node:
+</p>
+<pre class="code">
+  <span class='me identifier id'>me</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='neo identifier id'>neo</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='me identifier id'>me</span><span class='dot token'>.</span><span class='knows identifier id'>knows</span> <span class='lshft op'>&lt;&lt;</span> <span class='neo identifier id'>neo</span> <span class='comment val'># me knows neo but neo does not know me</span>
+</pre>
+<p>
+Notice that you can also add relationship on the incoming relationship The
+following example is the same as the example above:
+</p>
+<pre class="code">
+  <span class='me identifier id'>me</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='neo identifier id'>neo</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='neo identifier id'>neo</span><span class='dot token'>.</span><span class='known_by identifier id'>known_by</span> <span class='lshft op'>&lt;&lt;</span> <span class='me identifier id'>me</span> <span class='comment val'># neo is known by me, that means that I know neo but neo does have to know me</span>
+</pre>
+<h3>Relationship has_one</h3>
+<p>
+Example of has_one: A person can have at most one Address
+</p>
+<pre class="code">
+      <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+        <span class='has_one identifier id'>has_one</span><span class='lparen token'>(</span><span class='symbol val'>:address</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to identifier id'>to</span><span class='lparen token'>(</span><span class='Address constant id'>Address</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='class class kw'>class</span> <span class='Address constant id'>Address</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+        <span class='property identifier id'>property</span> <span class='symbol val'>:city</span><span class='comma token'>,</span> <span class='symbol val'>:road</span>
+        <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:people</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='from identifier id'>from</span><span class='lparen token'>(</span><span class='Person constant id'>Person</span><span class='comma token'>,</span> <span class='symbol val'>:address</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+</pre>
+<p>
+In the example above we have Neo4j.rb will generate the following methods
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='in in kw'>in</span> <span class='Person constant id'>Person</span><span class='comma token'>,</span> <span class='the identifier id'>the</span> <span class='method identifier id'>method</span> <span class='string val'>''</span><span class='address identifier id'>address</span><span class='assign token'>=</span><span class='string val'>''</span> <span class='and and kw'>and</span> <span class='string val'>''</span><span class='address identifier id'>address</span><span class='string val'>''</span>
+ <span class='mult op'>*</span> <span class='in in kw'>in</span> <span class='Address constant id'>Address</span><span class='comma token'>,</span> <span class='the identifier id'>the</span> <span class='traversal identifier id'>traversal</span> <span class='method identifier id'>method</span> <span class='string val'>''</span><span class='people identifier id'>people</span><span class='string val'>''</span> <span class='for for kw'>for</span>  <span class='traversing identifier id'>traversing</span> <span class='incomming identifier id'>incomming</span> <span class='relationships identifier id'>relationships</span> <span class='from identifier id'>from</span> <span class='the identifier id'>the</span> <span class='Person constant id'>Person</span> <span class='node identifier id'>node</span><span class='dot token'>.</span>
+</pre>
+<p>
+Example of usage
+</p>
+<pre class="code">
+      <span class='p identifier id'>p</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='address identifier id'>address</span> <span class='assign token'>=</span> <span class='Address constant id'>Address</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='p identifier id'>p</span><span class='dot token'>.</span><span class='address identifier id'>address</span><span class='dot token'>.</span><span class='city identifier id'>city</span> <span class='assign token'>=</span> <span class='string val'>'malmoe'</span>
+</pre>
+<p>
+Or from the incoming &#8217;&#8217;address&#8217;&#8217; relationship
+</p>
+<pre class="code">
+      <span class='a identifier id'>a</span> <span class='assign token'>=</span> <span class='Address constant id'>Address</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='city identifier id'>city</span> <span class='assign token'>=</span> <span class='string val'>'malmoe'</span><span class='rbrace token'>}</span>
+      <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='people identifier id'>people</span> <span class='lshft op'>&lt;&lt;</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+</pre>
+<h3>Properties on a relationship</h3>
+<p>
+A relationship can have properties just like a node.
+</p>
+<p>
+Example:
+</p>
+<pre class="code">
+  <span class='p1 identifier id'>p1</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='p2 identifier id'>p2</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+  <span class='relation identifier id'>relation</span> <span class='assign token'>=</span> <span class='p1 identifier id'>p1</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='p2 identifier id'>p2</span><span class='rparen token'>)</span>
+
+  <span class='comment val'># set a property 'since' on this relationship bewteen p1 and p2</span>
+  <span class='relation identifier id'>relation</span><span class='dot token'>.</span><span class='since identifier id'>since</span> <span class='assign token'>=</span> <span class='integer val'>1992</span>
+</pre>
+<p>
+If a Relationship class has not been specified for a relationship then any
+properties can be set on the relationship. It has a default relationship
+class: Neo4j::DynamicRelation
+</p>
+<h3>Traversing relationships:</h3>
+<p>
+Each type of relationship has a method that returns an Enumerable object
+that enables you to traverse that type of relationship.
+</p>
+<p>
+For example the Person example above declares one relationship of type
+friends. You can traverse all Person&#8217;s friend by doing:
+</p>
+<pre class="code">
+  <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='puts identifier id'>puts</span> <span class='n identifier id'>n</span> <span class='rbrace token'>}</span>
+</pre>
+<h3>Filtering nodes in a relationship</h3>
+<p>
+If you want to find one node in a relationship you can use a filter.
+Example, let say we want to find a friend with name &#8216;andreas&#8217;
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='n2 identifier id'>n2</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'andreas'</span><span class='rbrace token'>}</span>
+  <span class='n3 identifier id'>n3</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span> <span class='lshft op'>&lt;&lt;</span> <span class='n2 identifier id'>n2</span> <span class='lshft op'>&lt;&lt;</span> <span class='n3 identifier id'>n3</span>
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span><span class='lbrace token'>{</span> <span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='string val'>'andreas'</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='to_a identifier id'>to_a</span> <span class='comment val'># =&gt; [n2]</span>
+</pre>
+<p>
+The block { name == &#8216;andreas&#8217; } will be evaluated on each node
+in the relationship. If the evaluation returns true the node will be
+included in the filter search result.
+</p>
+<h3>Finding Relationships</h3>
+<p>
+Given we have the two nodes with a relationship between them:
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='n2 identifier id'>n2</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='friends identifier id'>friends</span> <span class='lshft op'>&lt;&lt;</span> <span class='n2 identifier id'>n2</span>
+</pre>
+<p>
+Then we can find all incoming and outgoing relationships like this:
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='to_a identifier id'>to_a</span> <span class='comment val'># =&gt; [#&lt;Neo4j::RelationMixin:0x134ae32]</span>
+</pre>
+<p>
+A Neo4j::RelationMixin object represents a relationship between two nodes.
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='start_node identifier id'>start_node</span> <span class='comment val'># =&gt; n1</span>
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='end_node identifier id'>end_node</span> <span class='comment val'># =&gt; n2</span>
+</pre>
+<p>
+Relationships can also have properties just like a node.
+</p>
+<h3>Finding outgoing and incoming relationships</h3>
+<p>
+If we are only interested in all incoming nodes, we can do
+</p>
+<pre class="code">
+  <span class='n2 identifier id'>n2</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='incoming identifier id'>incoming</span> <span class='comment val'># =&gt; [#&lt;Neo4j::RelationMixin:0x134ae32]</span>
+</pre>
+<p>
+Or outgoing:
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='outgoing identifier id'>outgoing</span> <span class='comment val'># =&gt; [#&lt;Neo4j::RelationMixin:0x134aea2]</span>
+</pre>
+<p>
+To find a specific relationship use the [] operator:
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='outgoing identifier id'>outgoing</span><span class='lbrack token'>[</span><span class='n2 identifier id'>n2</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='comment val'>#&lt;Neo4j::RelationMixin:0x134aea2</span>
+</pre>
+<p>
+Or which is better performance wise (since only friends relationships are
+being traversed):
+</p>
+<pre class="code">
+  <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='outgoing identifier id'>outgoing</span><span class='lparen token'>(</span><span class='symbol val'>:friends</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='n2 identifier id'>n2</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='comment val'>#&lt;Neo4j::RelationMixin:0x134aea2</span>
+</pre>
+<h3>Deleting a relationship</h3>
+<p>
+Use the Neo4j::RelationMixin#delete method. For example, to delete the
+relationship between n1 and n2 from the example above:
+</p>
+<pre class="code">
+    <span class='n1 identifier id'>n1</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='outgoing identifier id'>outgoing</span><span class='lparen token'>(</span><span class='symbol val'>:friends</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='n2 identifier id'>n2</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+</pre>
+<h3>Finding nodes in a relationship</h3>
+<p>
+If you do not want those relationship object but instead want the nodes you
+can use the &#8216;nodes&#8217; method in the Neo4j::RelationMixin object.
+</p>
+<p>
+For example:
+</p>
+<pre class="code">
+  <span class='n2 identifier id'>n2</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='incoming identifier id'>incoming</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span> <span class='comment val'># =&gt; [n1]</span>
+</pre>
+<h3>Finding outgoing/incoming nodes of a specific relationship type</h3>
+<p>
+Let say we want to find who has my phone number and who consider me as a
+friend
+</p>
+<pre class="code">
+  <span class='comment val'># who has my phone numbers</span>
+  <span class='me identifier id'>me</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='incoming identifier id'>incoming</span><span class='lparen token'>(</span><span class='symbol val'>:phone_numbers</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span> <span class='comment val'># =&gt; people with my phone numbers</span>
+
+  <span class='comment val'># who consider me as a friend</span>
+  <span class='me identifier id'>me</span><span class='dot token'>.</span><span class='relations identifier id'>relations</span><span class='dot token'>.</span><span class='incoming identifier id'>incoming</span><span class='lparen token'>(</span><span class='symbol val'>:friend</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span> <span class='comment val'># =&gt; people with a friend relationship to me</span>
+</pre>
+<p>
+Remember that relationships are not symmetrical.
+</p>
+<h3>Transactions</h3>
+<p>
+All operations that work with the node space (even read operations) must be
+wrapped in a transaction. Luckly neo4j.rb will automatically create a
+transaction for those operation that needs it if one is not already
+provided.
+</p>
+<p>
+For example all get, set and find operations will start a new transaction
+if none is already not runnig (for that thread).
+</p>
+<p>
+If you want to perform a set of operation in a single transaction, use the
+Neo4j::Transaction.run method:
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+  <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='run identifier id'>run</span> <span class='lbrace token'>{</span>
+    <span class='node1 identifier id'>node1</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>&quot;value&quot;</span>
+    <span class='node2 identifier id'>node2</span><span class='dot token'>.</span><span class='bar identifier id'>bar</span> <span class='assign token'>=</span> <span class='string val'>&quot;hi&quot;</span>
+  <span class='rbrace token'>}</span>
+</pre>
+<p>
+There is also a TransactionalMixin that lets you declare which method
+should be wrapped inside a transaction. Example:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='extend identifier id'>extend</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='TransactionalMixin constant id'>TransactionalMixin</span>
+
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span>
+
+    <span class='def def kw'>def</span> <span class='do_stuff identifier id'>do_stuff</span>
+      <span class='comment val'># ... no transaction stuff needed to be written here.</span>
+    <span class='end end kw'>end</span>
+
+    <span class='transactional identifier id'>transactional</span> <span class='symbol val'>:do_stuff</span>
+  <span class='end end kw'>end</span>
+</pre>
+<h4>Rollback</h4>
+<p>
+Neo4j support rollbacks on transaction. Example: Example:
+</p>
+<pre class="code">
+  <span class='include identifier id'>include</span> <span class='string val'>'neo4j'</span>
+
+  <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='MyNode constant id'>MyNode</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+
+  <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='run identifier id'>run</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='t identifier id'>t</span><span class='bitor op'>|</span>
+     <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='foo identifier id'>foo</span> <span class='assign token'>=</span> <span class='string val'>&quot;hej&quot;</span>
+     <span class='comment val'># something failed so we signal for a failure</span>
+     <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='failure identifier id'>failure</span> <span class='comment val'># will cause a rollback, node.foo will not be updated</span>
+  <span class='rbrace token'>}</span>
+</pre>
+<p>
+You can also run it without a block, like this:
+</p>
+<pre class="code">
+   <span class='transaction identifier id'>transaction</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+   <span class='transaction identifier id'>transaction</span><span class='dot token'>.</span><span class='start identifier id'>start</span>
+   <span class='comment val'># do something</span>
+   <span class='transaction identifier id'>transaction</span><span class='dot token'>.</span><span class='finish identifier id'>finish</span>
+</pre>
+<h3>Indexing</h3>
+<p>
+Properties and relationships which should be indexed by lucene can be
+specified by the index class method. For example to index the proeprties
+foo and bar
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='SomeNode constant id'>SomeNode</span>
+     <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+     <span class='property identifier id'>property</span> <span class='symbol val'>:foo</span><span class='comma token'>,</span> <span class='symbol val'>:bar</span>
+     <span class='index identifier id'>index</span> <span class='symbol val'>:foo</span><span class='comma token'>,</span> <span class='symbol val'>:bar</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+Everytime a node of type SomeNode (or a subclass) is create, deleted or
+updated the lucene index of will be updated.
+</p>
+<h3>Deleting or Reindex</h3>
+<p>
+Sometimes it&#8217;s neccessarly to change the index of a class after alot
+of node instances already have been created. To delete an index use the
+class method &#8216;remove_index&#8217; To update an index use the class
+method &#8216;update_index&#8217; which will update all already created
+nodes in the neo database.
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span><span class='comma token'>,</span> <span class='symbol val'>:phone</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span>
+  <span class='end end kw'>end</span>
+
+  <span class='p1 identifier id'>p1</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'andreas'</span><span class='semicolon token'>;</span> <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='phone identifier id'>phone</span> <span class='assign token'>=</span> <span class='integer val'>123</span><span class='rbrace token'>}</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'andreas'</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; [p1]</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lparen token'>(</span><span class='symbol val'>:phone</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>123</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; []</span>
+
+  <span class='comment val'># change index and reindex all person nodes already created in the neo database.</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='remove_index identifier id'>remove_index</span> <span class='symbol val'>:name</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='index identifier id'>index</span> <span class='symbol val'>:phone</span>  <span class='comment val'># add an index on phone</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='update_index identifier id'>update_index</span>
+
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'andreas'</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; []</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span> <span class='lparen token'>(</span><span class='symbol val'>:phone</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>123</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; [p1]</span>
+</pre>
+<h3>Quering (using lucene)</h3>
+<p>
+You can declare properties to be indexed by lucene by the index method:
+</p>
+<p>
+Example
+</p>
+<pre class="code">
+      <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+        <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+        <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span>
+        <span class='index identifier id'>index</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span>
+      <span class='end end kw'>end</span>
+
+      <span class='node identifier id'>node</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>'foo'</span>
+      <span class='node identifier id'>node</span><span class='dot token'>.</span><span class='age identifier id'>age</span>  <span class='assign token'>=</span> <span class='integer val'>42</span>
+
+      <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'foo'</span><span class='comma token'>,</span> <span class='symbol val'>:age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>42</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; [node]</span>
+</pre>
+<p>
+The query parameter (like property on a Neo4j::NodeMixin) can be of type
+String, Fixnum, Float, boolean or Range. The query above can also be
+written in a lucene query DSL:
+</p>
+<pre class="code">
+      <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lbrace token'>{</span><span class='lparen token'>(</span><span class='name identifier id'>name</span> <span class='eq op'>==</span><span class='string val'>'foo'</span><span class='rparen token'>)</span> <span class='bitand op'>&amp;</span> <span class='lparen token'>(</span><span class='age identifier id'>age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>42</span><span class='rparen token'>)</span><span class='rbrace token'>}</span> <span class='comment val'># =&gt; [node]</span>
+</pre>
+<p>
+Or lucene query language:
+</p>
+<pre class="code">
+     <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>&quot;name:foo AND age:42&quot;</span><span class='rparen token'>)</span>
+</pre>
+<p>
+For more information see:
+http://lucene.apache.org/java/2_4_0/queryparsersyntax.html or the lucene
+module above.
+</p>
+<h3>Indexing and Property Types</h3>
+<p>
+In order to use range querie on numbers the property types must be
+converted. This is done by using the :type optional parameter:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:age</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:age</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='Fixnum constant id'>Fixnum</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+By using :type =&gt; Fixnum the age will be padded with &#8216;0&#8217;s
+(lucene only support string comparsion).
+</p>
+<p>
+Example, if the :type =&gt; Fixnum was not specified then
+</p>
+<pre class="code">
+  <span class='p identifier id'>p</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='n identifier id'>n</span><span class='bitor op'>|</span> <span class='n identifier id'>n</span><span class='dot token'>.</span><span class='age identifier id'>age</span> <span class='assign token'>=</span> <span class='integer val'>100</span> <span class='rbrace token'>}</span>
+  <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='symbol val'>:age</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>8</span><span class='rparen token'>)</span> <span class='comment val'># =&gt; [p]</span>
+</pre>
+<h3>Indexing and Quering Relationships</h3>
+<p>
+The Neo4j::NodeMixin#index method can be used to index relationships to
+other classes.
+</p>
+<p>
+Example, let say we have to classes, Customer and Orders:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Customer constant id'>Customer</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span>
+
+    <span class='comment val'># specifies outgoing relationships to Order</span>
+    <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:orders</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to identifier id'>to</span><span class='lparen token'>(</span><span class='Order constant id'>Order</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># create an index on customer--&gt;order#total_cost</span>
+    <span class='index identifier id'>index</span> <span class='string val'>&quot;orders.total_cost&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='class class kw'>class</span> <span class='Order constant id'>Order</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+
+    <span class='property identifier id'>property</span> <span class='symbol val'>:total_cost</span>
+
+    <span class='comment val'># specifies one incoming relationship from Customer</span>
+    <span class='has_one identifier id'>has_one</span><span class='lparen token'>(</span><span class='symbol val'>:customer</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='from identifier id'>from</span><span class='lparen token'>(</span><span class='Customer constant id'>Customer</span><span class='comma token'>,</span> <span class='symbol val'>:orders</span><span class='rparen token'>)</span>
+
+    <span class='comment val'># create an index on the order&lt;--customer#name relationship</span>
+    <span class='index identifier id'>index</span> <span class='string val'>&quot;customer.name&quot;</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+Notice that we can index both incoming and outgoing relationships.
+</p>
+<p>
+Let&#8217;s create a customer and one order for that customer
+</p>
+<pre class="code">
+    <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='run identifier id'>run</span> <span class='do do kw'>do</span>
+      <span class='cust identifier id'>cust</span> <span class='assign token'>=</span> <span class='Customer constant id'>Customer</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='order identifier id'>order</span> <span class='assign token'>=</span> <span class='Order constant id'>Order</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='cust identifier id'>cust</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='string val'>&quot;kalle&quot;</span>
+      <span class='order identifier id'>order</span><span class='dot token'>.</span><span class='total_cost identifier id'>total_cost</span> <span class='assign token'>=</span> <span class='string val'>&quot;1000&quot;</span>
+
+      <span class='cust identifier id'>cust</span><span class='dot token'>.</span><span class='orders identifier id'>orders</span> <span class='lshft op'>&lt;&lt;</span> <span class='order identifier id'>order</span>
+    <span class='end end kw'>end</span>
+</pre>
+<p>
+Now we can find both Orders with a total cost between 500 and 2000 and
+Customers with name &#8216;kalle&#8217; using lucene
+</p>
+<p>
+Example:
+</p>
+<pre class="code">
+   <span class='customers identifier id'>customers</span> <span class='assign token'>=</span> <span class='Customer constant id'>Customer</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'orders.total_cost'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='float val'>500</span><span class='dot2 op'>..</span><span class='integer val'>2000</span><span class='comma token'>,</span> <span class='string val'>'name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span>
+</pre>
+<p>
+Or also possible from the other way:
+</p>
+<pre class="code">
+   <span class='orders identifier id'>orders</span> <span class='assign token'>=</span> <span class='Order constant id'>Order</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'total_cost'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='float val'>500</span><span class='dot2 op'>..</span><span class='integer val'>2000</span><span class='comma token'>,</span> <span class='string val'>'customer.name'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'kalle'</span><span class='rparen token'>)</span>
+</pre>
+<h3>Full text search</h3>
+<p>
+Neo4j supports full text search by setting the tokenized property to true
+on an index. (see JavaDoc for
+org.apache.lucene.document.Field.Index.ANALYZED).
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Comment constant id'>Comment</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+
+    <span class='property identifier id'>property</span> <span class='symbol val'>:comment</span>
+    <span class='index identifier id'>index</span> <span class='comment identifier id'>comment</span><span class='comma token'>,</span> <span class='symbol val'>:tokenized</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span>
+  <span class='end end kw'>end</span>
+</pre>
+<h3>Unmarshalling</h3>
+<p>
+The neo module will automatically unmarshalling nodes to the correct ruby
+class. It does this by reading the classname property and loading that ruby
+class with that node.
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Person constant id'>Person</span>
+    <span class='include identifier id'>include</span> <span class='Neo constant id'>Neo</span><span class='colon2 op'>::</span><span class='Node constant id'>Node</span>
+
+    <span class='def def kw'>def</span> <span class='hello identifier id'>hello</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+
+  <span class='f1 identifier id'>f1</span> <span class='assign token'>=</span> <span class='Person constant id'>Person</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+
+  <span class='comment val'># load the class again</span>
+  <span class='f2 identifier id'>f2</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='foo identifier id'>foo</span><span class='dot token'>.</span><span class='neo_node_id identifier id'>neo_node_id</span><span class='rparen token'>)</span>
+
+  <span class='comment val'># f2 will now be new instance of Person, but will be == f1</span>
+  <span class='f1 identifier id'>f1</span> <span class='eq op'>==</span> <span class='f2 identifier id'>f2</span> <span class='comment val'># =&gt; true</span>
+</pre>
+<h3>Reference node</h3>
+<p>
+There is one node that can always be find - the reference node,
+Neo4j::ReferenceNode. Example:
+</p>
+<pre class="code">
+    <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='ref_node identifier id'>ref_node</span>
+</pre>
+<p>
+This node has a relationship to all created nodes. It is used internally to
+recreate an index or finding all nodes of a specific type.
+</p>
+<h2 id="ch4">Ruby on Rails with Neo4j.rb</h2>
+<p>
+Neo4j.rb does work nicely with R&amp;R.
+</p>
+<p>
+It has been verified on rail 2.2.2, JRuby 1.1.6 RC1, Glassfish 0.9.1.
+</p>
+<h3>Configuration</h3>
+<h4>Install Neo4j.rb</h4>
+<pre class="code">
+  <span class='gem identifier id'>gem</span> <span class='install identifier id'>install</span> <span class='neo4j identifier id'>neo4j</span>
+</pre>
+<h4>Install rails</h4>
+<pre class="code">
+  <span class='gem identifier id'>gem</span> <span class='install identifier id'>install</span> <span class='rails identifier id'>rails</span>
+</pre>
+<h4>Create a rails project, movies</h4>
+<pre class="code">
+  <span class='rails identifier id'>rails</span> <span class='movies identifier id'>movies</span>
+</pre>
+<h4>Config rails</h4>
+<p>
+Config rails to use Neo4j.rb instead of ActiveRecord, edit
+movies/config/environment.rb environment.rb:
+</p>
+<pre class="code">
+  <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='frameworks identifier id'>frameworks</span> <span class='opasgn op'>-=</span> <span class='lbrack token'>[</span> <span class='symbol val'>:active_record</span> <span class='rbrack token'>]</span> <span class='comment val'>#, :active_resource, :action_mailer ]</span>
+  <span class='config identifier id'>config</span><span class='dot token'>.</span><span class='gem identifier id'>gem</span> <span class='string val'>&quot;neo4j&quot;</span><span class='comma token'>,</span> <span class='symbol val'>:version</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;0.0.7&quot;</span>
+</pre>
+<h4>Create Models</h4>
+<p>
+Create model in movies/app/models actor.rb:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Role constant id'>Role</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='RelationMixin constant id'>RelationMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:title</span><span class='comma token'>,</span> <span class='symbol val'>:character</span>
+  <span class='end end kw'>end</span>
+
+  <span class='class class kw'>class</span> <span class='Actor constant id'>Actor</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:phone</span><span class='comma token'>,</span> <span class='symbol val'>:salary</span>
+    <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:acted_in</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to identifier id'>to</span><span class='lparen token'>(</span><span class='Movie constant id'>Movie</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='relation identifier id'>relation</span><span class='lparen token'>(</span><span class='Role constant id'>Role</span><span class='rparen token'>)</span>
+    <span class='index identifier id'>index</span> <span class='symbol val'>:name</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+movie.rb:
+</p>
+<pre class="code">
+  <span class='class class kw'>class</span> <span class='Movie constant id'>Movie</span>
+    <span class='include identifier id'>include</span> <span class='Neo4j constant id'>Neo4j</span><span class='colon2 op'>::</span><span class='NodeMixin constant id'>NodeMixin</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:title</span>
+    <span class='property identifier id'>property</span> <span class='symbol val'>:year</span>
+
+    <span class='comment val'># defines a method for traversing incoming acted_in relationships from Actor</span>
+    <span class='has_n identifier id'>has_n</span><span class='lparen token'>(</span><span class='symbol val'>:actors</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='from identifier id'>from</span><span class='lparen token'>(</span><span class='Actor constant id'>Actor</span><span class='comma token'>,</span> <span class='symbol val'>:acted_in</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+</pre>
+<h4>Create RESTful routes</h4>
+<p>
+Edit the config/routes.rb file
+</p>
+<pre class="code">
+  <span class='ActionController constant id'>ActionController</span><span class='colon2 op'>::</span><span class='Routing constant id'>Routing</span><span class='colon2 op'>::</span><span class='Routes constant id'>Routes</span><span class='dot token'>.</span><span class='draw identifier id'>draw</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='map identifier id'>map</span><span class='bitor op'>|</span>
+     <span class='map identifier id'>map</span><span class='dot token'>.</span><span class='resources identifier id'>resources</span> <span class='symbol val'>:actors</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='actor identifier id'>actor</span><span class='bitor op'>|</span>
+      <span class='actor identifier id'>actor</span><span class='dot token'>.</span><span class='resources identifier id'>resources</span> <span class='symbol val'>:acted_in</span>
+      <span class='actor identifier id'>actor</span><span class='dot token'>.</span><span class='resource identifier id'>resource</span> <span class='symbol val'>:movies</span><span class='comma token'>,</span> <span class='symbol val'>:controller</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'acted_in'</span>
+     <span class='end end kw'>end</span>
+</pre>
+<h4>Create Controllers</h4>
+<p>
+Add the following controllers in app/controllers
+</p>
+<p>
+actors_controller.rb:
+</p>
+<pre class="code">
+    <span class='class class kw'>class</span> <span class='ActorsController constant id'>ActorsController</span> <span class='lt op'>&lt;</span> <span class='ApplicationController constant id'>ApplicationController</span>
+      <span class='before_filter identifier id'>before_filter</span> <span class='symbol val'>:find_actor</span><span class='comma token'>,</span> <span class='symbol val'>:only</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='symbol val'>:show</span><span class='comma token'>,</span> <span class='symbol val'>:edit</span><span class='comma token'>,</span> <span class='symbol val'>:update</span><span class='comma token'>,</span> <span class='symbol val'>:destroy</span><span class='rbrack token'>]</span>
+
+      <span class='def def kw'>def</span> <span class='index identifier id'>index</span>
+        <span class='@actors ivar id'>@actors</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='create identifier id'>create</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+        <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='flash identifier id'>flash</span><span class='lbrack token'>[</span><span class='symbol val'>:notice</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>'Actor was successfully created.'</span>
+        <span class='redirect_to identifier id'>redirect_to</span><span class='lparen token'>(</span><span class='@actor ivar id'>@actor</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='update identifier id'>update</span>
+        <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='flash identifier id'>flash</span><span class='lbrack token'>[</span><span class='symbol val'>:notice</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>'Actor was successfully updated.'</span>
+        <span class='redirect_to identifier id'>redirect_to</span><span class='lparen token'>(</span><span class='@actor ivar id'>@actor</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='destroy identifier id'>destroy</span>
+        <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span>
+        <span class='redirect_to identifier id'>redirect_to</span><span class='lparen token'>(</span><span class='actors_url identifier id'>actors_url</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='edit identifier id'>edit</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='show identifier id'>show</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='new identifier id'>new</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Actor constant id'>Actor</span><span class='dot token'>.</span><span class='value_object identifier id'>value_object</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='end end kw'>end</span>
+
+      <span class='private identifier id'>private</span>
+      <span class='def def kw'>def</span> <span class='find_actor identifier id'>find_actor</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+</pre>
+<p>
+acted_in_controller.rb:
+</p>
+<pre class="code">
+    <span class='class class kw'>class</span> <span class='ActedInController constant id'>ActedInController</span> <span class='lt op'>&lt;</span> <span class='ApplicationController constant id'>ApplicationController</span>
+      <span class='def def kw'>def</span> <span class='index identifier id'>index</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor_id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@movies ivar id'>@movies</span> <span class='assign token'>=</span> <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span><span class='dot token'>.</span><span class='nodes identifier id'>nodes</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='create identifier id'>create</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor_id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@movie ivar id'>@movie</span> <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+        <span class='@movie ivar id'>@movie</span><span class='dot token'>.</span><span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:movie</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span> <span class='lshft op'>&lt;&lt;</span> <span class='@movie ivar id'>@movie</span>
+        <span class='flash identifier id'>flash</span><span class='lbrack token'>[</span><span class='symbol val'>:notice</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>'Movie was successfully created.'</span>
+        <span class='redirect_to identifier id'>redirect_to</span><span class='lparen token'>(</span><span class='@actor ivar id'>@actor</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='update identifier id'>update</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor_id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@movie ivar id'>@movie</span> <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+        <span class='@movie ivar id'>@movie</span><span class='dot token'>.</span><span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:movie</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@actor ivar id'>@actor</span><span class='dot token'>.</span><span class='acted_in identifier id'>acted_in</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='@movie ivar id'>@movie</span>
+        <span class='@movie ivar id'>@movie</span><span class='dot token'>.</span><span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:movie</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='flash identifier id'>flash</span><span class='lbrack token'>[</span><span class='symbol val'>:notice</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>'Movie was successfully updated.'</span>
+        <span class='redirect_to identifier id'>redirect_to</span><span class='lparen token'>(</span><span class='@movie ivar id'>@movie</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='show identifier id'>show</span>
+        <span class='@movie ivar id'>@movie</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='new identifier id'>new</span>
+        <span class='@actor ivar id'>@actor</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:actor_id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+        <span class='@movie ivar id'>@movie</span> <span class='assign token'>=</span> <span class='Movie constant id'>Movie</span><span class='dot token'>.</span><span class='value_object identifier id'>value_object</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+      <span class='end end kw'>end</span>
+
+      <span class='def def kw'>def</span> <span class='edit identifier id'>edit</span>
+        <span class='@movie ivar id'>@movie</span> <span class='assign token'>=</span> <span class='Neo4j constant id'>Neo4j</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='lbrack token'>[</span><span class='symbol val'>:id</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+</pre>
+<h4>Add views</h4>
+<p>
+Add the following views in app/views/actors index.html.erb:
+</p>
+<pre class="code">
+    <span class='lt op'>&lt;</span><span class='h1 identifier id'>h1</span><span class='gt op'>&gt;</span><span class='Listing constant id'>Listing</span> <span class='actors identifier id'>actors</span><span class='lt op'>&lt;</span><span class='regexp val'>/h1&gt;
+
+    &lt;table&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Name&lt;/</span><span class='th identifier id'>th</span><span class='gt op'>&gt;</span>
+      <span class='lt op'>&lt;</span><span class='regexp val'>/tr&gt;
+
+      &lt;% for actor in @actors %&gt;
+        &lt;tr&gt;
+          &lt;td&gt;&lt;%=h actor.name %&gt;&lt;/</span><span class='td identifier id'>td</span><span class='gt op'>&gt;</span>
+          <span class='lt op'>&lt;</span><span class='td identifier id'>td</span><span class='gt op'>&gt;</span><span class='lt op'>&lt;</span><span class='string val'>%= link_to 'Edit', edit_actor_path(actor) %&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;%=</span> <span class='link_to identifier id'>link_to</span> <span class='string val'>'Show'</span><span class='comma token'>,</span> <span class='actor identifier id'>actor</span> <span class='string val'>%&gt;&lt;/td&gt;</span>
+          <span class='lt op'>&lt;</span><span class='td identifier id'>td</span><span class='gt op'>&gt;</span><span class='lt op'>&lt;</span><span class='string val'>%= link_to 'Destroy', actor, :confirm =</span><span class='gt op'>&gt;</span> <span class='string val'>'Are you sure?'</span><span class='comma token'>,</span> <span class='symbol val'>:method</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='symbol val'>:delete</span> <span class='mod op'>%</span><span class='gt op'>&gt;</span><span class='lt op'>&lt;</span><span class='regexp val'>/td&gt;
+        &lt;/</span><span class='tr identifier id'>tr</span><span class='gt op'>&gt;</span>
+      <span class='lt op'>&lt;</span><span class='string val'>% end </span><span class='mod op'>%</span><span class='gt op'>&gt;</span>
+    <span class='lt op'>&lt;</span><span class='regexp val'>/table&gt;
+
+    &lt;br /</span><span class='gt op'>&gt;</span>
+
+    <span class='lt op'>&lt;</span><span class='string val'>%= link_to 'New actor', new_actor_path %&gt;
+</span></pre>
+<p>
+new.html.erb:
+</p>
+<pre class="code">
+    <span class='lt op'>&lt;</span><span class='h1 identifier id'>h1</span><span class='gt op'>&gt;</span><span class='New constant id'>New</span> <span class='Actor constant id'>Actor</span><span class='lt op'>&lt;</span><span class='regexp val'>/h1&gt;
+
+    &lt;% form_for(@actor) do |f| %&gt;
+      &lt;p&gt;
+        &lt;%= f.label :name %&gt;&lt;br /</span><span class='gt op'>&gt;</span>
+        <span class='lt op'>&lt;</span><span class='string val'>%= f.text_field :name %&gt;
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;%=</span> <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='label identifier id'>label</span> <span class='symbol val'>:phone</span> <span class='mod op'>%</span><span class='gt op'>&gt;</span><span class='lt op'>&lt;</span><span class='br identifier id'>br</span> <span class='regexp val'>/&gt;
+        &lt;%= f.text_field :phone %&gt;
+      &lt;/</span><span class='p identifier id'>p</span><span class='gt op'>&gt;</span>
+      <span class='lt op'>&lt;</span><span class='p identifier id'>p</span><span class='gt op'>&gt;</span>
+        <span class='lt op'>&lt;</span><span class='string val'>%= f.label :salary%&gt;&lt;br /&gt;
+        &lt;%=</span> <span class='f identifier id'>f</span><span class='dot token'>.</span><span class='text_field identifier id'>text_field</span> <span class='symbol val'>:salary</span> <span class='mod op'>%</span><span class='gt op'>&gt;</span>
+      <span class='lt op'>&lt;</span><span class='regexp val'>/p&gt;
+      &lt;p&gt;
+        &lt;%= f.submit &quot;Update&quot; %&gt;
+      &lt;/</span><span class='p identifier id'>p</span><span class='gt op'>&gt;</span>
+
+    <span class='lt op'>&lt;</span><span class='string val'>% end </span><span class='mod op'>%</span><span class='gt op'>&gt;</span>
+
+    <span class='lt op'>&lt;</span><span class='string val'>%= link_to 'Back', actors_path %&gt;
+</span></pre>
+
+      </div>
+    </div>
+  </body>
+</html>

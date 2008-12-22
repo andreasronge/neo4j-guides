@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Module: Neo4j::RelationMixin::ClassMethods</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section module Neo4j_RelationMixin_ClassMethods">
+  <h1 class="title">Module: Neo4j::RelationMixin::ClassMethods</h1>
+  <div class="section constants">
+  
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#property-instance_method' title='#property'>#property</a></span><span class='args'>(*props)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>property</h3>
+</div><div id="property-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>property</span><span class='args'>(*props)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/neo4j/mixins/relation.rb', line 106</span>
+
+<span class='def def kw'>def</span> <span class='property identifier id'>property</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='props identifier id'>props</span><span class='rparen token'>)</span>
+  <span class='props identifier id'>props</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='prop identifier id'>prop</span><span class='bitor op'>|</span>
+    <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='prop identifier id'>prop</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
+      <span class='get_property identifier id'>get_property</span><span class='lparen token'>(</span><span class='prop identifier id'>prop</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+
+    <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='prop identifier id'>prop</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='lparen token'>(</span><span class='rparen token'>)</span> <span class='plus op'>+</span><span class='string val'>&quot;=&quot;</span><span class='rparen token'>)</span>
+    <span class='define_method identifier id'>define_method</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='value identifier id'>value</span><span class='bitor op'>|</span>
+      <span class='set_property identifier id'>set_property</span><span class='lparen token'>(</span><span class='prop identifier id'>prop</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>

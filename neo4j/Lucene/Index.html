@@ -1,0 +1,1168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="../syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="../jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Lucene::Index</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Lucene_Index">
+  <h1 class="title">Class: Lucene::Index</h1>
+  <div class="section docstring">
+  <p>
+Represents a Lucene Index. The index is written/updated only when the
+commit method is called. This is done since writing to the index file
+should be done as a batch operation. (Performace will be bad otherwise).
+</p>
+
+</div><div class="section attributes">
+  <h1>Attributes</h1>
+
+  
+    <div class="instance">
+      <h2>Instance Attributes</h2>
+      <table>
+      
+        <tr>
+          <th class="name">path</td>
+          <td class="readwrite">
+            [<span id='path-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>path</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+        <tr>
+          <th class="name">uncommited</td>
+          <td class="readwrite">
+            [<span id='uncommited-instance_method'>R</span>W] 
+          </td>
+          <td class="visibility">
+            public
+          </td>
+          <td class="docstring">
+            <p>
+Returns the value of attribute <tt>uncommited</tt>.
+</p>
+
+            
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  
+</div><div class="section constants">
+  
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>initialize</span><span class='args'>(path, index_info)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+31
+32
+33
+34
+35
+36</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 31</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='comma token'>,</span> <span class='index_info identifier id'>index_info</span><span class='rparen token'>)</span>
+  <span class='@path ivar id'>@path</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span> <span class='comment val'># a key (i.e. filepath) where the index is stored on disk/or RAM              </span>
+  <span class='@index_info ivar id'>@index_info</span> <span class='assign token'>=</span> <span class='index_info identifier id'>index_info</span> <span class='comment val'># the actual storage of the index</span>
+  <span class='@uncommited ivar id'>@uncommited</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>  <span class='comment val'># documents to be commited, a hash of Document</span>
+  <span class='@deleted_ids ivar id'>@deleted_ids</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> <span class='comment val'># documents to be deleted</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#clear-class_method' title='clear'>clear</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+See instance method Index.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#lock-class_method' title='lock'>lock</a></span><span class='args'>(path)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#%3C%3C-instance_method' title='#&lt;&lt;'>#&lt;&lt;</a></span><span class='args'>(key_values)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Creates a new document from the given hash of values.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#clear-instance_method' title='#clear'>#clear</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Delete all uncommited documents.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#commit-instance_method' title='#commit'>#commit</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Writes to the index files Open and closes an lucene IndexWriter Close the
+IndexSearcher so that it will read the updated index next time.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#delete-instance_method' title='#delete'>#delete</a></span><span class='args'>(id)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Delete the specified document.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#deleted%3F-instance_method' title='#deleted?'>#deleted?</a></span><span class='args'>(id)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#exist%3F-instance_method' title='#exist?'>#exist?</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns true if the index already exists.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#field_infos-instance_method' title='#field_infos'>#field_infos</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#find-instance_method' title='#find'>#find</a></span><span class='args'>(*query, &amp;block)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Delegetes to the IndexSearcher.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#id_field-instance_method' title='#id_field'>#id_field</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#lock-instance_method' title='#lock'>#lock</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+There is one lock per index path.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#to_s-instance_method' title='#to_s'>#to_s</a></span><span class='args'></span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#update-instance_method' title='#update'>#update</a></span><span class='args'>(doc)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Updates the specified document.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        <span class='name'><a href='#updated%3F-instance_method' title='#updated?'>#updated?</a></span><span class='args'>(id)</span>
+        <span class='block'></span>
+        
+      </th>
+      <td class="docstring">
+        
+        
+      </td>
+    </tr>
+  
+</table>
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear</h3>
+</div><div id="clear-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>clear</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+See instance method Index.clear
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+98
+99
+100
+101
+102</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 98</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='index? fid id'>index?</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='index identifier id'>index</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>lock</h3>
+</div><div id="lock-class_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>lock</span><span class='args'>(path)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+239
+240
+241
+242
+243
+244</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 239</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lock identifier id'>lock</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='@@locks ivar id'>@@locks</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@@locks ivar id'>@@locks</span><span class='lbrack token'>[</span><span class='path identifier id'>path</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='Monitor constant id'>Monitor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+    <span class='@@locks ivar id'>@@locks</span><span class='lbrack token'>[</span><span class='path identifier id'>path</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>&lt;&lt;</h3>
+</div><div id="%3C%3C-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'><<</span><span class='args'>(key_values)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Creates a new document from the given hash of values. This document will be
+stored in this instance till it is commited.
+</p>
+<h4>Parameters</h4>
+<table>
+<tr><td valign="top">path&lt;String&gt;:</td><td>The key or location where the index should be stored (relative
+Lucene::Config[:storage_path]
+
+</td></tr>
+</table>
+<h4>Examples</h4>
+<p>
+index = Index.new(&#8216;name_or_path_to_index&#8217;) index &lt;&lt; <tt>:name=&amp;gt;&amp;#8217;foo&amp;#8217;</tt>
+</p>
+<h4>Returns</h4>
+<p>
+Returns the index instance so that this method can be chained
+</p>
+<p>
+:api: public
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+118
+119
+120
+121
+122
+123
+124</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 118</span>
+
+<span class='def def kw'>def</span> <span class='lshft op'>&lt;&lt;</span><span class='lparen token'>(</span><span class='key_values identifier id'>key_values</span><span class='rparen token'>)</span>
+  <span class='doc identifier id'>doc</span> <span class='assign token'>=</span> <span class='Document constant id'>Document</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='field_infos identifier id'>field_infos</span><span class='comma token'>,</span> <span class='key_values identifier id'>key_values</span><span class='rparen token'>)</span>
+  <span class='lock identifier id'>lock</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@uncommited ivar id'>@uncommited</span><span class='lbrack token'>[</span><span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='doc identifier id'>doc</span>
+  <span class='end end kw'>end</span>
+  <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>clear</h3>
+</div><div id="clear-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>clear</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Delete all uncommited documents. Also deregister this index from the
+current transaction (if there is one transaction)
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+88
+89
+90
+91
+92
+93</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 88</span>
+
+<span class='def def kw'>def</span> <span class='clear identifier id'>clear</span>
+  <span class='lock identifier id'>lock</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@uncommited ivar id'>@uncommited</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='end end kw'>end</span>
+  <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='deregister_index identifier id'>deregister_index</span> <span class='self self kw'>self</span> <span class='if if_mod kw'>if</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>commit</h3>
+</div><div id="commit-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>commit</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Writes to the index files Open and closes an lucene IndexWriter Close the
+IndexSearcher so that it will read the updated index next time. This method
+will automatically be called from a Lucene::Transaction if it was running
+when the index was created.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 166</span>
+
+<span class='def def kw'>def</span> <span class='commit identifier id'>commit</span>
+  <span class='comment val'># TODO not enough to block threads here, since the @uncommited and @deleted_ids may change</span>
+  <span class='comment val'># Need to synchronize </span>
+  <span class='lock identifier id'>lock</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span> <span class='string val'>&quot;  BEGIN: COMMIT&quot;</span>
+    <span class='delete_documents identifier id'>delete_documents</span> <span class='comment val'># deletes all docuements given @deleted_ids</span>
+  
+    <span class='comment val'># are any updated document deleted ?</span>
+    <span class='deleted_ids identifier id'>deleted_ids</span> <span class='assign token'>=</span> <span class='@uncommited ivar id'>@uncommited</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span> <span class='bitand op'>&amp;</span> <span class='@deleted_ids ivar id'>@deleted_ids</span>
+    <span class='comment val'># delete them those</span>
+    <span class='deleted_ids identifier id'>deleted_ids</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='id identifier id'>id</span><span class='bitor op'>|</span> <span class='@uncommited ivar id'>@uncommited</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span><span class='rbrace token'>}</span>
+  
+    <span class='comment val'># update the remaining documents that has not been deleted</span>
+    <span class='update_documents identifier id'>update_documents</span> <span class='comment val'># update @documents</span>
+    
+    <span class='@uncommited ivar id'>@uncommited</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>  <span class='comment val'># TODO: should we do this in an ensure block ?</span>
+    <span class='@deleted_ids ivar id'>@deleted_ids</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+    
+    <span class='comment val'># if we are running in a transaction remove this so it will not be commited twice</span>
+    <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='current identifier id'>current</span><span class='dot token'>.</span><span class='deregister_index identifier id'>deregister_index</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='Transaction constant id'>Transaction</span><span class='dot token'>.</span><span class='running? fid id'>running?</span>
+    <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='debug identifier id'>debug</span> <span class='string val'>&quot;  END: COMMIT&quot;</span>        
+  <span class='end end kw'>end</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='ex identifier id'>ex</span>
+  <span class='$LUCENE_LOGGER gvar id'>$LUCENE_LOGGER</span><span class='dot token'>.</span><span class='error identifier id'>error</span><span class='lparen token'>(</span><span class='ex identifier id'>ex</span><span class='rparen token'>)</span>
+  <span class='comment val'>#      ex.backtrace.each{|x| $LUCENE_LOGGER.error(x)}</span>
+  <span class='raise identifier id'>raise</span> <span class='ex identifier id'>ex</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>delete</h3>
+</div><div id="delete-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>delete</span><span class='args'>(id)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Delete the specified document. The index file not be updated until the
+transaction commits. The id of the deleted document is stored in memory
+till the transaction commits.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+146
+147
+148
+149
+150</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 146</span>
+
+<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
+  <span class='lock identifier id'>lock</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@deleted_ids ivar id'>@deleted_ids</span> <span class='lshft op'>&lt;&lt;</span> <span class='id identifier id'>id</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>deleted?</h3>
+</div><div id="deleted%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>deleted?</span><span class='args'>(id)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+153
+154
+155</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 153</span>
+
+<span class='def def kw'>def</span> <span class='deleted? fid id'>deleted?</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
+  <span class='@deleted_ids ivar id'>@deleted_ids</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>exist?</h3>
+</div><div id="exist%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>exist?</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Returns true if the index already exists.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+249
+250
+251</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 249</span>
+
+<span class='def def kw'>def</span> <span class='exist? fid id'>exist?</span>
+  <span class='@index_info ivar id'>@index_info</span><span class='dot token'>.</span><span class='index_exists? fid id'>index_exists?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>field_infos</h3>
+</div><div id="field_infos-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>field_infos</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+38
+39
+40</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 38</span>
+
+<span class='def def kw'>def</span> <span class='field_infos identifier id'>field_infos</span>
+  <span class='IndexInfo constant id'>IndexInfo</span><span class='dot token'>.</span><span class='instance identifier id'>instance</span><span class='lparen token'>(</span><span class='@path ivar id'>@path</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>find</h3>
+</div><div id="find-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>find</span><span class='args'>(*query, &amp;block)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Delegetes to the IndexSearcher.find method
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 198</span>
+
+<span class='def def kw'>def</span> <span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='query identifier id'>query</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='comment val'># new method is a factory method, does not create if it already exists</span>
+  <span class='searcher identifier id'>searcher</span> <span class='assign token'>=</span> <span class='IndexSearcher constant id'>IndexSearcher</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@index_info ivar id'>@index_info</span><span class='dot token'>.</span><span class='storage identifier id'>storage</span><span class='rparen token'>)</span>
+  
+  <span class='comment val'># check sorting parameters</span>
+  <span class='query identifier id'>query</span><span class='dot token'>.</span><span class='last identifier id'>last</span> <span class='eq op'>==</span> <span class='symbol val'>:sort_by</span>
+  <span class='query identifier id'>query</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='x identifier id'>x</span><span class='bitor op'>|</span> <span class='x identifier id'>x</span> <span class='eq op'>==</span> <span class='symbol val'>:sort_by</span><span class='rbrace token'>}</span>
+  <span class='if if kw'>if</span> <span class='block identifier id'>block</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='case case kw'>case</span> <span class='query identifier id'>query</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
+    <span class='when when kw'>when</span> <span class='String constant id'>String</span>
+      <span class='return return kw'>return</span> <span class='searcher identifier id'>searcher</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='@index_info ivar id'>@index_info</span><span class='comma token'>,</span> <span class='query identifier id'>query</span><span class='rparen token'>)</span>           
+    <span class='when when kw'>when</span> <span class='Hash constant id'>Hash</span>
+      <span class='return return kw'>return</span> <span class='searcher identifier id'>searcher</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='@index_info ivar id'>@index_info</span><span class='comma token'>,</span> <span class='query identifier id'>query</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='rparen token'>)</span> 
+    <span class='end end kw'>end</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='searcher identifier id'>searcher</span><span class='dot token'>.</span><span class='find_dsl identifier id'>find_dsl</span><span class='lparen token'>(</span><span class='@index_info ivar id'>@index_info</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span> 
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>id_field</h3>
+</div><div id="id_field-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>id_field</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+126
+127
+128</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 126</span>
+
+<span class='def def kw'>def</span> <span class='id_field identifier id'>id_field</span>
+  <span class='@index_info ivar id'>@index_info</span><span class='dot token'>.</span><span class='id_field identifier id'>id_field</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>lock</h3>
+</div><div id="lock-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>lock</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+There is one lock per index path.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+232
+233
+234
+235
+236
+237</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 232</span>
+
+<span class='def def kw'>def</span> <span class='lock identifier id'>lock</span>
+  <span class='@@locks ivar id'>@@locks</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@@locks ivar id'>@@locks</span><span class='lbrack token'>[</span><span class='@path ivar id'>@path</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='Monitor constant id'>Monitor</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+    <span class='@@locks ivar id'>@@locks</span><span class='lbrack token'>[</span><span class='@path ivar id'>@path</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>to_s</h3>
+</div><div id="to_s-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>to_s</span><span class='args'></span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+218
+219
+220</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 218</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;Index [path: '#@path', #{@uncommited.size} documents]&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>update</h3>
+</div><div id="update-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>update</span><span class='args'>(doc)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section docstring">
+  <p>
+Updates the specified document. The index file will not be updated until
+the transaction commits. The doc is stored in memory till the transaction
+commits.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+135
+136
+137
+138
+139</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 135</span>
+
+<span class='def def kw'>def</span> <span class='update identifier id'>update</span><span class='lparen token'>(</span><span class='doc identifier id'>doc</span><span class='rparen token'>)</span>
+  <span class='lock identifier id'>lock</span><span class='dot token'>.</span><span class='synchronize identifier id'>synchronize</span> <span class='do do kw'>do</span>
+    <span class='@uncommited ivar id'>@uncommited</span><span class='lbrack token'>[</span><span class='doc identifier id'>doc</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='doc identifier id'>doc</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>updated?</h3>
+</div><div id="updated%3F-instance_method" class="section method">
+  <div class="details_title">
+  <div class='section methodsignature'>
+  <tt class='def'>
+    <span class='visibility'>public</span>
+    <span class='return_types'></span>
+    <span class='name'>updated?</span><span class='args'>(id)</span>
+    <span class='block'></span>
+  </tt>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+157
+158
+159</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/lucene/index.rb', line 157</span>
+
+<span class='def def kw'>def</span> <span class='updated? fid id'>updated?</span><span class='lparen token'>(</span><span class='id identifier id'>id</span><span class='rparen token'>)</span>
+  <span class='@uncommited ivar id'>@uncommited</span><span class='lbrack token'>[</span><span class='id identifier id'>id</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+  </body>
+</html>
