@@ -1,0 +1,112 @@
+h2. Basic - Nodes, Properties and Relationships
+
+Neo node space consists of three basic elements: nodes, relationships that connect nodes and properties attached
+to both nodes and relationships. All relationships have a type, for example if the node space represents
+a social network, a relationship type could be KNOWS. If a relationship of the type KNOWS connects two nodes,
+that probably represents two people that know each other. A lot of the semantics, the meaning, of a node space
+is encoded in the relationship types of the application. 
+
+endprologue.
+
+h3. Creating Nodes
+
+Example of creating a Neo4j::Node
+
+<pre><code class="ruby">
+  require "rubygems"
+  require 'neo4j'
+
+  Neo4j::Transaction.run do
+    node = Neo4j::Node.new
+  end
+</code></pre>
+h3. Transactions
+
+All Neo4j write operation must be wrapped in a transaction as shown above.
+Here is one way of creating transaction:
+
+<pre><code class="ruby">
+  Neo4j::Transaction.run do
+    # neo4j operations goes here
+  end
+</code></pre>
+
+For more info [[Neo4j Transactions|http://wiki.neo4j.org/content/Transactions]]
+
+h3. Properties
+
+Example of setting properties.
+
+<pre><code class="ruby">
+  Neo4j::Node.new :name=>'foo', :age=>123, :hungry => false, 4 => 3.14
+  # which is same as the following:
+  node = Neo4j::Node.new
+  node[:name] = 'foo'
+  node[:age]  = 123
+  node['hungry'] = false
+  node[4] = 3.14
+  node[:age] #  => 123
+</code></pre>
+
+h3. Creating Relationships
+
+Example of creating an outgoing Neo4j::Relationship from node1 to node2 of type friends
+
+<pre><code class="ruby">
+  node1 = Neo4j::Node.new
+  node2 = Neo4j::Node.new
+  Neo4j::Relationship.new(:friends, node1, node2)
+  # which is same as
+  node1.outgoing(:friends) << node2
+</code></pre>
+
+h3. Accessing Relationships
+
+Example of getting relationships
+
+<pre><code class="ruby">
+  node1.rels # => an Enumerable of all incoming and outgoing relationship of any type
+  node1.rel?  # => true if there are any relationship of any type
+  node1.rels(:friends) # => all relationship of type friends, both incoming and outgoing
+  node1.rels(:friends).outgoing # => all outgoing relationship of type friends
+  node1.rel(:both, :best_friend)  # => returns one relationship, nil or throws an exception if there are more the two relationship from this node
+  node1.rel(:incoming, :best_friend)
+</code></pre>
+
+h3. Finding Relationships between two nodes
+
+You can find all relationships between two nodes like this:
+
+<pre><code class="ruby">
+  node_a.rels.to_other(node_b)  # => an enumerable of all relationship between those two nodes
+  node_a.rels(:friends).outgoing.to_other(node_b)  # => an enumerable of relationship of only outgoing relationships of type friend
+</code></pre>
+
+h3. Deleting Relationships between two nodes
+
+You can combine the **to_other** method with **del** to delete relationships between two nodes (see above)
+
+<pre><code class="ruby">
+  node_a.rels.to_other(node_b).del  # => an enumerable of all relationship between those two nodes
+  node_a.rels(:friends).outgoing.to_other(node_b).del  # => an enumerable of relationship of only outgoing relationships of type friend
+</code></pre>
+
+h3. Properties on Relationships
+
+Example of setting properties on relationships
+
+<pre><code class="ruby">
+  rel = node1.rels(:friends).outgoing.first  # get the first relationship object 
+  rel[:since] = 1982
+</code></pre>
+
+h3. Accessing/Traversing Nodes
+
+Example:
+<pre><code class="ruby">
+  node.outgoing(:work).depth(4).filter{|path| path.length == 2}]
+  node.outgoing(:work).depth(4).prune{|path| ...}
+</code></pre>
+
+For more info about traversing see the java documetation of filter and prune: [[JavaDoc|http://api.neo4j.org/current/org/neo4j/graphdb/traversal/TraversalDescription.html]]
+

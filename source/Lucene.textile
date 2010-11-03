@@ -1,0 +1,266 @@
+h2. Indexing on Neo4j::Node
+
+You will lead ...
+
+endprologue.
+
+Example:
+
+<pre><code class="ruby">
+  Neo4j::Node.index :name
+  ...
+  Neo4j::Transaction.run do
+
+    Neo4j::Node.new :name => 'andreas'
+
+  end  # the indexing now takes place
+
+  # we can now query using the lucene query syntax
+  Neo4j::Node.find('name: andreas')
+
+</code></pre>    
+
+h3. Indexing on Neo4j::NodeMixin
+
+Indexes can also be declared on your models.
+
+Example:
+
+<pre><code class="ruby">
+  class Person
+    include Neo4j::NodeMixin
+    
+    index :name
+  end
+</code></pre>    
+
+After each transaction finishes the Person will be indexed.
+<pre><code class="ruby">
+  andreas = Person.new :name => 'andreas'
+</code></pre>    
+
+
+The full lucene query syntax is available:
+<pre><code class="ruby">
+  Person.find('name: andreas').first #=> andreas
+</code></pre>    
+
+h3. Indexing on Neo4j::Relationship
+
+Works as indexing on Neo4j::Node
+
+h3. Indexing on Neo4j::RelationshipMixin
+
+Works as indexing on Neo4j::NodeMixin
+
+h3. Fulltext
+
+By default indexes are of type :exact.
+To use a fulltext index provide the :type => :fulltext parameter for both the index and find method !
+
+Example:
+
+<pre><code class="ruby">
+  class Person
+    include Neo4j::NodeMixin
+    
+    index :name, :type => :fulltext
+  end
+</code></pre>    
+
+<pre><code class="ruby">
+  Person.find('name: andreas', :type => :fulltext).first #=> andreas
+</code></pre>    
+
+h3. Indexing Related Nodes (Shared Index)
+
+Two or more classes can share the same index. For example, let say we have two classes Person and Phone and
+each person can have several phone number nodes.
+
+Example:
+<pre><code class="ruby">
+  class Person
+     include Neo4j::NodeMixin
+     has_n :phones
+     index :name
+  end
+</code></pre>    
+
+<pre><code class="ruby">
+  class Phone
+     include Neo4j::NodeMixin
+     index :number
+  end   
+</code></pre>    
+
+With the example above we can only query and find Phone nodes. If we want to query both the Person and Phone nodes we should use the ''via''
+key word.
+
+Example
+<pre><code class="ruby">
+   class Phone  # forward declaration, needed below
+      include Neo4j::NodeMixin
+   end
+</code></pre>    
+
+<pre><code class="ruby">
+   class Person
+      include Neo4j::NodeMixin
+      has_n(:phones).to(Phone)
+      index :name
+   end
+</code></pre>    
+
+<pre><code class="ruby">
+   class Phone
+      has_n(:people).from(Person, :phones)  # several people can have the same phone number
+      index :number, :via => :people
+   end   
+</code></pre>    
+
+We can now do a query on the Person class instead.
+
+Example
+<pre><code class="ruby">
+  Person.find('name: *smith AND phone: "040*")
+</code></pre>    
+
+h4. Gotchas
+
+# You can only index incoming relationship
+# You must declare both direction with to and from in a has_n or has_one.
+
+h3. Reuse an Indexer (Shared Index)
+
+You can specify that a class should use the same lucene indexx as another class.
+
+Example
+<pre><code class="ruby">
+  class Employee
+    property :employee_id
+    node_indexer Person
+    index :employee_id
+  end
+</code></pre>    
+
+The Employee and Person class now shares the same index. That means that you can search on indexes declared
+in both the Person and Employee classes.
+
+h3. Query Syntax
+
+Neo4j/Lucene support a wide range of queries
+* Wildcard searches
+* Fuzzy searches
+* Proximity searches
+* Range searches
+
+For information of the syntax see [[here|http://lucene.apache.org/java/3_0_2/queryparsersyntax.html]]
+
+h3. Sort Order
+
+It is only possible to sort on :exact indexes. Sorting on :fulltext index is not possible.
+Sort order is specified with the *asc* and *desc* method.
+
+Example:
+<pre><code class="ruby">
+Person.find('email: *@gmail.com').asc(:email, :age) # sort by ascending order email&age
+Person.find('email: *@gmail.com').asc(:name, :age).desc(:email)
+</code></pre>    
+
+By default fields are sorted as Strings. If you want to sort as integer (Fixnum) you have to declare the type first, see below.
+
+h2. Performance and Configurations
+
+h3. Lucene Configuration 
+
+It is possible to create your own lucene configuration.
+Example, see the configuration for fulltext and exact indexing in the Neo4j::Config[:lucene]
+You can add your own lucene indexing configuration in the Neo4j::Config and use it with the index keyword.
+
+<pre><code class="ruby">
+
+  Neo4j::Config[:lucene][:my_index_type] = ...
+  
+  class Person
+     index :name, :type => :my_index_type
+  end
+</code></pre>    
+
+
+h3. Indexing and Query Before Commit
+
+When you declare an index it will make sure that the neo4j property and the lucene index will be synchronized.
+This happens when the transaction commits.
+If you want to index properties before the transaction commits you can do it yourself.
+
+Example (from RSpec):
+
+<pre><code class="ruby">
+    new_node = Neo4j::Node.new
+    new_node[:name] = 'Kalle Kula'
+    new_node.add_index(:name)
+    new_node.rm_index(:name)
+    new_node[:name] = 'lala'
+    new_node.add_index(:name)
+    Neo4j::Node.find('name: lala').first.should == new_node
+    Neo4j::Node.find('name: "Kalle Kula"').first.should_not == new_node
+</code></pre>    
+
+h3. Optimization
+
+If you are looping thru a lot of nodes you might get better performance by not loading the Ruby wrappers
+around the Java nodes.
+
+<pre><code class="ruby">
+  Person.find('name: andreas', :type => :fulltext, :wrapped => false)
+</code></pre>    
+
+When using the @:wrapped => false@ parameter the find method will return a Java @org.neo4j.graphdb.index.IndexHit@ instance
+(which works like an Ruby Enumerable so you can use the normal each, collect etc.. methods)
+
+h2. Unimplemented features
+
+h3. Numerical Fields
+
+In order to support sort order and range queries on Fixnum, Float and Date queries you need
+to specify that the field will be indexed as a numerical field.
+
+Example:
+
+<pre><code class="ruby">
+class Person
+  include Neo4j::NodeMixin
+  property :age, :type => Fixnum
+  index :age, :type => :exact
+</code></pre>    
+
+h3. Range Queries
+
+*Not sure if or when this will be implemented*
+<pre><code class="ruby">
+  Person.find(:age => 20..30)
+  Person.find(:height).between(1.52, 1.87)
+</code></pre>    
+
+h3. Boolean Queries
+
+*Not sure if or when this will be implemented*
+<pre><code class="ruby">
+  query1 = Person.find(:salary => 2000..3000).or(:name => 'kalle')
+  query2 = Person.find(:age => 30)
+  query1.and(query2).each {|node| puts "name #{node[:name]}"}
+</code></pre>    
+
+h3. Date Queries
+
+*Not sure if or when this will be implemented*
+<pre><code class="ruby">
+  class Person
+    property :born, :type => Date
+    index :born
+  end
+  Person.find("born:[20080427 TO 20100203]")
+  Person.find(:born).between(Date.today, 5.years.ago)
+</code></pre>    
+    
+    

@@ -1,0 +1,225 @@
+h2. Rails 3 / Active Model support
+
+You will lead ...
+
+endprologue.
+
+
+Developed by Nick Sieger (http://github.com/nicksieger/neo4j-rails) and extended 
+and included in Neo4j.rb by Andreas Ronge and Ben Jackson.
+
+h2. Usage
+
+The @Neo4j::Model@ implements the Rails ActiveModel interface. That means that you can use
+the normal validation and other methods that you are used to in ActiveRecord.
+
+Example:
+
+<pre><code class="ruby">
+  class IceCream < Neo4j::Model
+    property :flavour
+    validates_presence_of :flavour
+  end
+
+  IceCream.new.valid?  # => false
+  IceCream.new(:flavour => "vanilla").valid?  # => true
+</code></pre>
+
+h3. Callbacks
+
+The following callbacks are defined: *create* *save* *update* *destroy*
+See the [[rails documentation|http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html]] when they are called.
+
+h3. Transactions
+
+All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
+The @Neo4j::Model@ class can automatically create transactions for you.
+
+h4. Model.new
+
+The @Neo4j::Model.new@ methods does not require a transaction (unlike the @Neo4j::Node.new@ method)
+since it creates a node in memory with no connection to the neo4j database.
+This makes it easier to create forms that don't touch the database if validation fails by using
+the ActiveRecord-style two-step @Model.new@ + @Model#save@ creation.
+
+h4. Model.save
+
+Saves the node if the validation was successful. It will create a new transaction if neccessarly.
+If the saved model that was *not* created by the @Model.new@ method (which means it exist in the database) and
+the validation fails then the transaction will be rolled back.
+
+h4. Model.update_attributes
+
+Updates the model with the given attributes and saves the model.
+Will create a new transaction if neccessarly which can be rollback by the @save@ method if the validation was
+not successful.
+
+h3. accepts_nested_attributes_for
+
+Neo4j.rb supports [[Nested Attributes|http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html]]
+
+The following configuration option are available
+
+*  @:allow_destroy@ If true, destroys any members from the attributes hash with a _destroy key and a value that evaluates to true (eg. 1, ‘1’, true, or ‘true’). This option is off by default.
+*  @:reject_if@ Allows you to specify a Proc or a Symbol pointing to a method that checks whether a record should be built for a certain attribute hash. The hash is passed to the supplied Proc or the method and it should return either true or false. When no :reject_if is specified, a record will be built for all attribute hashes that do not have a _destroy value that evaluates to true. Passing :all_blank instead of a Proc will create a proc that will reject a record where all the attributes are blank.
+
+When using the @accepts_nested_attributes_for@ class method you must specify which class the relationship correspond to
+by using the @to@ method in @has_one@ or @has_n@.
+
+*Example*
+
+<pre><code class="ruby">
+class Member < Neo4j::Model
+  has_n(:posts).to(Post)
+  has_one(:avatar).to(Avator)
+
+  accepts_nested_attributes_for :avatar, :allow_destroy => true
+  accepts_nested_attributes_for :posts, :reject_if => proc { |attributes| attributes[:title].blank? }
+end
+
+</code></pre>
+
+h3. Neo4j::Rails::Transaction
+
+This class can be used as a filter in order to wrap methods in transactions.
+
+Example:
+<pre><code class="ruby">
+  class UsersController < ApplicationController
+    around_filter Neo4j::Rails::Transaction, :only => [:create]
+</code></pre>
+
+The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
+to signal for a rollback.
+
+Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
+
+h4. From the Rails Documentation
+
+Save and destroy are automatically wrapped in a transaction
+Both save and destroy come wrapped in a transaction that ensures that whatever you do in validations or callbacks will happen under its protected cover. So you can use validations to check for values that the transaction depends
+on or you can raise exceptions in the callbacks to rollback, including after_* callbacks. As a consequence changes to the database are not seen outside your connection until the operation is complete.
+
+h3. Validation
+
+All the normal validations work.
+Example:
+<pre><code class="ruby">
+class Person < Neo4j::Model
+  index :email
+  validates :email, :uniqueness => true
+  validates :password, :presence     => true,
+                   :confirmation => true,
+                   :length       => { :within => 6..40 }
+end
+</code></pre>
+
+In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
+
+h3. API
+
+Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Model. Neo4j::Model includes 
+* ActiveModel::Validations
+* ActiveModel::Conversions
+* ActiveModel::Callbacks
+* ActiveModel::Dirty
+* ActiveModel::MassAssignmentSecurity
+
+Methods:
+<pre><code class="ruby">
+class Neo4j::Model
+  def valid?; end
+  def save; end
+  def save!; end
+  def update_attributes(attributes); end
+  def update_attributes!(attributes); end
+  def destroy; end
+  def attributes=(attrs); end
+  def self.all; end
+  def self.find(*); end
+  def self.create(attributes); end
+  def self.create!(attributes); end
+  def self.transaction(&lock); end
+  def self.accepts_nested_attributes_for(*); end
+end
+</code></pre>
+
+Method @reload@ is not implemented but can instead be replaced by not commiting a transaction.
+Method @all@ is not implemented but can instead be replaced the @rule :all@ class method.
+
+h3. Rails Generators
+
+You can use the standard Rails 3 generators to create your models, controllers, routes, tests and views, by passing 'neo4j' as the ORM for generators to use:
+
+<pre>> rails generate scaffold User name:string email:string --orm=neo4j</pre>
+
+You can also set up your application configuration to use neo4j as the default ORM for generating templates.  Simply add the following to your application's Rails configuration.  This example also favours RSpec and specifies that fixtures are not to be created:
+
+<pre>config.generators do |g|
+  g.orm             :neo4j
+  g.test_framework  :rspec, :fixture => false
+end</pre>
+
+Then you can simply call generators as normal without having to specify the ORM:
+
+<pre>> rails generate model Admin --parent User</pre>
+
+To undo what was just generated:
+
+<pre>> rails destroy model Admin</pre>
+
+h2. Installation and Configuration
+
+h3. Install JRuby
+
+I recommend using [[RVM|http://rvm.beginrescueend.com/]]
+
+h3. Install Rails
+
+<pre>
+gem install rails
+gem install neo4j --pre
+</pre>
+
+h3. Replace ActiveRecord with Neo4j
+
+Edit the config/application.rb
+comment the line require 'rails/all' and add
+<pre>
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_resource/railtie"
+require "rails/test_unit/railtie"
+require 'neo4j'
+</pre>
+
+h3. Include dependency to neo4j
+
+Add the following line to your Gemfile
+<pre>
+gem 'neo4j', '1.0.0.beta.6'
+</pre>
+
+Install the gems specified in your Gemfile @bundle install@
+
+h3. Create app
+
+<pre>
+rails new neo4j-rails-example -m http://jruby.org/rails3.rb
+cd neo4j-rails-example
+rails generate scaffold person -o=neo4j
+</pre>
+
+h3. Configuration
+
+You can set the location of the database in the @config/application.rb@ file.
+Example:
+
+<pre>
+  config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
+</pre>
+
+h2. Deployment
+
+* [[Tomcat/Trinidad|https://github.com/calavera/trinidad]]
+* [[Glassfish App Server|http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl]]

@@ -1,0 +1,14 @@
+h2. The advantage if a graph database
+
+You will lead ...
+
+endprologue.
+
+Why a graph database ? 
+* Performance, here is a good summary by "Emil Eifrem, founder of the Neo4j":http://www.oscon.com/oscon2009/public/schedule/detail/8364
+
+* Domain modeling: you use the language of node,properties and relationship to describe your
+domain (instead of e.g. UML) and there is no need to have a complicated O/R mapping tool to implement it in your database.
+You can say that Neo4j is  "Whiteboard friendly" !
+
+!http://github.com/downloads/andreasronge/neo4j/whiteboard.png!

@@ -1,0 +1,190 @@
+h2. Mapping Nodes/Relationships to Ruby Classes
+
+In this guide you will learn how to map ruby classes to neo4j relationships and nodes.
+
+endprologue.
+
+There is a complete example [[here|http://github.com/andreasronge/neo4j/tree/master/example/simple/]] of some of the examples below.
+
+h3. Creating a Model
+
+The following example specifies how to map a Neo4j node to a Ruby Person instance.
+
+<ruby>
+require "rubygems"
+require "neo4j"
+
+class Person
+  include Neo4j::NodeMixin
+
+  # define Neo4j properties
+  property :name, :salary, :age, :country
+
+  # define an one way relationship to any other node
+  has_n :friends
+
+  # adds a Lucene index on the following properties
+  index :name
+  index :salary
+  index :age
+  index :country
+end
+</ruby>
+
+Neo4j properties and relationships are declared using the 'property' and 'has_n'/'has_one' NodeMixin class method.
+Adding new types of properties and relationships can also be done without
+declaring those properties/relationships by using the operator '[]' on @Neo4j::NodeMixin@ and the
+'<<' on the @Neo4j::NodeTraverser@
+
+By using the NodeMixin and by declaring properties and indices, all instances of the Person class can now be stored in 
+the Neo4j node space and be retrieved/queried by traversing the node space or performing Lucene queries.
+
+A Lucene index will be updated when the name or salary property changes.
+
+
+h3. Creating a node
+
+Creating a Person node instance
+
+<pre><code class="ruby">
+  person = Person.new
+</code></pre>      
+
+h3. Properties
+
+Setting a property:
+
+<pre><code class="ruby">
+  person.name = 'kalle'
+  person.salary  = 10000
+</code></pre>      
+
+You can also set this (or any property) when you create the node:
+
+<pre><code class="ruby">
+   person = Person.new :name => 'kalle', :salary => 10000, :foo => 'bar'
+</code></pre>      
+
+
+h4. Properties and the [] operator
+
+Notice that it is not required to specify which attributes should be available on a node. Any attributes can be
+set using the [] operator. Declared properties set an expectation, not an requirement. It can be used for documenting your model objects and
+catching typos.
+
+Example:
+<pre><code class="ruby">
+  person['an_undefined_property'] = 'hello'
+</code></pre>      
+
+So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation.
+But also, if you declare a Lucene index on the declared property and update the value, then the Lucene index will 
+automatically be updated.  The property declaration is required before declaring an index on the property.
+
+h4. Properties as a hash
+
+You can get all properties as an hash.
+
+Example:
+<pre><code class="ruby">
+    puts "person #{person.props.inspect}"
+ </code></pre>      
+
+You can also update any properties with an hash
+
+Example:
+<pre><code class="ruby">
+    person.update( :name => 'foo', :age => 42, :colour => nil)
+ </code></pre>      
+
+
+h3. Relationships
+
+Like properties, relationships do not have to be defined using has_n or has_one for a class.
+A relationship can be added at any time on any node.
+
+Example:
+
+<pre><code class="ruby">
+  person.outgoing(:best_friends) << other_node
+  person.rels(:best_friends).outgoing.first.end_node # => other_node (if there is only one relationship of type 'best_friends' on person)
+</code></pre>      
+
+h3. Mapping -  one to many, many to many
+
+Use **to** and **from** with has_n to specify which direction the generated method should traverse.
+
+Example
+
+<pre><code class="ruby">
+  class Role
+    include Neo4j::RelationshipMixin
+    # notice that neo4j relationships can also have properties
+    property :name
+  end
+</code></pre>      
+
+<pre><code class="ruby">
+  class Actor
+    include Neo4j::NodeMixin
+
+    # The following line defines the acted_in relationship
+    # using the following classes:
+    # Actor[Node] --(Role[Relationship])--   Movie[Node]
+    #
+    has_n(:acted_in).to(Movie).relationship(Role)
+  end
+</code></pre>      
+
+<pre><code class="ruby">
+  class Director
+    include Neo4j::NodeMixin
+    property :name
+    has_n(:directed).to(Movie)
+  end
+</code></pre>      
+  
+<pre><code class="ruby">
+  class Movie
+    include Neo4j::NodeMixin
+    property :title
+    property :year
+  
+    has_one(:director).from(Director, :directed)
+  
+    # defines a method for traversing incoming acted_in relationships from Actor
+    has_n(:actors).from(Actor, :acted_in)
+  end
+</code></pre>      
+
+You can then do this:
+
+<pre><code class="ruby">
+    lucas = Director.new :name => 'George Lucas'
+    star_wars_4 = Movie.new :title => 'Star Wars Episode IV: A New Hope', :year => 1977
+    star_wars_3 = Movie.new :title => "Star Wars Episode III: Revenge of the Sith", :year => 2005
+    lucas.directed << star_wars_3 << star_wars_4
+
+    lucas.directed.should include(star_wars_3, star_wars_4)
+    star_wars_3.director.should == lucas
+    star_wars_4.director.should == lucas
+</code></pre>      
+
+Which is same as:
+
+<pre><code class="ruby">
+    lucas.outgoing("Movie#directed").should include(star_wars_3, star_wars_4)
+    star_wars_3.incoming("Movie#directed").should include(lucas)
+</code></pre>      
+
+
+h3. Finding Nodes and Queries
+
+There are three ways of finding/querying nodes in Neo4j: 
+# by traversing the graph
+# by using Lucene queries
+# using the unique neo4j id (Neo4j::NodeMixin#neo_id).
+
+When doing a traversal one starts from a node and traverses one or more relationships (one or more levels deep).
+This start node can be either the reference node which is always found (Neo4j#ref_node) or by finding a start
+node from a Lucene query.
