@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Ruby on Rails Guides: Mapping Nodes/Relationships to Ruby Classes</title>
+
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+</head>
+<body class="guide">
+  <div id="topNav">
+    <div class="wrapper">
+      <a href="http://neo4j.org">neo4j.org</a> |
+      <a href="http://github.com/andreasronge/neo4j">GitHub</a>
+    </div>
+  </div>
+  <div id="header">
+    <div class="wrapper clearfix">
+      <h1><a href="index.html" title="Return to home page">Guides for Neo4j.rb</a></h1>
+      <p class="hide"><a href="#mainCol">Skip navigation</a>.</p>
+      <ul class="nav">
+        <li><a href="index.html">Home</a></li>
+        <li class="index"><a href="index.html" onclick="guideMenu(); return false;" id="guidesMenu">Guides Index</a>
+          <div id="guides" class="clearfix" style="display: none;">
+            <hr />
+            <dl class="L">
+              <dt>Start Here</dt>
+              <dd><a href="Why-a-Graph-Database.html">Why a graph database ?</a></dd>
+              <dd><a href="Installation.html">Installation</a></dd>
+              <dt>The Basic</dt>
+              <dd><a href="Basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dt>Mapping to Ruby Classes</dt>
+              <dd><a href="Mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
+              <dd><a href="Lucene.html">Indexing and Quering with Lucene</a></dd>
+              <dt>Rails 3</dt>
+              <dd><a href="Rails-3.html">Rails 3 Integration</a></dd>
+            </dl>
+          </div>
+        </li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="credits.html">Credits</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="hide" />
+
+  <div id="feature">
+    <div class="wrapper">
+      <h2>Mapping Nodes/Relationships to Ruby Classes</h2>
+<p>In this guide you will learn how to map ruby classes to neo4j relationships and nodes.</p>
+
+            <div id="subCol">
+        <h3 class="chapter"><img src="images/chapters_icon.gif" alt="" />Chapters</h3>
+        <ol class="chapters">
+<li><a href="#creating-a-model">Creating a Model</a></li><li><a href="#creating-a-node">Creating a node</a></li><li><a href="#properties">Properties</a><ul><li><a href="#properties-and-the-operator">Properties and the [] operator</a></li> <li><a href="#properties-as-a-hash">Properties as a hash</a></li></ul></li><li><a href="#relationships">Relationships</a></li><li><a href="#mapping-one-to-many-many-to-many">Mapping &#8211;  one to many, many to many</a></li><li><a href="#finding-nodes-and-queries">Finding Nodes and Queries</a></li></ol></div>
+    </div>
+  </div>
+
+  <div id="container">
+    <div class="wrapper">
+      <div id="mainCol">
+        <p>There is a complete example [[here|http://github.com/andreasronge/neo4j/tree/master/example/simple/]] of some of the examples below.</p>
+<h3 id="creating-a-model">1 Creating a Model</h3>
+<p>The following example specifies how to map a Neo4j node to a Ruby Person instance.</p>
+<notextile>
+<div class="code_container">
+<pre class="brush: ruby; gutter: false; toolbar: false">
+require &quot;rubygems&quot;
+require &quot;neo4j&quot;
+
+class Person
+  include Neo4j::NodeMixin
+
+  # define Neo4j properties
+  property :name, :salary, :age, :country
+
+  # define an one way relationship to any other node
+  has_n :friends
+
+  # adds a Lucene index on the following properties
+  index :name
+  index :salary
+  index :age
+  index :country
+end
+</pre>
+</div>
+</notextile>
+
+<p>Neo4j properties and relationships are declared using the &#8216;property&#8217; and &#8216;has_n&#8217;/&#8216;has_one&#8217; NodeMixin class method.
+Adding new types of properties and relationships can also be done without
+declaring those properties/relationships by using the operator &#8216;[]&#8217; on <code>Neo4j::NodeMixin</code> and the
+&#8216;&lt;&lt;&#8217; on the <code>Neo4j::NodeTraverser</code></p>
+<p>By using the NodeMixin and by declaring properties and indices, all instances of the Person class can now be stored in 
+the Neo4j node space and be retrieved/queried by traversing the node space or performing Lucene queries.</p>
+<p>A Lucene index will be updated when the name or salary property changes.</p>
+<h3 id="creating-a-node">2 Creating a node</h3>
+<p>Creating a Person node instance</p>
+<pre><code class="ruby">
+  person = Person.new
+</code></pre>
+<h3 id="properties">3 Properties</h3>
+<p>Setting a property:</p>
+<pre><code class="ruby">
+  person.name = 'kalle'
+  person.salary  = 10000
+</code></pre>
+<p>You can also set this (or any property) when you create the node:</p>
+<pre><code class="ruby">
+   person = Person.new :name =&gt; 'kalle', :salary =&gt; 10000, :foo =&gt; 'bar'
+</code></pre>
+<h4 id="properties-and-the-operator">3.1 Properties and the [] operator</h4>
+<p>Notice that it is not required to specify which attributes should be available on a node. Any attributes can be
+set using the [] operator. Declared properties set an expectation, not an requirement. It can be used for documenting your model objects and
+catching typos.</p>
+<p>Example:
+<pre><code class="ruby">
+  person['an_undefined_property'] = 'hello'
+</code></pre></p>
+<p>So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation.
+But also, if you declare a Lucene index on the declared property and update the value, then the Lucene index will 
+automatically be updated.  The property declaration is required before declaring an index on the property.</p>
+<h4 id="properties-as-a-hash">3.2 Properties as a hash</h4>
+<p>You can get all properties as an hash.</p>
+<p>Example:
+<pre><code class="ruby">
+    puts "person #{person.props.inspect}"
+ </code></pre></p>
+<p>You can also update any properties with an hash</p>
+<p>Example:
+<pre><code class="ruby">
+    person.update( :name =&gt; 'foo', :age =&gt; 42, :colour =&gt; nil)
+ </code></pre></p>
+<h3 id="relationships">4 Relationships</h3>
+<p>Like properties, relationships do not have to be defined using has_n or has_one for a class.
+A relationship can be added at any time on any node.</p>
+<p>Example:</p>
+<pre><code class="ruby">
+  person.outgoing(:best_friends) &lt;&lt; other_node
+  person.rels(:best_friends).outgoing.first.end_node # =&gt; other_node (if there is only one relationship of type 'best_friends' on person)
+</code></pre>
+<h3 id="mapping-one-to-many-many-to-many">5 Mapping &#8211;  one to many, many to many</h3>
+<p>Use <b>to</b> and <b>from</b> with has_n to specify which direction the generated method should traverse.</p>
+<p>Example</p>
+<pre><code class="ruby">
+  class Role
+    include Neo4j::RelationshipMixin
+    # notice that neo4j relationships can also have properties
+    property :name
+  end
+</code></pre>
+
+<pre><code class="ruby">
+  class Actor
+    include Neo4j::NodeMixin
+
+    # The following line defines the acted_in relationship
+    # using the following classes:
+    # Actor[Node] --(Role[Relationship])--   Movie[Node]
+    #
+    has_n(:acted_in).to(Movie).relationship(Role)
+  end
+</code></pre>
+
+<pre><code class="ruby">
+  class Director
+    include Neo4j::NodeMixin
+    property :name
+    has_n(:directed).to(Movie)
+  end
+</code></pre>
+
+<pre><code class="ruby">
+  class Movie
+    include Neo4j::NodeMixin
+    property :title
+    property :year
+  
+    has_one(:director).from(Director, :directed)
+  
+    # defines a method for traversing incoming acted_in relationships from Actor
+    has_n(:actors).from(Actor, :acted_in)
+  end
+</code></pre>
+<p>You can then do this:</p>
+<pre><code class="ruby">
+    lucas = Director.new :name =&gt; 'George Lucas'
+    star_wars_4 = Movie.new :title =&gt; 'Star Wars Episode IV: A New Hope', :year =&gt; 1977
+    star_wars_3 = Movie.new :title =&gt; "Star Wars Episode III: Revenge of the Sith", :year =&gt; 2005
+    lucas.directed &lt;&lt; star_wars_3 &lt;&lt; star_wars_4
+
+    lucas.directed.should include(star_wars_3, star_wars_4)
+    star_wars_3.director.should == lucas
+    star_wars_4.director.should == lucas
+</code></pre>
+<p>Which is same as:</p>
+<pre><code class="ruby">
+    lucas.outgoing("Movie#directed").should include(star_wars_3, star_wars_4)
+    star_wars_3.incoming("Movie#directed").should include(lucas)
+</code></pre>
+<h3 id="finding-nodes-and-queries">6 Finding Nodes and Queries</h3>
+<p>There are three ways of finding/querying nodes in Neo4j:</p>
+<ol>
+	<li>by traversing the graph</li>
+	<li>by using Lucene queries</li>
+	<li>using the unique neo4j id (Neo4j::NodeMixin#neo_id).</li>
+</ol>
+<p>When doing a traversal one starts from a node and traverses one or more relationships (one or more levels deep).
+This start node can be either the reference node which is always found (Neo4j#ref_node) or by finding a start
+node from a Lucene query.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hide" />
+  <div id="footer">
+    <div class="wrapper">
+      <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0</a> License</p>
+      <p>"Rails", "Ruby on Rails", and the Rails logo are trademarks of David Heinemeier Hansson. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="javascripts/guides.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushSql.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushPlain.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.all()
+  </script>
+</body>
+</html>

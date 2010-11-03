@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Ruby on Rails Guides: Basic - Nodes, Properties and Relationships</title>
+
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+</head>
+<body class="guide">
+  <div id="topNav">
+    <div class="wrapper">
+      <a href="http://neo4j.org">neo4j.org</a> |
+      <a href="http://github.com/andreasronge/neo4j">GitHub</a>
+    </div>
+  </div>
+  <div id="header">
+    <div class="wrapper clearfix">
+      <h1><a href="index.html" title="Return to home page">Guides for Neo4j.rb</a></h1>
+      <p class="hide"><a href="#mainCol">Skip navigation</a>.</p>
+      <ul class="nav">
+        <li><a href="index.html">Home</a></li>
+        <li class="index"><a href="index.html" onclick="guideMenu(); return false;" id="guidesMenu">Guides Index</a>
+          <div id="guides" class="clearfix" style="display: none;">
+            <hr />
+            <dl class="L">
+              <dt>Start Here</dt>
+              <dd><a href="Why-a-Graph-Database.html">Why a graph database ?</a></dd>
+              <dd><a href="Installation.html">Installation</a></dd>
+              <dt>The Basic</dt>
+              <dd><a href="Basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dt>Mapping to Ruby Classes</dt>
+              <dd><a href="Mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
+              <dd><a href="Lucene.html">Indexing and Quering with Lucene</a></dd>
+              <dt>Rails 3</dt>
+              <dd><a href="Rails-3.html">Rails 3 Integration</a></dd>
+            </dl>
+          </div>
+        </li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="credits.html">Credits</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="hide" />
+
+  <div id="feature">
+    <div class="wrapper">
+      <h2>Basic &#8211; Nodes, Properties and Relationships</h2>
+<p>Neo node space consists of three basic elements: nodes, relationships that connect nodes and properties attached
+to both nodes and relationships. All relationships have a type, for example if the node space represents
+a social network, a relationship type could be <span class="caps">KNOWS</span>. If a relationship of the type <span class="caps">KNOWS</span> connects two nodes,
+that probably represents two people that know each other. A lot of the semantics, the meaning, of a node space
+is encoded in the relationship types of the application.</p>
+
+            <div id="subCol">
+        <h3 class="chapter"><img src="images/chapters_icon.gif" alt="" />Chapters</h3>
+        <ol class="chapters">
+<li><a href="#creating-nodes">Creating Nodes</a></li><li><a href="#transactions">Transactions</a></li><li><a href="#properties">Properties</a></li><li><a href="#creating-relationships">Creating Relationships</a></li><li><a href="#accessing-relationships">Accessing Relationships</a></li><li><a href="#finding-relationships-between-two-nodes">Finding Relationships between two nodes</a></li><li><a href="#deleting-relationships-between-two-nodes">Deleting Relationships between two nodes</a></li><li><a href="#properties-on-relationships">Properties on Relationships</a></li><li><a href="#accessing-traversing-nodes">Accessing/Traversing Nodes</a></li></ol></div>
+    </div>
+  </div>
+
+  <div id="container">
+    <div class="wrapper">
+      <div id="mainCol">
+        <h3 id="creating-nodes">1 Creating Nodes</h3>
+<p>Example of creating a Neo4j::Node</p>
+<pre><code class="ruby">
+  require "rubygems"
+  require 'neo4j'
+
+  Neo4j::Transaction.run do
+    node = Neo4j::Node.new
+  end
+</code></pre>
+<h3 id="transactions">2 Transactions</h3>
+<p>All Neo4j write operation must be wrapped in a transaction as shown above.
+Here is one way of creating transaction:</p>
+<pre><code class="ruby">
+  Neo4j::Transaction.run do
+    # neo4j operations goes here
+  end
+</code></pre>
+<p>For more info [[Neo4j Transactions|http://wiki.neo4j.org/content/Transactions]]</p>
+<h3 id="properties">3 Properties</h3>
+<p>Example of setting properties.</p>
+<pre><code class="ruby">
+  Neo4j::Node.new :name=&gt;'foo', :age=&gt;123, :hungry =&gt; false, 4 =&gt; 3.14
+  # which is same as the following:
+  node = Neo4j::Node.new
+  node[:name] = 'foo'
+  node[:age]  = 123
+  node['hungry'] = false
+  node[4] = 3.14
+  node[:age] #  =&gt; 123
+</code></pre>
+<h3 id="creating-relationships">4 Creating Relationships</h3>
+<p>Example of creating an outgoing Neo4j::Relationship from node1 to node2 of type friends</p>
+<pre><code class="ruby">
+  node1 = Neo4j::Node.new
+  node2 = Neo4j::Node.new
+  Neo4j::Relationship.new(:friends, node1, node2)
+  # which is same as
+  node1.outgoing(:friends) &lt;&lt; node2
+</code></pre>
+<h3 id="accessing-relationships">5 Accessing Relationships</h3>
+<p>Example of getting relationships</p>
+<pre><code class="ruby">
+  node1.rels # =&gt; an Enumerable of all incoming and outgoing relationship of any type
+  node1.rel?  # =&gt; true if there are any relationship of any type
+  node1.rels(:friends) # =&gt; all relationship of type friends, both incoming and outgoing
+  node1.rels(:friends).outgoing # =&gt; all outgoing relationship of type friends
+  node1.rel(:both, :best_friend)  # =&gt; returns one relationship, nil or throws an exception if there are more the two relationship from this node
+  node1.rel(:incoming, :best_friend)
+</code></pre>
+<h3 id="finding-relationships-between-two-nodes">6 Finding Relationships between two nodes</h3>
+<p>You can find all relationships between two nodes like this:</p>
+<pre><code class="ruby">
+  node_a.rels.to_other(node_b)  # =&gt; an enumerable of all relationship between those two nodes
+  node_a.rels(:friends).outgoing.to_other(node_b)  # =&gt; an enumerable of relationship of only outgoing relationships of type friend
+</code></pre>
+<h3 id="deleting-relationships-between-two-nodes">7 Deleting Relationships between two nodes</h3>
+<p>You can combine the <b>to_other</b> method with <b>del</b> to delete relationships between two nodes (see above)</p>
+<pre><code class="ruby">
+  node_a.rels.to_other(node_b).del  # =&gt; an enumerable of all relationship between those two nodes
+  node_a.rels(:friends).outgoing.to_other(node_b).del  # =&gt; an enumerable of relationship of only outgoing relationships of type friend
+</code></pre>
+<h3 id="properties-on-relationships">8 Properties on Relationships</h3>
+<p>Example of setting properties on relationships</p>
+<pre><code class="ruby">
+  rel = node1.rels(:friends).outgoing.first  # get the first relationship object 
+  rel[:since] = 1982
+</code></pre>
+<h3 id="accessing-traversing-nodes">9 Accessing/Traversing Nodes</h3>
+<p>Example:
+<pre><code class="ruby">
+  node.outgoing(:work).depth(4).filter{|path| path.length == 2}]
+  node.outgoing(:work).depth(4).prune{|path| ...}
+</code></pre></p>
+<p>For more info about traversing see the java documetation of filter and prune: [[JavaDoc|http://api.neo4j.org/current/org/neo4j/graphdb/traversal/TraversalDescription.html]]</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hide" />
+  <div id="footer">
+    <div class="wrapper">
+      <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0</a> License</p>
+      <p>"Rails", "Ruby on Rails", and the Rails logo are trademarks of David Heinemeier Hansson. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="javascripts/guides.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushSql.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushPlain.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.all()
+  </script>
+</body>
+</html>

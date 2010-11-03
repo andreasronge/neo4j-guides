@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Ruby on Rails Guides: Indexing on Neo4j::Node</title>
+
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+</head>
+<body class="guide">
+  <div id="topNav">
+    <div class="wrapper">
+      <a href="http://neo4j.org">neo4j.org</a> |
+      <a href="http://github.com/andreasronge/neo4j">GitHub</a>
+    </div>
+  </div>
+  <div id="header">
+    <div class="wrapper clearfix">
+      <h1><a href="index.html" title="Return to home page">Guides for Neo4j.rb</a></h1>
+      <p class="hide"><a href="#mainCol">Skip navigation</a>.</p>
+      <ul class="nav">
+        <li><a href="index.html">Home</a></li>
+        <li class="index"><a href="index.html" onclick="guideMenu(); return false;" id="guidesMenu">Guides Index</a>
+          <div id="guides" class="clearfix" style="display: none;">
+            <hr />
+            <dl class="L">
+              <dt>Start Here</dt>
+              <dd><a href="Why-a-Graph-Database.html">Why a graph database ?</a></dd>
+              <dd><a href="Installation.html">Installation</a></dd>
+              <dt>The Basic</dt>
+              <dd><a href="Basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dt>Mapping to Ruby Classes</dt>
+              <dd><a href="Mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
+              <dd><a href="Lucene.html">Indexing and Quering with Lucene</a></dd>
+              <dt>Rails 3</dt>
+              <dd><a href="Rails-3.html">Rails 3 Integration</a></dd>
+            </dl>
+          </div>
+        </li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="credits.html">Credits</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="hide" />
+
+  <div id="feature">
+    <div class="wrapper">
+      <h2>Indexing on Neo4j::Node</h2>
+<p>You will lead &#8230;</p>
+
+            <div id="subCol">
+        <h3 class="chapter"><img src="images/chapters_icon.gif" alt="" />Chapters</h3>
+        <ol class="chapters">
+<li><a href="#indexing-on-neo4j-nodemixin">Indexing on Neo4j::NodeMixin</a></li><li><a href="#indexing-on-neo4j-relationship">Indexing on Neo4j::Relationship</a></li><li><a href="#indexing-on-neo4j-relationshipmixin">Indexing on Neo4j::RelationshipMixin</a></li><li><a href="#fulltext">Fulltext</a></li><li><a href="#indexing-related-nodes-shared-index">Indexing Related Nodes (Shared Index)</a><ul><li><a href="#gotchas">Gotchas</a></li></ul></li><li><a href="#reuse-an-indexer-shared-index">Reuse an Indexer (Shared Index)</a></li><li><a href="#query-syntax">Query Syntax</a></li><li><a href="#sort-order">Sort Order</a></li></ol></div>
+    </div>
+  </div>
+
+  <div id="container">
+    <div class="wrapper">
+      <div id="mainCol">
+        <p>Example:</p>
+<pre><code class="ruby">
+  Neo4j::Node.index :name
+  ...
+  Neo4j::Transaction.run do
+
+    Neo4j::Node.new :name =&gt; 'andreas'
+
+  end  # the indexing now takes place
+
+  # we can now query using the lucene query syntax
+  Neo4j::Node.find('name: andreas')
+
+</code></pre>
+<h3 id="indexing-on-neo4j-nodemixin">1 Indexing on Neo4j::NodeMixin</h3>
+<p>Indexes can also be declared on your models.</p>
+<p>Example:</p>
+<pre><code class="ruby">
+  class Person
+    include Neo4j::NodeMixin
+    
+    index :name
+  end
+</code></pre>
+<p>After each transaction finishes the Person will be indexed.
+<pre><code class="ruby">
+  andreas = Person.new :name =&gt; 'andreas'
+</code></pre></p>
+<p>The full lucene query syntax is available:
+<pre><code class="ruby">
+  Person.find('name: andreas').first #=&gt; andreas
+</code></pre></p>
+<h3 id="indexing-on-neo4j-relationship">2 Indexing on Neo4j::Relationship</h3>
+<p>Works as indexing on Neo4j::Node</p>
+<h3 id="indexing-on-neo4j-relationshipmixin">3 Indexing on Neo4j::RelationshipMixin</h3>
+<p>Works as indexing on Neo4j::NodeMixin</p>
+<h3 id="fulltext">4 Fulltext</h3>
+<p>By default indexes are of type :exact.
+To use a fulltext index provide the :type =&gt; :fulltext parameter for both the index and find method !</p>
+<p>Example:</p>
+<pre><code class="ruby">
+  class Person
+    include Neo4j::NodeMixin
+    
+    index :name, :type =&gt; :fulltext
+  end
+</code></pre>
+
+<pre><code class="ruby">
+  Person.find('name: andreas', :type =&gt; :fulltext).first #=&gt; andreas
+</code></pre>
+<h3 id="indexing-related-nodes-shared-index">5 Indexing Related Nodes (Shared Index)</h3>
+<p>Two or more classes can share the same index. For example, let say we have two classes Person and Phone and
+each person can have several phone number nodes.</p>
+<p>Example:
+<pre><code class="ruby">
+  class Person
+     include Neo4j::NodeMixin
+     has_n :phones
+     index :name
+  end
+</code></pre></p>
+<pre><code class="ruby">
+  class Phone
+     include Neo4j::NodeMixin
+     index :number
+  end   
+</code></pre>
+<p>With the example above we can only query and find Phone nodes. If we want to query both the Person and Phone nodes we should use the &#8217;&#8217;via&#8217;&#8217;
+key word.</p>
+<p>Example
+<pre><code class="ruby">
+   class Phone  # forward declaration, needed below
+      include Neo4j::NodeMixin
+   end
+</code></pre></p>
+<pre><code class="ruby">
+   class Person
+      include Neo4j::NodeMixin
+      has_n(:phones).to(Phone)
+      index :name
+   end
+</code></pre>
+
+<pre><code class="ruby">
+   class Phone
+      has_n(:people).from(Person, :phones)  # several people can have the same phone number
+      index :number, :via =&gt; :people
+   end   
+</code></pre>
+<p>We can now do a query on the Person class instead.</p>
+<p>Example
+<pre><code class="ruby">
+  Person.find('name: *smith AND phone: "040*")
+</code></pre></p>
+<h4 id="gotchas">5.1 Gotchas</h4>
+<ol>
+	<li>You can only index incoming relationship</li>
+	<li>You must declare both direction with to and from in a has_n or has_one.</li>
+</ol>
+<h3 id="reuse-an-indexer-shared-index">6 Reuse an Indexer (Shared Index)</h3>
+<p>You can specify that a class should use the same lucene indexx as another class.</p>
+<p>Example
+<pre><code class="ruby">
+  class Employee
+    property :employee_id
+    node_indexer Person
+    index :employee_id
+  end
+</code></pre></p>
+<p>The Employee and Person class now shares the same index. That means that you can search on indexes declared
+in both the Person and Employee classes.</p>
+<h3 id="query-syntax">7 Query Syntax</h3>
+<p>Neo4j/Lucene support a wide range of queries</p>
+<ul>
+	<li>Wildcard searches</li>
+	<li>Fuzzy searches</li>
+	<li>Proximity searches</li>
+	<li>Range searches</li>
+</ul>
+<p>For information of the syntax see [[here|http://lucene.apache.org/java/3_0_2/queryparsersyntax.html]]</p>
+<h3 id="sort-order">8 Sort Order</h3>
+<p>It is only possible to sort on :exact indexes. Sorting on :fulltext index is not possible.
+Sort order is specified with the <strong>asc</strong> and <strong>desc</strong> method.</p>
+<p>Example:
+<pre><code class="ruby">
+Person.find('email: *@gmail.com').asc(:email, :age) # sort by ascending order email&amp;age
+Person.find('email: *@gmail.com').asc(:name, :age).desc(:email)
+</code></pre></p>
+<p>By default fields are sorted as Strings. If you want to sort as integer (Fixnum) you have to declare the type first, see below.</p>
+<h2>Performance and Configurations</h2>
+<h3>Lucene Configuration</h3>
+<p>It is possible to create your own lucene configuration.
+Example, see the configuration for fulltext and exact indexing in the Neo4j::Config[:lucene]
+You can add your own lucene indexing configuration in the Neo4j::Config and use it with the index keyword.</p>
+<pre><code class="ruby">
+
+  Neo4j::Config[:lucene][:my_index_type] = ...
+  
+  class Person
+     index :name, :type =&gt; :my_index_type
+  end
+</code></pre>
+<h3>Indexing and Query Before Commit</h3>
+<p>When you declare an index it will make sure that the neo4j property and the lucene index will be synchronized.
+This happens when the transaction commits.
+If you want to index properties before the transaction commits you can do it yourself.</p>
+<p>Example (from RSpec):</p>
+<pre><code class="ruby">
+    new_node = Neo4j::Node.new
+    new_node[:name] = 'Kalle Kula'
+    new_node.add_index(:name)
+    new_node.rm_index(:name)
+    new_node[:name] = 'lala'
+    new_node.add_index(:name)
+    Neo4j::Node.find('name: lala').first.should == new_node
+    Neo4j::Node.find('name: "Kalle Kula"').first.should_not == new_node
+</code></pre>
+<h3>Optimization</h3>
+<p>If you are looping thru a lot of nodes you might get better performance by not loading the Ruby wrappers
+around the Java nodes.</p>
+<pre><code class="ruby">
+  Person.find('name: andreas', :type =&gt; :fulltext, :wrapped =&gt; false)
+</code></pre>
+<p>When using the <code>:wrapped =&gt; false</code> parameter the find method will return a Java <code>org.neo4j.graphdb.index.IndexHit</code> instance
+(which works like an Ruby Enumerable so you can use the normal each, collect etc.. methods)</p>
+<h2>Unimplemented features</h2>
+<h3>Numerical Fields</h3>
+<p>In order to support sort order and range queries on Fixnum, Float and Date queries you need
+to specify that the field will be indexed as a numerical field.</p>
+<p>Example:</p>
+<pre><code class="ruby">
+class Person
+  include Neo4j::NodeMixin
+  property :age, :type =&gt; Fixnum
+  index :age, :type =&gt; :exact
+</code></pre>
+<h3>Range Queries</h3>
+<p><strong>Not sure if or when this will be implemented</strong>
+<pre><code class="ruby">
+  Person.find(:age =&gt; 20..30)
+  Person.find(:height).between(1.52, 1.87)
+</code></pre></p>
+<h3>Boolean Queries</h3>
+<p><strong>Not sure if or when this will be implemented</strong>
+<pre><code class="ruby">
+  query1 = Person.find(:salary =&gt; 2000..3000).or(:name =&gt; 'kalle')
+  query2 = Person.find(:age =&gt; 30)
+  query1.and(query2).each {|node| puts "name #{node[:name]}"}
+</code></pre></p>
+<h3>Date Queries</h3>
+<p><strong>Not sure if or when this will be implemented</strong>
+<pre><code class="ruby">
+  class Person
+    property :born, :type =&gt; Date
+    index :born
+  end
+  Person.find("born:[20080427 TO 20100203]")
+  Person.find(:born).between(Date.today, 5.years.ago)
+</code></pre></p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hide" />
+  <div id="footer">
+    <div class="wrapper">
+      <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0</a> License</p>
+      <p>"Rails", "Ruby on Rails", and the Rails logo are trademarks of David Heinemeier Hansson. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="javascripts/guides.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushSql.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushPlain.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.all()
+  </script>
+</body>
+</html>

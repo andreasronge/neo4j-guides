@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title></title>
+
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+</head>
+<body class="guide">
+  <div id="topNav">
+    <div class="wrapper">
+      <a href="http://neo4j.org">neo4j.org</a> |
+      <a href="http://github.com/andreasronge/neo4j">GitHub</a>
+    </div>
+  </div>
+  <div id="header">
+    <div class="wrapper clearfix">
+      <h1><a href="index.html" title="Return to home page">Guides for Neo4j.rb</a></h1>
+      <p class="hide"><a href="#mainCol">Skip navigation</a>.</p>
+      <ul class="nav">
+        <li><a href="index.html">Home</a></li>
+        <li class="index"><a href="index.html" onclick="guideMenu(); return false;" id="guidesMenu">Guides Index</a>
+          <div id="guides" class="clearfix" style="display: none;">
+            <hr />
+            <dl class="L">
+              <dt>Start Here</dt>
+              <dd><a href="Why-a-Graph-Database.html">Why a graph database ?</a></dd>
+              <dd><a href="Installation.html">Installation</a></dd>
+              <dt>The Basic</dt>
+              <dd><a href="Basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dt>Mapping to Ruby Classes</dt>
+              <dd><a href="Mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
+              <dd><a href="Lucene.html">Indexing and Quering with Lucene</a></dd>
+              <dt>Rails 3</dt>
+              <dd><a href="Rails-3.html">Rails 3 Integration</a></dd>
+            </dl>
+          </div>
+        </li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="credits.html">Credits</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="hide" />
+
+  <div id="feature">
+    <div class="wrapper">
+      
+
+      
+    </div>
+  </div>
+
+  <div id="container">
+    <div class="wrapper">
+      <div id="mainCol">
+        <h2>Overview of Neo4j.rb 1.0.0.beta.16</h2>
+
+Neo4j.rb is a graph database for JRuby
+It uses the powerful and mature Java libraries
+<li><a href="http://www.neo4j.org">Neo4j</a> for for persistence and traversal of the graph</li>
+<li><a href="http://lucene.apache.org/java/docs/index.html">Apache Lucene</a> for querying and indexing.</li>
+
+Notice this is a beta so you need to install it with: gem install neo4j --pre
+
+
+<h2>Examples</h2>
+
+Here are some examples of what you can do:
+<li><a href="http://github.com/andreasronge/neo4j/blob/1.0/example/rules/newsstory.rb">Rules</a></li>
+<li><a href="http://github.com/andreasronge/neo4j-rails-example">Rails 3 Example</a></li>
+
+<h2>Content</h2>
+
+* "Why a Graph Database":Why-a-Graph-Database.html
+* "Installation":Installation.html
+* "Basic - Nodes, Properties & Relationships":Basic.html
+* "Ruby Class to Node & Relationship Mapping":Mapping.html
+* [[Rails 3|Rails-3]]
+* [[Indexing and Queries with Lucene|Lucene]]
+
+      </div>
+    </div>
+  </div>
+
+  <hr class="hide" />
+  <div id="footer">
+    <div class="wrapper">
+      <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0</a> License</p>
+      <p>"Rails", "Ruby on Rails", and the Rails logo are trademarks of David Heinemeier Hansson. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="javascripts/guides.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushSql.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushPlain.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.all()
+  </script>
+</body>
+</html>

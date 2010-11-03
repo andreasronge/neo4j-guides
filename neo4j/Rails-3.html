@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Ruby on Rails Guides: Rails 3 / Active Model support</title>
+
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+</head>
+<body class="guide">
+  <div id="topNav">
+    <div class="wrapper">
+      <a href="http://neo4j.org">neo4j.org</a> |
+      <a href="http://github.com/andreasronge/neo4j">GitHub</a>
+    </div>
+  </div>
+  <div id="header">
+    <div class="wrapper clearfix">
+      <h1><a href="index.html" title="Return to home page">Guides for Neo4j.rb</a></h1>
+      <p class="hide"><a href="#mainCol">Skip navigation</a>.</p>
+      <ul class="nav">
+        <li><a href="index.html">Home</a></li>
+        <li class="index"><a href="index.html" onclick="guideMenu(); return false;" id="guidesMenu">Guides Index</a>
+          <div id="guides" class="clearfix" style="display: none;">
+            <hr />
+            <dl class="L">
+              <dt>Start Here</dt>
+              <dd><a href="Why-a-Graph-Database.html">Why a graph database ?</a></dd>
+              <dd><a href="Installation.html">Installation</a></dd>
+              <dt>The Basic</dt>
+              <dd><a href="Basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dt>Mapping to Ruby Classes</dt>
+              <dd><a href="Mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
+              <dd><a href="Lucene.html">Indexing and Quering with Lucene</a></dd>
+              <dt>Rails 3</dt>
+              <dd><a href="Rails-3.html">Rails 3 Integration</a></dd>
+            </dl>
+          </div>
+        </li>
+        <li><a href="contribute.html">Contribute</a></li>
+        <li><a href="credits.html">Credits</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="hide" />
+
+  <div id="feature">
+    <div class="wrapper">
+      <h2>Rails 3 / Active Model support</h2>
+<p>You will lead &#8230;</p>
+
+            <div id="subCol">
+        <h3 class="chapter"><img src="images/chapters_icon.gif" alt="" />Chapters</h3>
+        <ol class="chapters">
+</ol></div>
+    </div>
+  </div>
+
+  <div id="container">
+    <div class="wrapper">
+      <div id="mainCol">
+        <p>Developed by Nick Sieger (http://github.com/nicksieger/neo4j-rails) and extended 
+and included in Neo4j.rb by Andreas Ronge and Ben Jackson.</p>
+<h2>Usage</h2>
+<p>The <code>Neo4j::Model</code> implements the Rails ActiveModel interface. That means that you can use
+the normal validation and other methods that you are used to in ActiveRecord.</p>
+<p>Example:</p>
+<pre><code class="ruby">
+  class IceCream &lt; Neo4j::Model
+    property :flavour
+    validates_presence_of :flavour
+  end
+
+  IceCream.new.valid?  # =&gt; false
+  IceCream.new(:flavour =&gt; "vanilla").valid?  # =&gt; true
+</code></pre>
+<h3>Callbacks</h3>
+<p>The following callbacks are defined: <strong>create</strong> <strong>save</strong> <strong>update</strong> <strong>destroy</strong>
+See the [[rails documentation|http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html]] when they are called.</p>
+<h3>Transactions</h3>
+<p>All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
+The <code>Neo4j::Model</code> class can automatically create transactions for you.</p>
+<h4>Model.new</h4>
+<p>The <code>Neo4j::Model.new</code> methods does not require a transaction (unlike the <code>Neo4j::Node.new</code> method)
+since it creates a node in memory with no connection to the neo4j database.
+This makes it easier to create forms that don&#8217;t touch the database if validation fails by using
+the ActiveRecord-style two-step <code>Model.new</code> + <code>Model#save</code> creation.</p>
+<h4>Model.save</h4>
+<p>Saves the node if the validation was successful. It will create a new transaction if neccessarly.
+If the saved model that was <strong>not</strong> created by the <code>Model.new</code> method (which means it exist in the database) and
+the validation fails then the transaction will be rolled back.</p>
+<h4>Model.update_attributes</h4>
+<p>Updates the model with the given attributes and saves the model.
+Will create a new transaction if neccessarly which can be rollback by the <code>save</code> method if the validation was
+not successful.</p>
+<h3>accepts_nested_attributes_for</h3>
+<p>Neo4j.rb supports [[Nested Attributes|http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html]]</p>
+<p>The following configuration option are available</p>
+<ul>
+	<li><code>:allow_destroy</code> If true, destroys any members from the attributes hash with a _destroy key and a value that evaluates to true (eg. 1, ‘1’, true, or ‘true’). This option is off by default.</li>
+	<li><code>:reject_if</code> Allows you to specify a Proc or a Symbol pointing to a method that checks whether a record should be built for a certain attribute hash. The hash is passed to the supplied Proc or the method and it should return either true or false. When no :reject_if is specified, a record will be built for all attribute hashes that do not have a <em>destroy value that evaluates to true. Passing :all</em>blank instead of a Proc will create a proc that will reject a record where all the attributes are blank.</li>
+</ul>
+<p>When using the <code>accepts_nested_attributes_for</code> class method you must specify which class the relationship correspond to
+by using the <code>to</code> method in <code>has_one</code> or <code>has_n</code>.</p>
+<p><strong>Example</strong></p>
+<pre><code class="ruby">
+class Member &lt; Neo4j::Model
+  has_n(:posts).to(Post)
+  has_one(:avatar).to(Avator)
+
+  accepts_nested_attributes_for :avatar, :allow_destroy =&gt; true
+  accepts_nested_attributes_for :posts, :reject_if =&gt; proc { |attributes| attributes[:title].blank? }
+end
+
+</code></pre>
+<h3>Neo4j::Rails::Transaction</h3>
+<p>This class can be used as a filter in order to wrap methods in transactions.</p>
+<p>Example:
+<pre><code class="ruby">
+  class UsersController &lt; ApplicationController
+    around_filter Neo4j::Rails::Transaction, :only =&gt; [:create]
+</code></pre></p>
+<p>The <code>Neo4j::Rails::Transaction</code> class can also be used to access the current running transaction in order
+to signal for a rollback.</p>
+<p>Notice that you can also use the <code>Model.transaction</code> method to wrap a block of code in a transaction.</p>
+<h4>From the Rails Documentation</h4>
+<p>Save and destroy are automatically wrapped in a transaction
+Both save and destroy come wrapped in a transaction that ensures that whatever you do in validations or callbacks will happen under its protected cover. So you can use validations to check for values that the transaction depends
+on or you can raise exceptions in the callbacks to rollback, including after_* callbacks. As a consequence changes to the database are not seen outside your connection until the operation is complete.</p>
+<h3>Validation</h3>
+<p>All the normal validations work.
+Example:
+<pre><code class="ruby">
+class Person &lt; Neo4j::Model
+  index :email
+  validates :email, :uniqueness =&gt; true
+  validates :password, :presence     =&gt; true,
+                   :confirmation =&gt; true,
+                   :length       =&gt; { :within =&gt; 6..40 }
+end
+</code></pre></p>
+<p>In order to get uniquess validation to work you <strong>must</strong> have an exact index on the property, as shown above (<strong>index :email</strong>)</p>
+<h3><span class="caps">API</span></h3>
+<p>Many of the familiar <span class="caps">API</span> methods from ActiveRecord are duplicated in Neo4j::Model. Neo4j::Model includes</p>
+<ul>
+	<li>ActiveModel::Validations</li>
+	<li>ActiveModel::Conversions</li>
+	<li>ActiveModel::Callbacks</li>
+	<li>ActiveModel::Dirty</li>
+	<li>ActiveModel::MassAssignmentSecurity</li>
+</ul>
+<p>Methods:
+<pre><code class="ruby">
+class Neo4j::Model
+  def valid?; end
+  def save; end
+  def save!; end
+  def update_attributes(attributes); end
+  def update_attributes!(attributes); end
+  def destroy; end
+  def attributes=(attrs); end
+  def self.all; end
+  def self.find(*); end
+  def self.create(attributes); end
+  def self.create!(attributes); end
+  def self.transaction(&amp;lock); end
+  def self.accepts_nested_attributes_for(*); end
+end
+</code></pre></p>
+<p>Method <code>reload</code> is not implemented but can instead be replaced by not commiting a transaction.
+Method <code>all</code> is not implemented but can instead be replaced the <code>rule :all</code> class method.</p>
+<h3>Rails Generators</h3>
+<p>You can use the standard Rails 3 generators to create your models, controllers, routes, tests and views, by passing &#8216;neo4j&#8217; as the <span class="caps">ORM</span> for generators to use:</p>
+<pre>&gt; rails generate scaffold User name:string email:string --orm=neo4j</pre>
+<p>You can also set up your application configuration to use neo4j as the default <span class="caps">ORM</span> for generating templates.  Simply add the following to your application&#8217;s Rails configuration.  This example also favours RSpec and specifies that fixtures are not to be created:</p>
+<pre>config.generators do |g|
+  g.orm             :neo4j
+  g.test_framework  :rspec, :fixture =&gt; false
+end</pre>
+<p>Then you can simply call generators as normal without having to specify the <span class="caps">ORM</span>:</p>
+<pre>&gt; rails generate model Admin --parent User</pre>
+<p>To undo what was just generated:</p>
+<pre>&gt; rails destroy model Admin</pre>
+<h2>Installation and Configuration</h2>
+<h3>Install JRuby</h3>
+<p>I recommend using [[<span class="caps">RVM</span>|http://rvm.beginrescueend.com/]]</p>
+<h3>Install Rails</h3>
+<pre>
+gem install rails
+gem install neo4j --pre
+</pre>
+<h3>Replace ActiveRecord with Neo4j</h3>
+<p>Edit the config/application.rb
+comment the line require &#8216;rails/all&#8217; and add
+<pre>
+require &#8220;action_controller/railtie&#8221;
+require &#8220;action_mailer/railtie&#8221;
+require &#8220;active_resource/railtie&#8221;
+require &#8220;rails/test_unit/railtie&#8221;
+require &#8216;neo4j&#8217;
+</pre></p>
+<h3>Include dependency to neo4j</h3>
+<p>Add the following line to your Gemfile
+<pre>
+gem &#8216;neo4j&#8217;, &#8216;1.0.0.beta.6&#8217;
+</pre></p>
+<p>Install the gems specified in your Gemfile <code>bundle install</code></p>
+<h3>Create app</h3>
+<pre>
+rails new neo4j-rails-example -m http://jruby.org/rails3.rb
+cd neo4j-rails-example
+rails generate scaffold person -o=neo4j
+</pre>
+<h3>Configuration</h3>
+<p>You can set the location of the database in the <code>config/application.rb</code> file.
+Example:</p>
+<pre>
+  config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
+</pre>
+<h2>Deployment</h2>
+<ul>
+	<li>[[Tomcat/Trinidad|https://github.com/calavera/trinidad]]</li>
+	<li>[[Glassfish App Server|http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl]]</li>
+</ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hide" />
+  <div id="footer">
+    <div class="wrapper">
+      <p>This work is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0</a> License</p>
+      <p>"Rails", "Ruby on Rails", and the Rails logo are trademarks of David Heinemeier Hansson. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="javascripts/guides.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushSql.js"></script>
+  <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushPlain.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.all()
+  </script>
+</body>
+</html>
