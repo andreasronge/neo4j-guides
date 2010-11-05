@@ -2,10 +2,11 @@ h2. Installing JRuby
 
 endprologue.
 
-I recommend using [[RVM|http://rvm.beginrescueend.com/]]
+h3. Install JRuby
 
-h3. Installing Neo4j
+I recommend using http://rvm.beginrescueend.com
 
-<pre><code>
+h3. Install Neo4j
+<code>
 gem install neo4j --pre
-</code></pre>
+</code>
