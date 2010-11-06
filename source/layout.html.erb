@@ -5,13 +5,29 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title><%= yield(:page_title) || 'Ruby on Rails guides' %></title>
+<title><%= yield(:page_title) || 'Neo4j Guides' %></title>
 
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
 <link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shCore.css" />
 <link rel="stylesheet" type="text/css" href="stylesheets/syntaxhighlighter/shThemeRailsGuides.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-5622556-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
 </head>
 <body class="guide">
   <div id="header">
@@ -27,7 +43,7 @@
               <dd><a href="why_graph_db.html">Why a graph database ?</a></dd>
               <dd><a href="installation.html">Installation</a></dd>
               <dt>The Basic</dt>
-              <dd><a href="basic.html">Using Nodes, Relationships and Properties</a></dd>
+              <dd><a href="basic.html">Nodes, Relationships and Properties</a></dd>
               <dt>Mapping to Ruby Classes</dt>
               <dd><a href="mapping.html">Mapping nodes/relationships to Ruby classes</a></dd>
               <dd><a href="lucene.html">Indexing and Quering with Lucene</a></dd>

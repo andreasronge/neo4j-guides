@@ -77,7 +77,7 @@ module RailsGuides
     def initialize_dirs(output)
       @guides_dir = File.join(File.dirname(__FILE__), '..')
       @source_dir = File.join(@guides_dir, "source")
-      @output_dir = output || File.join(@guides_dir, "neo4j")
+      @output_dir = output || File.join(@guides_dir, "neo4j/guides")
     end
 
     def create_output_dir_if_needed
@@ -152,7 +152,7 @@ module RailsGuides
 
       header =~ /h2\.(.*)/
       puts "body #{body}" if $1.nil?
-      page_title = "Ruby on Rails Guides: #{$1.strip}"
+      page_title = "Neo4j Guides: #{$1.strip}"
 
       header = textile(header)
 

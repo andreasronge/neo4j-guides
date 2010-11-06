@@ -1,68 +1,50 @@
-h2. Indexing on Neo4j::Node
+h2. Indexing and Quering with Lucene
 
 
 endprologue.
 
-Example:
+h3. Index
 
-<ruby>
-  Neo4j::Node.index :name
-  ...
-  Neo4j::Transaction.run do
-
-    Neo4j::Node.new :name => 'andreas'
-
-  end  # the indexing now takes place
-
-  # we can now query using the lucene query syntax
-  Neo4j::Node.find('name: andreas')
-
-</ruby>
-
-h3. Indexing on Neo4j::NodeMixin
-
-Indexes can also be declared on your models.
+In order to perform a query you must declare an index on the fields.
+A Lucene index can be declared on nodes and relationships and Neo4j::Model classes.
 
 Example:
 
 <ruby>
   class Person
     include Neo4j::NodeMixin
-    
     index :name
   end
 </ruby>    
 
 After each transaction finishes the Person will be indexed.
+
 <ruby>
-  andreas = Person.new :name => 'andreas'
+Neo4j::Transaction.run do
+  Person.new :name => 'andreas'
+end
 </ruby>    
 
+The full lucene query syntax is available, see "here":http://lucene.apache.org/java/3_0_2/queryparsersyntax.html
 
-The full lucene query syntax is available:
 <ruby>
   Person.find('name: andreas').first #=> andreas
 </ruby>    
 
-h3. Indexing on Neo4j::Relationship
-
-Works as indexing on Neo4j::Node
-
-h3. Indexing on Neo4j::RelationshipMixin
+h4. Neo4j::RelationshipMixin
 
 Works as indexing on Neo4j::NodeMixin
 
-h3. Fulltext
+h3. Fulltext and Exact
 
-By default indexes are of type :exact.
-To use a fulltext index provide the :type => :fulltext parameter for both the index and find method !
+By default indexes are of type @:exact@ which is great for indexing keywords etc.
+To index each word in a text you should use a fulltext index. Fulltext uses white-space tokenizer in its analyzer. Add the type @:exact@ when you declare the index *and* in the find method.
 
 Example:
 
 <ruby>
   class Person
     include Neo4j::NodeMixin
-    
     index :name, :type => :fulltext
   end
 </ruby>    
@@ -124,7 +106,7 @@ Example
   Person.find('name: *smith AND phone: "040*")
 </ruby>    
 
-h4. Gotchas
+*Gotchas*
 
 # You can only index incoming relationship
 # You must declare both direction with to and from in a has_n or has_one.
@@ -153,7 +135,7 @@ Neo4j/Lucene support a wide range of queries
 * Proximity searches
 * Range searches
 
-For information of the syntax see [[here|http://lucene.apache.org/java/3_0_2/queryparsersyntax.html]]
+For information of the syntax see "here":http://lucene.apache.org/java/3_0_2/queryparsersyntax.html
 
 h3. Sort Order
 
@@ -167,6 +149,53 @@ Person.find('email: *@gmail.com').asc(:name, :age).desc(:email)
 </ruby>    
 
 By default fields are sorted as Strings. If you want to sort as integer (Fixnum) you have to declare the type first, see below.
+
+h3. Numerical Fields
+
+In order to support sort order and range queries on Fixnum, Float and Date queries you need
+to specify that the field will be indexed as a numerical field.
+
+Example:
+
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+  property :age, :type => Fixnum
+  index :age
+</ruby>    
+
+h3. Range Queries
+
+<ruby>
+  Person.find(:height).between(1.52, 1.87)
+</ruby>    
+
+h3. Compound Queries
+
+<ruby>
+  Person.find(:name => 'foo').and(:age).between(10,20)
+</ruby>    
+
+Only @and@ queries are currently supported.
+
+h3. Date Queries
+
+<ruby>
+  class Person
+    property :born, :type => DateTime
+    index :born
+  end
+  Person.find(:born).between(Date.today, 5.years.ago)
+</ruby>    
+    
+Both @Date@ and @DateTime@ are supported.
+The DateTime values will automatically be converted into UTC timezone.
+    
+h3. Type Conversion
+
+Neo4j has support for converting DateTime and Date to Java long values.
+You can create your own type conversion, read:
+"TypeConverters":http://neo4j.rubyforge.org/classes/Neo4j/TypeConverters.html
 
 h2. Performance and Configurations
 
@@ -217,49 +246,3 @@ around the Java nodes.
 When using the @:wrapped => false@ parameter the find method will return a Java @org.neo4j.graphdb.index.IndexHit@ instance
 (which works like an Ruby Enumerable so you can use the normal each, collect etc.. methods)
 
-h2. Unimplemented features
-
-h3. Numerical Fields
-
-In order to support sort order and range queries on Fixnum, Float and Date queries you need
-to specify that the field will be indexed as a numerical field.
-
-Example:
-
-<ruby>
-class Person
-  include Neo4j::NodeMixin
-  property :age, :type => Fixnum
-  index :age, :type => :exact
-</ruby>    
-
-h3. Range Queries
-
-*Not sure if or when this will be implemented*
-<ruby>
-  Person.find(:age => 20..30)
-  Person.find(:height).between(1.52, 1.87)
-</ruby>    
-
-h3. Boolean Queries
-
-*Not sure if or when this will be implemented*
-<ruby>
-  query1 = Person.find(:salary => 2000..3000).or(:name => 'kalle')
-  query2 = Person.find(:age => 30)
-  query1.and(query2).each {|node| puts "name #{node[:name]}"}
-</ruby>    
-
-h3. Date Queries
-
-*Not sure if or when this will be implemented*
-<ruby>
-  class Person
-    property :born, :type => Date
-    index :born
-  end
-  Person.find("born:[20080427 TO 20100203]")
-  Person.find(:born).between(Date.today, 5.years.ago)
-</ruby>    
-    
-    

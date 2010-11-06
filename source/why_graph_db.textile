@@ -3,10 +3,15 @@ h2. The advantage if a graph database
 endprologue.
 
 Why a graph database ? 
-* Performance, here is a good summary by "Emil Eifrem, founder of the Neo4j":http://www.oscon.com/oscon2009/public/schedule/detail/8364
-
-* Domain modeling: you use the language of node,properties and relationship to describe your
-domain (instead of e.g. UML) and there is no need to have a complicated O/R mapping tool to implement it in your database.
-You can say that Neo4j is  "Whiteboard friendly" !
+* Schema Less and Efficient storage of Semi Structured Information
+* No "O/R mismatch":http://en.wikipedia.org/wiki/Object-relational_impedance_mismatch - very natural to map a graph to an Object Oriented language like Ruby.
+* "Performance":http://www.oscon.com/oscon2009/public/schedule/detail/8364
+* Embedded Database - no database tier, easier to install, test, deploy and configure. It is run in the same process as your application.
+* Express Queries as Traversals
+  * Fast deep traversal instead of slow SQL queries that span many table joins.
+  * Very natural to express graph related problem with traversals (recommendation engine, find shortest parth etc..)
+* Seamless integration with Ruby on Rails.
+* ACID Transaction with rollbacks support.
+* Whiteboard friendly -  you use the language of node,properties and relationship to describe your domain (instead of e.g. UML) and there is no need to have a complicated O/R mapping tool to implement it in your database. You can say that Neo4j is  "Whiteboard friendly" !
 
 !http://github.com/downloads/andreasronge/neo4j/whiteboard.png!

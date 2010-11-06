@@ -1,8 +1,8 @@
-h2. Basic - Nodes, Properties and Relationships
+h2. Nodes, Properties and Relationships
 
-Neo node space consists of three basic elements: nodes, relationships that connect nodes and properties attached
+The Neo4j node space consists of three basic elements: nodes, relationships that connect nodes and properties attached
 to both nodes and relationships. All relationships have a type, for example if the node space represents
-a social network, a relationship type could be KNOWS. If a relationship of the type KNOWS connects two nodes,
+a social network, a relationship type could be *knows*. If a relationship of the type *knows* connects two nodes,
 that probably represents two people that know each other. A lot of the semantics, the meaning, of a node space
 is encoded in the relationship types of the application. 
 
@@ -48,6 +48,28 @@ Example of setting properties.
   node[4] = 3.14
   node[:age] #  => 123
 </ruby>
+
+Properties can be of a primitive value (@Fixnum@, @Float@, @TrueClass@, @FalseClass@, @String) and arrays of those primitive values.
+Also, @Date@ and @DateTime@ is also possible to save if you declared it, see Type Conversion below.
+
+*Array Gotchas 1* all items in an array must be of the same type.
+*Array Gotchas 2* you can not change one item in the array (they are mutable), you have to create a new array each time you add, remove, change one item.
+
+h4. Type Conversion
+
+If you declare a type of a property it can be converted into a primitive.
+Example
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+  property :born, :type => DateTime
+end
+</ruby>
+
+The born property will be marshalled into a Java long value automatically since there is (by default) a
+registered type conversion for DateTime in the @Neo4j::Config@ object under the key @conversions@.
+
+You can add your own conversion if you want to save a Ruby object with a property.
 
 h3. Creating Relationships
 
@@ -105,9 +127,9 @@ h3. Accessing/Traversing Nodes
 
 Example:
 <ruby>
-  node.outgoing(:work).depth(4).filter{|path| path.length == 2}]
-  node.outgoing(:work).depth(4).prune{|path| ...}
-<ruby>
+node.outgoing(:work).depth(4).filter{|path| path.length == 2}]
+node.outgoing(:work).depth(4).prune{|path| ...}
+</ruby>
 
 For more info about traversing see the java documetation of filter and prune: "JavaDoc":http://api.neo4j.org/current/org/neo4j/graphdb/traversal/TraversalDescription.html
 

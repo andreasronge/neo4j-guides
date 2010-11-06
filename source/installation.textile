@@ -4,9 +4,10 @@ endprologue.
 
 h3. Install JRuby
 
-I recommend using http://rvm.beginrescueend.com
+I recommend using "rvm":http://rvm.beginrescueend.com
 
 h3. Install Neo4j
+
 <code>
 gem install neo4j --pre
 </code>

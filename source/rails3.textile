@@ -6,7 +6,7 @@ endprologue.
 Developed by "Nick Sieger":http://github.com/nicksieger/neo4j-rails and extended 
 and included in Neo4j.rb by Andreas Ronge and Ben Jackson.
 
-h2. Usage
+h3. Usage
 
 The @Neo4j::Model@ implements the Rails ActiveModel interface. That means that you can use
 the normal validation and other methods that you are used to in ActiveRecord.
@@ -14,24 +14,39 @@ the normal validation and other methods that you are used to in ActiveRecord.
 Example:
 
 <ruby>
-  class IceCream < Neo4j::Model
-    property :flavour
-    validates_presence_of :flavour
-  end
+class IceCream < Neo4j::Model
+  property :flavour
+  validates_presence_of :flavour
+end
 
-  IceCream.new.valid?  # => false
-  IceCream.new(:flavour => "vanilla").valid?  # => true
+IceCream.new.valid?  # => false
+IceCream.new(:flavour => "vanilla").valid?  # => true
 </ruby>
 
 h3. Callbacks
 
 The following callbacks are defined: *create* *save* *update* *destroy*
-See the [[rails documentation|http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html]] when they are called.
+See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html when they are called.
 
 h3. Transactions
 
 All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
-The @Neo4j::Model@ class can automatically create transactions for you.
+Some methods like @save@ and @destroy@, @update_attributes@ are automatically wrapped inside a transaction. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
+
+h4. Neo4j::Rails::Transaction
+
+This class can be used as a filter in order to wrap methods in transactions.
+
+Example:
+<ruby>
+  class UsersController < ApplicationController
+    around_filter Neo4j::Rails::Transaction, :only => [:create]
+</ruby>
+
+The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
+to signal for a rollback.
+
+Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
 
 h4. Model.new
 
@@ -54,7 +69,7 @@ not successful.
 
 h3. accepts_nested_attributes_for
 
-Neo4j.rb supports [[Nested Attributes|http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html]]
+Neo4j.rb supports "Nested Attributes":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html
 
 The following configuration option are available
 
@@ -77,26 +92,6 @@ end
 
 </ruby>
 
-h3. Neo4j::Rails::Transaction
-
-This class can be used as a filter in order to wrap methods in transactions.
-
-Example:
-<ruby>
-  class UsersController < ApplicationController
-    around_filter Neo4j::Rails::Transaction, :only => [:create]
-</ruby>
-
-The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
-to signal for a rollback.
-
-Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
-
-h4. From the Rails Documentation
-
-Save and destroy are automatically wrapped in a transaction
-Both save and destroy come wrapped in a transaction that ensures that whatever you do in validations or callbacks will happen under its protected cover. So you can use validations to check for values that the transaction depends
-on or you can raise exceptions in the callbacks to rollback, including after_* callbacks. As a consequence changes to the database are not seen outside your connection until the operation is complete.
 
 h3. Validation
 
@@ -122,6 +117,8 @@ Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Mode
 * ActiveModel::Callbacks
 * ActiveModel::Dirty
 * ActiveModel::MassAssignmentSecurity
+* ActiveModel::Serializers::Xml
+* ActiveRecord::Timestamp (@created_at@ and/or @updated_at@)
 
 Methods:
 <ruby>
@@ -142,9 +139,6 @@ class Neo4j::Model
 end
 </ruby>
 
-Method @reload@ is not implemented but can instead be replaced by not commiting a transaction.
-Method @all@ is not implemented but can instead be replaced the @rule :all@ class method.
-
 h3. Rails Generators
 
 You can use the standard Rails 3 generators to create your models, controllers, routes, tests and views, by passing 'neo4j' as the ORM for generators to use:
@@ -160,26 +154,31 @@ end</pre>
 
 Then you can simply call generators as normal without having to specify the ORM:
 
-<pre>> rails generate model Admin --parent User</pre>
+<pre> rails generate model Admin --parent User</pre>
 
 To undo what was just generated:
 
-<pre>> rails destroy model Admin</pre>
+<pre> rails destroy model Admin</pre>
 
-h2. Installation and Configuration
+h4. Rails Neo4j Project Template
 
-h3. Install JRuby
+Example of creating an Neo4j Application from scratch, type
 
-I recommend using "RVM":http://rvm.beginrescueend.com/
-
-h3. Install Rails
-
-<code>
+<pre>
 gem install rails
-gem install neo4j --pre
-</code>
+rails new myapp -m http://andreasronge.github.com/rails3.rb
+cd myapp
+bundle
+rails generate scaffold User name:string email:string
+rails s
+</pre>
+open a webbrowser: http://localhost:3000/users
 
-h3. Replace ActiveRecord with Neo4j
+h3. Installation and Configuration
+
+If you don't want to use the Neo4j Project template above you can do it yourself.
+
+h4. Replace ActiveRecord with Neo4j
 
 Edit the config/application.rb
 comment the line require 'rails/all' and add
@@ -191,41 +190,29 @@ require "rails/test_unit/railtie"
 require 'neo4j'
 </ruby>
 
-h3. Include dependency to neo4j
+h4. Include Dependency to Neo4j
 
 Add the following line to your Gemfile
 <code>
-gem 'neo4j', '1.0.0.beta.6'
+gem 'neo4j', '1.0.0.beta.19'
 </code>
+and remove all sql gems.
 
 Install the gems specified in your Gemfile @bundle install@
 
-h3. Create app using Scaffolds
-
-Generate a Rails Application
-Example of creating an Neo4j Application from scratch:
-<code>
- gem install rails
- rails new myapp -m http://andreasronge.github.com/rails3.rb
- cd myapp
- bundle
- rails generate scaffold User name:string email:string
- rails s
- open a webbrowser: http://localhost:3000/users
-</code>
-
-h3. Configuration
+h4. Configuration
 
 You can set the location of the database in the @config/application.rb@ file.
 Example:
 
 <ruby>
-  config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
-  config.neo4j.timestamps = false  # disable automatic timestamps on updated_at and created_at properties
+config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
+config.neo4j.timestamps = false  # disable automatic timestamps on updated_at and created_at properties
 </ruby>
 
 
-h2. Deployment
+h4. Deployment
 
+* Installing JRuby - see "RVM":http://rvm.beginrescueend.com/
 * "Tomcat/Trinidad":https://github.com/calavera/trinidad
 * "Glassfish App Server":http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl
