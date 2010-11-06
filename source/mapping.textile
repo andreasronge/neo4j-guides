@@ -4,7 +4,7 @@ In this guide you will learn how to map ruby classes to neo4j relationships and 
 
 endprologue.
 
-There is a complete example [[here|http://github.com/andreasronge/neo4j/tree/master/example/simple/]] of some of the examples below.
+There is a complete example "here":http://github.com/andreasronge/neo4j/tree/master/example/simple/ of some of the examples below.
 
 h3. Creating a Model
 
@@ -46,24 +46,24 @@ h3. Creating a node
 
 Creating a Person node instance
 
-<pre><code class="ruby">
+<ruby>
   person = Person.new
-</code></pre>      
+</ruby>      
 
 h3. Properties
 
 Setting a property:
 
-<pre><code class="ruby">
+<ruby>
   person.name = 'kalle'
   person.salary  = 10000
-</code></pre>      
+</ruby>      
 
 You can also set this (or any property) when you create the node:
 
-<pre><code class="ruby">
+<ruby>
    person = Person.new :name => 'kalle', :salary => 10000, :foo => 'bar'
-</code></pre>      
+</ruby>      
 
 
 h4. Properties and the [] operator
@@ -73,9 +73,9 @@ set using the [] operator. Declared properties set an expectation, not an requir
 catching typos.
 
 Example:
-<pre><code class="ruby">
+<ruby>
   person['an_undefined_property'] = 'hello'
-</code></pre>      
+</ruby>      
 
 So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation.
 But also, if you declare a Lucene index on the declared property and update the value, then the Lucene index will 
@@ -86,16 +86,16 @@ h4. Properties as a hash
 You can get all properties as an hash.
 
 Example:
-<pre><code class="ruby">
+<ruby>
     puts "person #{person.props.inspect}"
- </code></pre>      
+</ruby>      
 
 You can also update any properties with an hash
 
 Example:
-<pre><code class="ruby">
+<ruby>
     person.update( :name => 'foo', :age => 42, :colour => nil)
- </code></pre>      
+</ruby>      
 
 
 h3. Relationships
@@ -105,10 +105,10 @@ A relationship can be added at any time on any node.
 
 Example:
 
-<pre><code class="ruby">
+<ruby>
   person.outgoing(:best_friends) << other_node
   person.rels(:best_friends).outgoing.first.end_node # => other_node (if there is only one relationship of type 'best_friends' on person)
-</code></pre>      
+</ruby>
 
 h3. Mapping -  one to many, many to many
 
@@ -116,15 +116,15 @@ Use **to** and **from** with has_n to specify which direction the generated meth
 
 Example
 
-<pre><code class="ruby">
+<ruby>
   class Role
     include Neo4j::RelationshipMixin
     # notice that neo4j relationships can also have properties
     property :name
   end
-</code></pre>      
+</ruby>
 
-<pre><code class="ruby">
+<ruby>
   class Actor
     include Neo4j::NodeMixin
 
@@ -134,17 +134,17 @@ Example
     #
     has_n(:acted_in).to(Movie).relationship(Role)
   end
-</code></pre>      
+</ruby>
 
-<pre><code class="ruby">
+<ruby>
   class Director
     include Neo4j::NodeMixin
     property :name
     has_n(:directed).to(Movie)
   end
-</code></pre>      
+</ruby>      
   
-<pre><code class="ruby">
+<ruby>
   class Movie
     include Neo4j::NodeMixin
     property :title
@@ -155,11 +155,11 @@ Example
     # defines a method for traversing incoming acted_in relationships from Actor
     has_n(:actors).from(Actor, :acted_in)
   end
-</code></pre>      
+</ruby>      
 
 You can then do this:
 
-<pre><code class="ruby">
+<ruby>
     lucas = Director.new :name => 'George Lucas'
     star_wars_4 = Movie.new :title => 'Star Wars Episode IV: A New Hope', :year => 1977
     star_wars_3 = Movie.new :title => "Star Wars Episode III: Revenge of the Sith", :year => 2005
@@ -168,14 +168,14 @@ You can then do this:
     lucas.directed.should include(star_wars_3, star_wars_4)
     star_wars_3.director.should == lucas
     star_wars_4.director.should == lucas
-</code></pre>      
+</ruby>      
 
 Which is same as:
 
-<pre><code class="ruby">
+<ruby>
     lucas.outgoing("Movie#directed").should include(star_wars_3, star_wars_4)
     star_wars_3.incoming("Movie#directed").should include(lucas)
-</code></pre>      
+</ruby>      
 
 
 h3. Finding Nodes and Queries

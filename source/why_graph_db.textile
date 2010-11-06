@@ -1,7 +1,5 @@
 h2. The advantage if a graph database
 
-You will lead ...
-
 endprologue.
 
 Why a graph database ? 

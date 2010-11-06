@@ -1,11 +1,9 @@
 h2. Rails 3 / Active Model support
 
-You will lead ...
-
 endprologue.
 
 
-Developed by Nick Sieger (http://github.com/nicksieger/neo4j-rails) and extended 
+Developed by "Nick Sieger":http://github.com/nicksieger/neo4j-rails and extended 
 and included in Neo4j.rb by Andreas Ronge and Ben Jackson.
 
 h2. Usage
@@ -15,7 +13,7 @@ the normal validation and other methods that you are used to in ActiveRecord.
 
 Example:
 
-<pre><code class="ruby">
+<ruby>
   class IceCream < Neo4j::Model
     property :flavour
     validates_presence_of :flavour
@@ -23,7 +21,7 @@ Example:
 
   IceCream.new.valid?  # => false
   IceCream.new(:flavour => "vanilla").valid?  # => true
-</code></pre>
+</ruby>
 
 h3. Callbacks
 
@@ -68,7 +66,7 @@ by using the @to@ method in @has_one@ or @has_n@.
 
 *Example*
 
-<pre><code class="ruby">
+<ruby>
 class Member < Neo4j::Model
   has_n(:posts).to(Post)
   has_one(:avatar).to(Avator)
@@ -77,17 +75,17 @@ class Member < Neo4j::Model
   accepts_nested_attributes_for :posts, :reject_if => proc { |attributes| attributes[:title].blank? }
 end
 
-</code></pre>
+</ruby>
 
 h3. Neo4j::Rails::Transaction
 
 This class can be used as a filter in order to wrap methods in transactions.
 
 Example:
-<pre><code class="ruby">
+<ruby>
   class UsersController < ApplicationController
     around_filter Neo4j::Rails::Transaction, :only => [:create]
-</code></pre>
+</ruby>
 
 The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
 to signal for a rollback.
@@ -104,7 +102,7 @@ h3. Validation
 
 All the normal validations work.
 Example:
-<pre><code class="ruby">
+<ruby>
 class Person < Neo4j::Model
   index :email
   validates :email, :uniqueness => true
@@ -112,7 +110,7 @@ class Person < Neo4j::Model
                    :confirmation => true,
                    :length       => { :within => 6..40 }
 end
-</code></pre>
+</ruby>
 
 In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
 
@@ -126,7 +124,7 @@ Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Mode
 * ActiveModel::MassAssignmentSecurity
 
 Methods:
-<pre><code class="ruby">
+<ruby>
 class Neo4j::Model
   def valid?; end
   def save; end
@@ -142,7 +140,7 @@ class Neo4j::Model
   def self.transaction(&lock); end
   def self.accepts_nested_attributes_for(*); end
 end
-</code></pre>
+</ruby>
 
 Method @reload@ is not implemented but can instead be replaced by not commiting a transaction.
 Method @all@ is not implemented but can instead be replaced the @rule :all@ class method.
@@ -172,54 +170,62 @@ h2. Installation and Configuration
 
 h3. Install JRuby
 
-I recommend using [[RVM|http://rvm.beginrescueend.com/]]
+I recommend using "RVM":http://rvm.beginrescueend.com/
 
 h3. Install Rails
 
-<pre>
+<code>
 gem install rails
 gem install neo4j --pre
-</pre>
+</code>
 
 h3. Replace ActiveRecord with Neo4j
 
 Edit the config/application.rb
 comment the line require 'rails/all' and add
-<pre>
+<ruby>
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
 require 'neo4j'
-</pre>
+</ruby>
 
 h3. Include dependency to neo4j
 
 Add the following line to your Gemfile
-<pre>
+<code>
 gem 'neo4j', '1.0.0.beta.6'
-</pre>
+</code>
 
 Install the gems specified in your Gemfile @bundle install@
 
-h3. Create app
+h3. Create app using Scaffolds
 
-<pre>
-rails new neo4j-rails-example -m http://jruby.org/rails3.rb
-cd neo4j-rails-example
-rails generate scaffold person -o=neo4j
-</pre>
+Generate a Rails Application
+Example of creating an Neo4j Application from scratch:
+<code>
+ gem install rails
+ rails new myapp -m http://andreasronge.github.com/rails3.rb
+ cd myapp
+ bundle
+ rails generate scaffold User name:string email:string
+ rails s
+ open a webbrowser: http://localhost:3000/users
+</code>
 
 h3. Configuration
 
 You can set the location of the database in the @config/application.rb@ file.
 Example:
 
-<pre>
+<ruby>
   config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
-</pre>
+  config.neo4j.timestamps = false  # disable automatic timestamps on updated_at and created_at properties
+</ruby>
+
 
 h2. Deployment
 
-* [[Tomcat/Trinidad|https://github.com/calavera/trinidad]]
-* [[Glassfish App Server|http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl]]
+* "Tomcat/Trinidad":https://github.com/calavera/trinidad
+* "Glassfish App Server":http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl
