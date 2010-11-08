@@ -23,6 +23,8 @@ IceCream.new.valid?  # => false
 IceCream.new(:flavour => "vanilla").valid?  # => true
 </ruby>
 
+TIP: The @Neo4j::Model@ includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html for more information see the "Neo4j Mapping Guide":mapping.html
+
 h3. Callbacks
 
 The following callbacks are defined: *create* *save* *update* *destroy*
@@ -216,3 +218,13 @@ h4. Deployment
 * Installing JRuby - see "RVM":http://rvm.beginrescueend.com/
 * "Tomcat/Trinidad":https://github.com/calavera/trinidad
 * "Glassfish App Server":http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl
+
+h3. FAQ
+
+h4. Why do I get @ERROR IOError: Connection reset by peer@ ?
+Not sure, but it does not occur when you use Tomcat/Trinidad
+
+h4. Why can't I open the rails console while the application is running ?
+Because only one singel instance of neo4j is allowed to run at the same time.
+
+
