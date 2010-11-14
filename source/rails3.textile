@@ -156,17 +156,17 @@ class IceCreamController < ApplicationController
 end
 </ruby>
 
-Tip: String parameter values with special characters, such as URI's, should be escaped first before setting or querying to not conflict with the Lucene Query Parser Syntax @ + - && || ! ( ) { } ^ " ~ * ? : \ @. See "Apache Lucene - Query Parser Syntax":http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
+Tip: String parameter values with special characters, such as URI's, should be escaped first before setting or querying to not conflict with the Lucene Query Parser Syntax:  + - && || ! ( ) { } ^ " ~ * ? : \ . See "Apache Lucene - Query Parser Syntax":http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
 
 <ruby>
-	escaped = URI.escape("http://neo4j.rubyforge.org/guides", Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+	escaped = URI.escape( "http://neo4j.rubyforge.org/guides", Regexp.new( "[^#{URI::PATTERN::UNRESERVED}]" ))
 	Website.find("uri: #{escaped}")
 <ruby>
 	
 or using String#gsub
 
 <ruby>
-	escaped = "http://neo4j.rubyforge.org/guides".gsub(/([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/, "\\\1")
+	escaped = "http://neo4j.rubyforge.org/guides".gsub( /([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/ , "\\\1" )
 </ruby>
 
 
@@ -179,7 +179,7 @@ IceCream.all #=> [vanilla_sugar, vanilla_waffle]
 
 IceCream.all('flavour: vanilla') #=> [vanilla_sugar, vanilla_waffle]
 
-IceCream.all('flavour: vanilla AND cone: sugar') => [vanilla_sugar]
+IceCream.all('flavour: vanilla AND cone: sugar') #=> [vanilla_sugar]
 
 IceCream.all('flavour: chocolate') #=> []
 </ruby>
