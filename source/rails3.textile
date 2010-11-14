@@ -111,6 +111,82 @@ end
 
 In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
 
+
+h3. Querying
+
+The @find@ and @all@ methods use the model's Lucene index to search for either one or a set of nodes respectively. Make sure to index the properties that you'll query on.
+
+*Example Setup*
+<ruby>
+class IceCream < Neo4j::Model
+  property :flavour
+  property :cone
+
+  index :flavour
+  index :cone
+end
+</ruby>
+
+<ruby>
+vanilla_sugar = IceCream.create(:flavour => 'vanilla', :cone => 'sugar')
+vanilla_waffle = IceCream.create(:flavour => 'vanilla', :cone => 'waffle')
+</ruby>
+
+h4. Find
+
+The @find@ method will find the first node that matches its query or @nil@ if one isn't found.
+
+<ruby>
+IceCream.find('cone: sugar') #=> vanilla_sugar
+
+IceCream.find('flavour: vanilla') #=> who knows?
+
+IceCream.find('flavour: chocolate') #=> nil
+</ruby>
+
+The @find@ method will also accept a Neo4j node id which is useful for finding a node in a rails controller.
+<ruby>
+class IceCreamController < ApplicationController
+  
+  def show
+    @ice_cream = IceCream.find(params[:id])
+    # . . .
+  end
+
+end
+</ruby>
+
+Tip: String parameter values with special characters, such as URI's, should be escaped first before setting or querying to not conflict with the Lucene Query Parser Syntax @ + - && || ! ( ) { } ^ " ~ * ? : \ @. See "Apache Lucene - Query Parser Syntax":http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
+
+<ruby>
+	escaped = URI.escape("http://neo4j.rubyforge.org/guides", Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+	Website.find("uri: #{escaped}")
+<ruby>
+	
+or using String#gsub
+
+<ruby>
+	escaped = "http://neo4j.rubyforge.org/guides".gsub(/([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/, "\\\1")
+</ruby>
+
+
+h4. All
+
+The @all@ method will find a set of nodes or return an empty array if none are found.
+
+<ruby>
+IceCream.all #=> [vanilla_sugar, vanilla_waffle]
+
+IceCream.all('flavour: vanilla') #=> [vanilla_sugar, vanilla_waffle]
+
+IceCream.all('flavour: vanilla AND cone: sugar') => [vanilla_sugar]
+
+IceCream.all('flavour: chocolate') #=> []
+</ruby>
+
+
+
+
 h3. API
 
 Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Model. Neo4j::Model includes 
