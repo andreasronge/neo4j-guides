@@ -4,7 +4,7 @@ endprologue.
 
 
 Developed by "Nick Sieger":http://github.com/nicksieger/neo4j-rails and extended 
-and included in Neo4j.rb by Andreas Ronge and Ben Jackson.
+and included in Neo4j.rb by Andreas Ronge and Ben Jackson. You no longer need the neo4j-rails gem.
 
 h3. Usage
 
@@ -41,14 +41,39 @@ This class can be used as a filter in order to wrap methods in transactions.
 
 Example:
 <ruby>
-  class UsersController < ApplicationController
-    around_filter Neo4j::Rails::Transaction, :only => [:create]
+class UsersController < ApplicationController
+  around_filter Neo4j::Rails::Transaction, :only => [:create]
 </ruby>
 
 The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
 to signal for a rollback.
 
+Example:
+<ruby>
+class UsersController < ApplicationController
+   around_filter Neo4j::Rails::Transaction, :only => [:create, :update]
+
+   def update
+     #.. create, update delete some nodes/relationships
+     #.. something when wrong, rollback everyting
+     Neo4j::Rails::Transaction.current.fail
+   end
+</ruby>
+
 Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
+
+Example:
+<ruby>
+class UsersController < ApplicationController
+  def update
+    Users.transaction do |tx|
+      #.. create, update delete some nodes/relationships
+      #.. something when wrong, rollback everyting
+      tx.fail
+    end
+  end
+</ruby>
+
 
 h4. Model.new
 
@@ -69,9 +94,9 @@ Updates the model with the given attributes and saves the model.
 Will create a new transaction if neccessarly which can be rollback by the @save@ method if the validation was
 not successful.
 
-h3. accepts_nested_attributes_for
+h3. Nested Attributes
 
-Neo4j.rb supports "Nested Attributes":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html
+Neo4j.rb supports "accepts_nested_attributes_for":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html
 
 The following configuration option are available
 

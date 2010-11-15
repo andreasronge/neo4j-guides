@@ -1,6 +1,6 @@
 h2. Mapping Nodes/Relationships to Ruby Classes
 
-In this guide you will learn how to map ruby classes to neo4j relationships and nodes.
+In this guide you will learn how to map ruby classes to neo4j relationships and nodes. 
 
 endprologue.
 
@@ -77,9 +77,8 @@ Example:
   person['an_undefined_property'] = 'hello'
 </ruby>      
 
-So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation.
-But also, if you declare a Lucene index on the declared property and update the value, then the Lucene index will 
-automatically be updated.  The property declaration is required before declaring an index on the property.
+So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation. Also, when using Neo4j.rb from Ruby on Rails you sometimes need to declare properties on your models to get  *accepts_nested_attributes_for* and *ActiveModel::MassAssignmentSecurity* working.
+It is not required to declare an property in order to use an index on that property (as in Neo4j.rb version <= 0.4.6).
 
 h4. Properties as a hash
 
@@ -117,64 +116,64 @@ Use **to** and **from** with has_n to specify which direction the generated meth
 Example
 
 <ruby>
-  class Role
-    include Neo4j::RelationshipMixin
-    # notice that neo4j relationships can also have properties
-    property :name
-  end
+class Role
+  include Neo4j::RelationshipMixin
+  # notice that neo4j relationships can also have properties
+  property :name
+end
 </ruby>
 
 <ruby>
-  class Actor
-    include Neo4j::NodeMixin
+class Actor
+  include Neo4j::NodeMixin
 
-    # The following line defines the acted_in relationship
-    # using the following classes:
-    # Actor[Node] --(Role[Relationship])--   Movie[Node]
-    #
-    has_n(:acted_in).to(Movie).relationship(Role)
-  end
+  # The following line defines the acted_in relationship
+  # using the following classes:
+  # Actor[Node] --(Role[Relationship])--   Movie[Node]
+  #
+  has_n(:acted_in).to(Movie).relationship(Role)
+end
 </ruby>
 
 <ruby>
-  class Director
-    include Neo4j::NodeMixin
-    property :name
-    has_n(:directed).to(Movie)
-  end
+class Director
+  include Neo4j::NodeMixin
+  property :name
+  has_n(:directed).to(Movie)
+end
 </ruby>      
   
 <ruby>
-  class Movie
-    include Neo4j::NodeMixin
-    property :title
-    property :year
+class Movie
+  include Neo4j::NodeMixin
+  property :title
+  property :year
   
-    has_one(:director).from(Director, :directed)
-  
-    # defines a method for traversing incoming acted_in relationships from Actor
-    has_n(:actors).from(Actor, :acted_in)
-  end
+  has_one(:director).from(Director, :directed)
+
+  # defines a method for traversing incoming acted_in relationships from Actor
+  has_n(:actors).from(Actor, :acted_in)
+end
 </ruby>      
 
 You can then do this:
 
 <ruby>
-    lucas = Director.new :name => 'George Lucas'
-    star_wars_4 = Movie.new :title => 'Star Wars Episode IV: A New Hope', :year => 1977
-    star_wars_3 = Movie.new :title => "Star Wars Episode III: Revenge of the Sith", :year => 2005
-    lucas.directed << star_wars_3 << star_wars_4
+lucas = Director.new :name => 'George Lucas'
+star_wars_4 = Movie.new :title => 'Star Wars Episode IV: A New Hope', :year => 1977
+star_wars_3 = Movie.new :title => "Star Wars Episode III: Revenge of the Sith", :year => 2005
+lucas.directed << star_wars_3 << star_wars_4
 
-    lucas.directed.should include(star_wars_3, star_wars_4)
-    star_wars_3.director.should == lucas
-    star_wars_4.director.should == lucas
+lucas.directed.should include(star_wars_3, star_wars_4)
+star_wars_3.director.should == lucas
+star_wars_4.director.should == lucas
 </ruby>      
 
 Which is same as:
 
 <ruby>
-    lucas.outgoing("Movie#directed").should include(star_wars_3, star_wars_4)
-    star_wars_3.incoming("Movie#directed").should include(lucas)
+lucas.outgoing("Movie#directed").should include(star_wars_3, star_wars_4)
+star_wars_3.incoming("Movie#directed").should include(lucas)
 </ruby>      
 
 
@@ -188,3 +187,29 @@ There are three ways of finding/querying nodes in Neo4j:
 When doing a traversal one starts from a node and traverses one or more relationships (one or more levels deep).
 This start node can be either the reference node which is always found (Neo4j#ref_node) or by finding a start
 node from a Lucene query.
+
+h3. How do I sort the traversal result ?
+
+# Using the @Enumerable#sort_by@ 
+# Using lucene, see "Indexing and Quering with Lucene":lucene.html
+# Using "timeline":http://api.neo4j.org/current/org/neo4j/index/timeline/Timeline.html (no Ruby support yet, you have to call the java api) 
+# Implement your own "indexing" tree in neo4j
+
+h3. Inheritance
+
+It works as expected, example:
+
+<ruby>
+class Vehicle
+  include Neo4::NodeMixin
+  property :wheels
+  index :wheels
+end
+
+class Car < Vehicle
+end
+
+Car.all  # => returns all cars
+Vehicle.all # => returns all vehicles
+</ruby>
+
