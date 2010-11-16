@@ -26,7 +26,7 @@ IceCream.new.valid?  # => false
 IceCream.new(:flavour => "vanilla").valid?  # => true
 </ruby>
 
-The @new@ method does not create new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord @new@ method. The node will be saved to the database when the @save@ method is called (just like ActiveRecord).
+The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called (just like ActiveRecord).
 
 TIP: The @Neo4j::Model@ includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html but overrides some methods. For more information see the "Neo4j Mapping Guide":mapping.html
 
@@ -98,6 +98,20 @@ h4. Model.update_attributes
 Updates the model with the given attributes and saves the model.
 Will create a new transaction if neccessarly which can be rollback by the @save@ method if the validation was
 not successful.
+
+h4. Model.property
+
+The @Neo4j::Model#property@ method accept additional configuration parameters:, @:default@, @:length@ and @:null@.
+
+Example:
+<ruby>
+class MyModel < Neo4j::Rails::Model
+  # gives title "Mr" unless it is set specifically
+  # ensures it is a maximum of 3 chars long
+  # ensures it is never saved with a nil value
+  property :title, :default => "Mr", :length => 3, :null => false
+end
+</ruby>
 
 h3. Nested Attributes
 
@@ -192,6 +206,15 @@ end
 </ruby>
 
 
+The Neo4j::Model also support Active Record like query syntax:
+
+<ruby>
+Model.find(:first, :conditions => { :name => "test" }) # works the same as find("name: \"test\"")
+Model.find(:first, :conditions => { :id => 10 }) # works the same as find(10) or find("10")
+</ruby>
+
+For more information about indexing and quering, see "Indexing and Quering with Lucene":lucene.html
+
 h4. All
 
 The @all@ method will find a set of nodes or return an empty array if none are found.
@@ -254,7 +277,7 @@ h3. Rails Generators
 
 You can use the standard Rails 3 generators to create your models, controllers, routes, tests and views, by passing 'neo4j' as the ORM for generators to use:
 
-<pre>> rails generate scaffold User name:string email:string --orm=neo4j</pre>
+<pre>> rails generate scaffold User name:string born:date --orm=neo4j</pre>
 
 You can also set up your application configuration to use neo4j as the default ORM for generating templates.  Simply add the following to your application's Rails configuration.  This example also favours RSpec and specifies that fixtures are not to be created:
 
@@ -270,6 +293,10 @@ Then you can simply call generators as normal without having to specify the ORM:
 To undo what was just generated:
 
 <pre> rails destroy model Admin</pre>
+
+To create a model with timestamps:
+
+<pre>rails generate scaffold Post title:string --timestamps</pre>
 
 h4. Rails Neo4j Project Template
 
@@ -305,11 +332,9 @@ h4. Include Dependency to Neo4j
 
 Add the following line to your Gemfile
 <code>
-gem 'neo4j', '1.0.0.beta.19'
+gem 'neo4j', '1.0.0.beta.20'
 </code>
-and remove all sql gems.
-
-Install the gems specified in your Gemfile @bundle install@
+and remove all sql gems. Install the gems specified in your Gemfile @bundle install@
 
 h4. Configuration
 
