@@ -38,7 +38,7 @@ See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Ca
 h3. Transactions
 
 All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
-Some methods like @save@ and @destroy@, @update_attributes@ are automatically wrapped inside a transaction. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
+Some methods: @save@, @destroy@ and @update_attributes@ are automatically wrapped inside a transaction. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
 
 h4. Neo4j::Rails::Transaction
 
@@ -92,6 +92,7 @@ h4. Model.save
 Saves the node if the validation was successful. It will create a new transaction if neccessarly.
 If the saved model that was *not* created by the @Model.new@ method (which means it exist in the database) and
 the validation fails then the transaction will be rolled back.
+Notice, also nested nodes will be saved (created by has_n, has_one, or outgoing).
 
 h4. Model.update_attributes
 
@@ -161,6 +162,58 @@ The @Neo4j::Model@ includes the @Neo4j::NodeMixin@
 See "Mapping nodes/relationships to Ruby classes":mapping.html
 
 TIP: Only a limited set of traversal method is available before the node is saved. E.g. methods like @node.outgoing(:work).depth(4).filter{|path| path.length == 2}@ is only possible if node is saved.
+
+h4. Saving Relationships and Validation 
+
+Unlike using Neo4j::NodeMixin you have to save relationships in order to make them persist (like ActiveRecord). All the nested nodes will be saved when the save method is called and validation will be performed on each nested node.
+
+<ruby>
+p1 = Person.new
+p2 = Person.new
+p1.friends << p2
+p1.save # => true if validation was successful for both p1 and p2
+</ruby>
+
+If an validation error occurs the errors will be aggregated on the 'root' object
+(in the example above that is p1.errors).
+
+has_list
+Implemented in upcomming 1.0.0.beta.21
+
+h4. has_list
+
+The @has_list@ class method is used to create an ordered and/or indexed list of
+nodes. It could be an alternative of using range quieres with Lucene.
+
+Example:
+<ruby>
+class Parent
+  has_list :children
+end
+
+# Make sure you have an transaction here
+p = Parent.create
+p.children[1992] = child1
+p.children[1995] = child2
+p.children[1998] = child3
+p.children.between(1992..1998) => [child1, child2, child3]
+</ruby>
+
+Or you can just use it as a order list
+<ruby>
+p = Parent.create
+# Make sure you have an transaction here
+p.children << child1
+p.children << child2
+p.children << child3
+p.children.size # == 3 # very efficient since it does not traverse in order to count all children
+</ruby>
+
+The @Neo4j::NodeMixin#has_list@ is not wrapped and does not behave like
+the @has_n@ and @has_one@ ActiveRecord like methods. That means that
+when you add nodes to a list you must make sure that you have a running transaction.
+
+Implemented in 1.0.0.beta.21
 
 h3. Querying
 
@@ -242,6 +295,22 @@ or using String#gsub
 	escaped = "http://neo4j.rubyforge.org/guides".gsub( /([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/ , "\\\1" )
 </ruby>
 
+h4. Dynamic Finders
+
+If you declare an index you neo4j.rb will generate finder methods for you.
+
+Example:
+<ruby>
+class Person
+  property :name
+  index :name
+end
+
+Person.find_by_name 'andreas'  # with underscore of course, not visible
+
+</ruby>
+
+(introduced in 1.0.0.beta.21)
 
 h3. API
 
