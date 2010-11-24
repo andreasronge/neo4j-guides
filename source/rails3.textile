@@ -177,9 +177,6 @@ p1.save # => true if validation was successful for both p1 and p2
 If an validation error occurs the errors will be aggregated on the 'root' object
 (in the example above that is p1.errors).
 
-has_list
-Implemented in upcomming 1.0.0.beta.21
-
 h4. has_list
 
 The @has_list@ class method is used to create an ordered and/or indexed list of
@@ -212,8 +209,6 @@ p.children.size # == 3 # very efficient since it does not traverse in order to c
 The @Neo4j::NodeMixin#has_list@ is not wrapped and does not behave like
 the @has_n@ and @has_one@ ActiveRecord like methods. That means that
 when you add nodes to a list you must make sure that you have a running transaction.
-
-Implemented in 1.0.0.beta.21
 
 h3. Querying
 
@@ -310,8 +305,6 @@ Person.find_by_name 'andreas'  # with underscore of course, not visible
 
 </ruby>
 
-(introduced in 1.0.0.beta.21)
-
 h3. API
 
 Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Model. Neo4j::Model includes 
@@ -401,7 +394,7 @@ h4. Include Dependency to Neo4j
 
 Add the following line to your Gemfile
 <code>
-gem 'neo4j', '1.0.0.beta.20'
+gem 'neo4j', '1.0.0.beta.21'
 </code>
 and remove all sql gems. Install the gems specified in your Gemfile @bundle install@
 
@@ -422,15 +415,27 @@ h4. Deployment
 * "Tomcat/Trinidad":https://github.com/calavera/trinidad
 * "Glassfish App Server":http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl
 
+h3. Integration with other Rails Gems
+
+h4. Using Devise
+
+See the http://github.com/benjackson/devise-neo4j
+
+h4. will_pagenate
+
+No support currently, you have to do it yourself.
+
 h3. FAQ
 
 h4. Why do I get @ERROR IOError: Connection reset by peer@ ?
 
-Not sure, but it does not occur when you use Tomcat/Trinidad
+It is a JRuby bug which will be solved in an upcoming JRuby release.
+However, this error is not shown when using Tomcat/Trinidad
 
 h4. Why can't I open the rails console while the application is running ?
 
 Because only one singel instance of neo4j is allowed to run at the same time
 (unless one use a REST client or maybe a readonly instance of the Neo4j server, todo ...)
+I'm working on a solution to this problem.
 
 
