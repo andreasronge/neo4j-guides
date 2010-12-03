@@ -275,6 +275,8 @@ IceCream.all('flavour: vanilla') #=> [vanilla_sugar, vanilla_waffle]
 IceCream.all('flavour: vanilla AND cone: sugar') #=> [vanilla_sugar]
 
 IceCream.all('flavour: chocolate') #=> []
+IceCream.all(:flavour => 'chocolate')
+IceCream.find(:all, :condition => {:flavour => 'chocolate'}, :sort => {:name => :asc})
 </ruby>
 
 Tip: String parameter values with special characters, such as URI's, should be escaped first before setting or querying to not conflict with the Lucene Query Parser Syntax:  + - && || ! ( ) { } ^ " ~ * ? : \ . See "Apache Lucene - Query Parser Syntax":http://lucene.apache.org/java/2_4_0/queryparsersyntax.html
@@ -304,6 +306,18 @@ end
 Person.find_by_name 'andreas'  # with underscore of course, not visible
 
 </ruby>
+
+
+h4. Sorting
+
+Examples:
+<ruby>
+Person.all('name: Test*').asc(:name).desc(:age)
+Person.find(:all, 'name: Test*', :page => 2, :per_page => 2, :sort => {:name => :asc}
+Person.first(:conditions => 'name: Test*', :sort => {:name => :asc})
+</ruby>
+
+You can add a paginate prefix and it will be paginated (need to specify :page and :per_page parameters).
 
 h3. API
 
@@ -423,7 +437,28 @@ See the http://github.com/benjackson/devise-neo4j
 
 h4. will_pagenate
 
-No support currently, you have to do it yourself.
+First you need to include the will_paginate gem, edit your Gemfile
+<pre>
+  gem "will_paginate", "~> 3.0.pre2"
+</pre>
+
+In your controller paginate the traversal or search result.
+Example
+<ruby>
+ def index
+# Example 1, with lucene query does support sorting !
+#    @users = User.paginate(:all, 'name: P*', :total_entries => 100,:page => params[:page], :per_page => 3)
+# Example 2, with traversal, does not support sorting
+#    @users = User.all.paginate(:page => params[:page], :per_page => 3)
+ end    
+</ruby>
+
+In the view.
+<erb>
+<%= will_paginate(@users) %>
+</erb>
+
+Supported in 1.0.0.beta.23
 
 h3. FAQ
 
@@ -432,10 +467,9 @@ h4. Why do I get @ERROR IOError: Connection reset by peer@ ?
 It is a JRuby bug which will be solved in an upcoming JRuby release.
 However, this error is not shown when using Tomcat/Trinidad
 
-h4. Why can't I open the rails console while the application is running ?
+h4. org.neo4j.kernel.impl.core.ReadOnlyDbException
 
-Because only one singel instance of neo4j is allowed to run at the same time
-(unless one use a REST client or maybe a readonly instance of the Neo4j server, todo ...)
-I'm working on a solution to this problem.
-
+You get this exception if there is already an neo4j db instance running.
+Only one write instance of the database is possible. If there is already a write instance running then a read only db will be created.
+Did you run the rails console before you did the first request to rails ?
 
