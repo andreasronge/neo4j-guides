@@ -7,12 +7,11 @@ Developed by "Nick Sieger":http://github.com/nicksieger/neo4j-rails and extended
 and included in Neo4j.rb by Andreas Ronge and Ben Jackson. You no longer need the neo4j-rails gem.
 
 
-TIP: Notice that you can use the  @Neo4j::Model@ in a standalone application or Sinatra application. It is also possible to use the @Neo4j::NodeMixin@ in a Rails application instead of the @Neo4j::Model@
+TIP: Notice that you can use the  @Neo4j::Model@ in a standalone application or Sinatra application. It is also possible to use the @Neo4j::NodeMixin@ or @Neo4j::Node@ in a Rails application instead of the @Neo4j::Model@, see the other guides: "Neo4j Mapping Guide":mapping.html and "Node, Relationships and Properties":basic.html
 
 h3. Usage
 
-The @Neo4j::Model@ implements the Rails ActiveModel interface. That means that you can use
-the normal validation and other methods that you are used to in ActiveRecord.
+The @Neo4j::Model@ implements the Rails ActiveModel interface and a subset of the ActiveRecord API. 
 
 Example:
 
@@ -26,7 +25,7 @@ IceCream.new.valid?  # => false
 IceCream.new(:flavour => "vanilla").valid?  # => true
 </ruby>
 
-The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called (just like ActiveRecord).
+The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called, just like ActiveRecord.
 
 TIP: The @Neo4j::Model@ includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html but overrides some methods. For more information see the "Neo4j Mapping Guide":mapping.html
 
@@ -237,6 +236,7 @@ The @find@ method will find the first node that matches its query or @nil@ if on
 <ruby>
 IceCream.find('cone: sugar') #=> vanilla_sugar
 IceCream.find('flavour: vanilla') #=> who knows?
+IceCream.find(:flavour => 'vanilla') #=> same as above
 IceCream.find('flavour: chocolate') #=> nil
 </ruby>
 
@@ -318,6 +318,10 @@ Person.first(:conditions => 'name: Test*', :sort => {:name => :asc})
 </ruby>
 
 You can add a paginate prefix and it will be paginated (need to specify :page and :per_page parameters).
+
+h4. Range Queries
+
+Does work on String, Fixnum, Float, Date and DateTime, see the "Lucene Queries":lucene.html
 
 h3. API
 
@@ -431,9 +435,10 @@ h4. Deployment
 
 h3. Integration with other Rails Gems
 
-h4. Using Devise
+h4. devise
 
-See the http://github.com/benjackson/devise-neo4j
+See the "devise-neo4j gem":http://github.com/benjackson/devise-neo4j and
+"devise_example":http://github.com/andreasronge/devise_example
 
 h4. will_pagenate
 

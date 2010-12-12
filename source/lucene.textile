@@ -170,10 +170,33 @@ h3. Range Queries
   Person.find(:height).between(1.52, 1.87)
 </ruby>    
 
+You must declare the property unless you want to perform a range query on Strings.
+
+<ruby>
+Person.find(:age => 49..52)
+Person.find(:age => 49...52)
+</ruby>
+
+h4. Date and DateTime Range Queries
+
+If you specify a :type of Date or DateTime it will be translated into an Fixnum.
+
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+  property :born, :type => Date
+  index :born
+end
+
+Person.find(:born => Date.today - 5 .. Date.today)
+</ruby>    
+ 
 h3. Compound Queries
 
 <ruby>
   Person.find(:name => 'foo').and(:age).between(10,20)
+  # same as
+  Person.find(:name => 'foo', :age => 10..20)
 </ruby>    
 
 Only @and@ queries are currently supported.
