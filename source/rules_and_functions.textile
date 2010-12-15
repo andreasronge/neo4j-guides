@@ -4,12 +4,11 @@ endprologue.
 
 h3. Rules
 
-Rules can be used to group a set of nodes. Rules and functions is very fast for reads. 
+Rules can be used to group a set of nodes. Rules and functions are very fast for read operations.
 The grouping of nodes take place when you update, insert, delete a node, relationship or property.
-So, if you have not many writes but mostly read operations using rules and function might give you better performance compared to using lucene queries or traversals.
+So, if you have not too many writes but mostly read operations using rules and function might give you better performance compared to using lucene queries or traversals.
 
-Example of rule groups: all nodes of a class, property x == y, relationship z == q.
-
+Example of rule groups: all nodes of a class, all nodes with property x == y, all nodes with relationship type z == q.
 
 h4. Find all nodes of a class
 
@@ -144,6 +143,8 @@ end
 Person.new
 # create new transaction, required since rules are triggered when transaction finish
 Person.all.count # => 1
+# same as
+Person.count(:all)
 </ruby>
 
 To count only a subset.
@@ -151,9 +152,16 @@ To count only a subset.
 <ruby>
 class Person
   include Neo4j::NodeMixin
+  # notice the :functions parameter can take an array of functions, or just one function
   rule(:old, :functions => [Count.new]) {  age > 10 }
 end
+Person.count(:old)
+
 </ruby>
+
+TIP: Neo4j/Rails Neo4j::Model already includes one rule: <pre>rule(:all, functions => Count.new)</pre>. That
+means when calling the count method on the Person.all.count it will not traverse and count all nodes, instead
+it will read the count function value on the rule node, which is much faster.
 
 h4. Sum
 
@@ -162,8 +170,12 @@ The following function will sum the age of every people in the rule group @old@
 <ruby>
 class Person
   include Neo4j::NodeMixin
-  rule(:old, :functions => [Sum.new(:age)]) {  age > 10 }
+  rule(:old, :functions => Sum.new(:age)) {  age > 10 }
 end
+
+Person.sum(:old, :age)
+# same as
+Person.old.sum(:age)
 </ruby>
 
 

@@ -160,14 +160,14 @@ h3. Specifing Relationships (has_n/has_one)
 The @Neo4j::Model@ includes the @Neo4j::NodeMixin@
 See "Mapping nodes/relationships to Ruby classes":mapping.html
 
-TIP: Only a limited set of traversal method is available before the node is saved. E.g. methods like @node.outgoing(:work).depth(4).filter{|path| path.length == 2}@ is only possible if node is saved.
+TIP: Only a limited set of traversal method is available before the node is saved. E.g. methods like @node.outgoing(:work).depth(4).filter{|path| path.length == 2}@ is only possible if node is saved. 
 
 h4. Saving Relationships and Validation 
 
 Unlike using Neo4j::NodeMixin you have to save relationships in order to make them persist (like ActiveRecord). All the nested nodes will be saved when the save method is called and validation will be performed on each nested node.
 
 <ruby>
-p1 = Person.new
+p1 = Person.new  # or Person.create
 p2 = Person.new
 p1.friends << p2
 p1.save # => true if validation was successful for both p1 and p2
@@ -412,7 +412,7 @@ h4. Include Dependency to Neo4j
 
 Add the following line to your Gemfile
 <code>
-gem 'neo4j', '1.0.0.beta.21'
+gem 'neo4j', '1.0.0.beta.24'
 </code>
 and remove all sql gems. Install the gems specified in your Gemfile @bundle install@
 
@@ -440,21 +440,25 @@ h4. devise
 See the "devise-neo4j gem":http://github.com/benjackson/devise-neo4j and
 "devise_example":http://github.com/andreasronge/devise_example
 
-h4. will_pagenate
+h4. will_paginate
 
 First you need to include the will_paginate gem, edit your Gemfile
 <pre>
   gem "will_paginate", "~> 3.0.pre2"
+</pre>
+and add in the config/application.rb file
+<pre>
+  require 'will_paginate'
 </pre>
 
 In your controller paginate the traversal or search result.
 Example
 <ruby>
  def index
-# Example 1, with lucene query does support sorting !
-#    @users = User.paginate(:all, 'name: P*', :total_entries => 100,:page => params[:page], :per_page => 3)
-# Example 2, with traversal, does not support sorting
-#    @users = User.all.paginate(:page => params[:page], :per_page => 3)
+   # Example 1, with lucene query does support sorting !
+   @users = User.paginate(:all, 'name: P*', :total_entries => 100,:page => params[:page], :per_page => 3)
+   # Example 2, with traversal, does not support sorting
+   @users = User.all.paginate(:page => params[:page], :per_page => 3)
  end    
 </ruby>
 
@@ -462,8 +466,6 @@ In the view.
 <erb>
 <%= will_paginate(@users) %>
 </erb>
-
-Supported in 1.0.0.beta.23
 
 h3. FAQ
 
