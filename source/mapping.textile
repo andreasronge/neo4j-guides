@@ -177,6 +177,39 @@ star_wars_3.incoming("Movie#directed").should include(lucas)
 </ruby>      
 
 
+h4. has_list
+
+The @has_list@ class method is used to create an ordered and/or indexed list of
+nodes. It could be an alternative of using range quieres with Lucene.
+It uses the "timeline":http://api.neo4j.org/current/org/neo4j/index/timeline/Timeline.html feature of the Java Neo4j API.
+
+Example:
+
+<ruby>
+class Parent
+  include Neo4j::NodeMixin
+  has_list :children
+end
+
+# Make sure you have an transaction here
+p = Parent.new
+p.children[1992] = child1
+p.children[1995] = child2
+p.children[1998] = child3
+# commit transaction here
+p.children.between(1992..1998) => [child1, child2, child3]
+</ruby>
+
+Or you can just use it as a order list
+<ruby>
+p = Parent.create
+# Make sure you have an transaction here
+p.children << child1
+p.children << child2
+p.children << child3
+p.children.size # == 3 # very efficient since it does not traverse in order to count all children
+</ruby>
+
 h3. Finding Nodes and Queries
 
 There are three ways of finding/querying nodes in Neo4j: 
@@ -192,7 +225,7 @@ h3. How do I sort the traversal result ?
 
 # Using the @Enumerable#sort_by@ 
 # Using lucene, see "Indexing and Quering with Lucene":lucene.html
-# Using "timeline":http://api.neo4j.org/current/org/neo4j/index/timeline/Timeline.html (no Ruby support yet, you have to call the java api) 
+# Using @Neo4j::NodeMixin#has_list@, see above
 # Implement your own "indexing" tree in neo4j
 
 h3. Inheritance

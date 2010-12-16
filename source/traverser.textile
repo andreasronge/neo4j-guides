@@ -13,7 +13,7 @@ Ruby is much slower then Java, so you will always get better performance impleme
 traverser filters in Java. However, compared to traversing relationships in SQL Neo4j.rb 
 is still several maginutes faster (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/Blarko/Entries/2010/3/29_MySQL_vs._Neo4j_on_a_Large-Scale_Graph_Traversal.html ).
 
-Example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java but in JRuby it takes about 4 seconds.
+For example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java but in JRuby it takes about 4 seconds.
 However if you traverse fewer nodes then there is less difference between Java and Ruby.
 For more information check the "neo4j-perf github project":http://github.com/andreasronge/neo4j-perf
 
@@ -24,10 +24,12 @@ You can increase the performance by not loading the Ruby wrapper around Java nod
 *Using the Java iterator directly*
 
 <ruby>
-folder.incoming(:parent_folder).incoming(:folder).depth(:all).iterator.each do |node|
-    size += node[:size] if node.property?(:size) #&& node.property?(:file_id)
-    @traversed += 1
-end
+folder.incoming(:parent_folder).
+       incoming(:folder).
+       depth(:all).
+       iterator.each do |node|
+         puts node
+       end
 </ruby>
 
 *Using Java Neo4j::Relationships*
@@ -42,7 +44,7 @@ Notice that @Neo4j::Node@ and @Neo4j::Relationships@ really are the Java objects
 h3. Traversals
 
 An neo4j traversal is created using the incoming and outgoing method on the @Neo4j::Node@.
-These method is also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
+These methods are also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
 
 TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these example, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block, or use the (Rails) Neo4j::Model instead which will create transactions automatically for you.
 
@@ -55,10 +57,12 @@ This means that you can use any of the Enumerable method on traversals.
 Example:
 
 <ruby>
-# find all nodes with property name == 'foo' from node a with outgoing relationship 'friends'
+# find all nodes with property name == 'foo' from node a
+# with outgoing relationship 'friends'
 a.outgoing(:friends).find{|node| node[:name} == 'foo'}
 
-# return an array names of all nodes from node a with outgoing relationship 'friends'
+# return an array names of all nodes from node a with 
+# outgoing relationship 'friends'
 a.outgoing(:friends).collect{|node| node[:name}} 
 </ruby>
 
@@ -112,7 +116,9 @@ In the example above let say we only want to include the friends friends nodes (
 not nodes at depth one.
 
 <ruby>
-a.outgoing(:friends).depth(2).filter{|path| path.length == 2}.each {|node| puts node[:name]}
+a.outgoing(:friends).depth(2).
+  filter{|path| path.length == 2}.
+    each {|node| puts node[:name]}
 </ruby>
 
 The above example prints: D, E
@@ -150,7 +156,8 @@ Creates this graph:
 You can traverse several relationship types at the same time:
 
 <ruby>
-a.outgoing(:friends).outgoing(:recommend).each{|node| puts node[:name]}
+a.outgoing(:friends).outgoing(:recommend).
+  each{|node| puts node[:name]}
 </ruby>
 
 The example above prints B, C and D.
@@ -161,7 +168,9 @@ The path end_node method returns the node it has traversed to.
 Example: Find all your friends friends friends that are recommended by someone (uses the node space from the example above).
 
 <ruby>
-a.outgoing(:friends).outgoing(:recommend).depth(3).filter{|path| path.end_node.rel?(:recommend, :incoming)}.each{|node| puts node[:name]}
+a.outgoing(:friends).outgoing(:recommend).depth(3).
+   filter{|path| path.end_node.rel?(:recommend, :incoming)}.
+     each{|node| puts node[:name]}
 </ruby>
 
 This prints C, D and G. There is also a @start_node@ method on the @path@ paramenter.
@@ -172,9 +181,9 @@ To only include nodes which has been friends before 2005 or is recommended by so
 
 <ruby>
  a.outgoing(:friends).outgoing(:recommend).depth(:all).filter do |path|
-  path.last_relationship.rel_type == 'recommend' ||                     
-  path.last_relationship[:since] < 2005                                 
-end.each {|node| puts node[:name]}
+    path.last_relationship.rel_type == 'recommend' ||                     
+    path.last_relationship[:since] < 2005                                 
+  end.each {|node| puts node[:name]}
 </ruby>
 
 The following prints D, G and F.
@@ -186,7 +195,9 @@ You can 'cut of' parts of the traversals.
 Let say you don't want to traverse past node B.
 
 <ruby>
-a.outgoing(:friends).outgoing(:recommend).depth(:all).prune{|path| path.end_node[:name] == 'B'}.each{|node| puts node[:name]}
+a.outgoing(:friends).outgoing(:recommend).depth(:all).
+  prune{|path| path.end_node[:name] == 'B'}.
+    each{|node| puts node[:name]}
 </ruby>
 
 The example above prints: B, C, D and G.
@@ -196,7 +207,8 @@ h4. Traversing Incoming Relationships
 You can traverse both incoming and outgoing relationships.
 
 <ruby>
-a.outgoing(:recommend).incoming(:friends).depth(:all).each{|node| puts node[:name]}
+a.outgoing(:recommend).incoming(:friends).depth(:all).
+   each{|node| puts node[:name]}
 </ruby>
 
 The example above prints: D, C, B, G and E (not F).

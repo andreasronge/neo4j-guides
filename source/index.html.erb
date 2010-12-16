@@ -1,10 +1,18 @@
-<h2>Overview of Neo4j.rb 1.0.0.beta.23</h2>
+<h2>Overview of Neo4j.rb 1.0.0.beta.24</h2>
 
 Neo4j.rb is a graph database for JRuby
 It uses the powerful and mature Java libraries:
 
 <li><a href="http://www.neo4j.org">Neo4j</a> for for persistence and traversal of the graph</li>
 <li><a href="http://lucene.apache.org/java/docs/index.html">Apache Lucene</a> for querying and indexing.</li>
+
+<h4>Not using JRuby, using C Ruby ?</h4>
+
+Check the <a href="http://wiki.neo4j.org/content/Using_the_Neo4j_Server_with_Ruby">REST API</a>. Either use the neography gem or simply use the rest-client gem.
+<br/>
+Notice that JRuby is a very good runtime to run Ruby/Rails application on:
+<a href="http://www.infoq.com/interviews/Yehuda-Katz-on-Rails-3.x">"Today, jruby is the best ruby implementation" - Yehuda Katz</a>
+
 
 
 <h2>Guides</h2>
@@ -20,12 +28,12 @@ It uses the powerful and mature Java libraries:
 <h2>Documentation and APIs</h2>
 
 <li><a href="http://neo4j.rubyforge.org/">RDoc API</a></li>
-<li><a href="http://api.neo4j.org/current/">JavaDoc</a></li>
-<li><a href="http://docs.neo4j.org/html/snapshot/">The Neo4j Manual</a></li>
-
+<li><a href="http://docs.neo4j.org/">The Neo4j Manual</a></li>
+<li><a href="http://www.slideshare.net/andreasronge/neo4jrb">An Neo4j.rb presentation (using Neo4j.rb version 0.4.6)</a></li>
 
 <h2>Installation</h2>
-Notice this is a beta so you need to install it with: <code>gem install neo4j --pre</code>
+Notice this is a beta so you need to install it with: <code>gem install neo4j --pre</code><br/>
+To install JRuby I recommend using <a href="http://rvm.beginrescueend.com/">RVM</a>.
 
 <h2>Examples</h2>
 

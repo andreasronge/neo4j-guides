@@ -155,7 +155,7 @@ end
 
 In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
 
-h3. Specifing Relationships (has_n/has_one)
+h3. Specifing Relationships (has_n/has_one/has_list)
 
 The @Neo4j::Model@ includes the @Neo4j::NodeMixin@
 See "Mapping nodes/relationships to Ruby classes":mapping.html
@@ -176,38 +176,38 @@ p1.save # => true if validation was successful for both p1 and p2
 If an validation error occurs the errors will be aggregated on the 'root' object
 (in the example above that is p1.errors).
 
-h4. has_list
-
-The @has_list@ class method is used to create an ordered and/or indexed list of
-nodes. It could be an alternative of using range quieres with Lucene.
+The @outgoing@ method will not return unsaved relationships.
 
 Example:
 <ruby>
-class Parent
-  has_list :children
-end
-
-# Make sure you have an transaction here
-p = Parent.create
-p.children[1992] = child1
-p.children[1995] = child2
-p.children[1998] = child3
-p.children.between(1992..1998) => [child1, child2, child3]
+a.friends << b
+a.outgoing(:friends).first # => nil
+a.save
+a.outgoing(:friends).first # => b
 </ruby>
 
-Or you can just use it as a order list
+
+h4. Deleting Relationships
+
+Deleting a relationship does not require a @save@. Instead you have to create an transaction.
+
+Example:
+
 <ruby>
-p = Parent.create
-# Make sure you have an transaction here
-p.children << child1
-p.children << child2
-p.children << child3
-p.children.size # == 3 # very efficient since it does not traverse in order to count all children
+# Find the first relationship between node a and node b
+rel = a.rels(:friends).outgoing.to_other(b).first
+
+# Delete this relationship
+Neo4j::Transaction.run { rel.del }
+a.outgoing(:friends) # does now not include b
 </ruby>
 
-The @Neo4j::NodeMixin#has_list@ is not wrapped and does not behave like
-the @has_n@ and @has_one@ ActiveRecord like methods. That means that
-when you add nodes to a list you must make sure that you have a running transaction.
+Since @del@ was run without  @save@ no validation will be performed.
+
+h4. has_list
+
+The @has_list@ is not wrapped in @Neo4j::Model@. That means that you have to create a transaction 
+when you want to modify the list, for more info see "Mapping nodes/relationships to Ruby classes":mapping.html#has_list
 
 h3. Querying
 
