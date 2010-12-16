@@ -1,0 +1,204 @@
+h2. Traversing Relationships and Nodes
+
+Traversing nodes and relationships are one of the key benefits of using Neo4j.
+
+
+endprologue.
+
+
+h3. Performance
+
+Neo4j is very efficient and can easily traverse 100.000 nodes/relationships of any depth.
+Ruby is much slower then Java, so you will always get better performance implementing
+traverser filters in Java. However, compared to traversing relationships in SQL Neo4j.rb 
+is still several maginutes faster (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/Blarko/Entries/2010/3/29_MySQL_vs._Neo4j_on_a_Large-Scale_Graph_Traversal.html ).
+
+Example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java but in JRuby it takes about 4 seconds.
+However if you traverse fewer nodes then there is less difference between Java and Ruby.
+For more information check the "neo4j-perf github project":http://github.com/andreasronge/neo4j-perf
+
+h4. Tweeking Performance
+
+You can increase the performance by not loading the Ruby wrapper around Java nodes.
+
+*Using the Java iterator directly*
+
+<ruby>
+folder.incoming(:parent_folder).incoming(:folder).depth(:all).iterator.each do |node|
+    size += node[:size] if node.property?(:size) #&& node.property?(:file_id)
+    @traversed += 1
+end
+</ruby>
+
+*Using Java Neo4j::Relationships*
+
+The @Neo4j::Node#:_rels@ and @Neo4j::Node#_rel@ returns @Neo4j::Relationship@ instead of your own Ruby wrapper class.
+For more info, check "RDoc":http://neo4j.rubyforge.org/classes/Neo4j/NodeRelationship.html
+
+@Neo4j::Relationship._end_node@ and @Neo4j::Relationship._start_node@ returns Neo4j::Node objects.
+Notice that @Neo4j::Node@ and @Neo4j::Relationships@ really are the Java objects.
+
+
+h3. Traversals
+
+An neo4j traversal is created using the incoming and outgoing method on the @Neo4j::Node@.
+These method is also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
+
+TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these example, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block, or use the (Rails) Neo4j::Model instead which will create transactions automatically for you.
+
+
+h4. Ruby Enumerable and Traversals
+
+The @outgoing@ and @incoming@ returns an object which includes the "Ruby Enumerable":http://ruby-doc.org/core/classes/Enumerable.html mixin.
+This means that you can use any of the Enumerable method on traversals. 
+
+Example:
+
+<ruby>
+# find all nodes with property name == 'foo' from node a with outgoing relationship 'friends'
+a.outgoing(:friends).find{|node| node[:name} == 'foo'}
+
+# return an array names of all nodes from node a with outgoing relationship 'friends'
+a.outgoing(:friends).collect{|node| node[:name}} 
+</ruby>
+
+h4. Depth One Traversal
+
+The following code:
+<ruby>
+a = Neo4j::Node.new
+b = Neo4j::Node.new
+c = Neo4j::Node.new
+a.outgoing(:friends) << b << c
+</ruby>
+
+Creates the following nodes and relationships:
+
+  !abc.png!
+
+To find @b@ and @c@:
+<ruby>
+a.outgoing(:friends)
+</ruby>
+
+h4. Depth N Traversal
+
+Let say we have the following node space:
+
+  !ae.png!
+
+which is created with
+<ruby>
+a = Neo4j::Node.new :name => 'A'
+b = Neo4j::Node.new :name => 'B'
+c = Neo4j::Node.new :name => 'C'
+d = Neo4j::Node.new :name => 'D'
+e = Neo4j::Node.new :name => 'E'
+a.outgoing(:friends) << b << c
+b.outgoing(:friends) << d << e
+c.outgoing(:friends) << b
+</ruby>
+
+To find A's friends friends and his friends
+<ruby>
+a.outgoing(:friends).depth(2).each {|node| puts node[:name]}
+</ruby>
+
+The above example prints: B, C, D, E
+
+h4. Filter length
+
+In the example above let say we only want to include the friends friends nodes (D and E) and
+not nodes at depth one.
+
+<ruby>
+a.outgoing(:friends).depth(2).filter{|path| path.length == 2}.each {|node| puts node[:name]}
+</ruby>
+
+The above example prints: D, E
+
+h4. Traversing Several Relationships
+
+The following example:
+
+<ruby>
+a = Neo4j::Node.new :name => 'A'
+b = Neo4j::Node.new :name => 'B'
+c = Neo4j::Node.new :name => 'C'
+d = Neo4j::Node.new :name => 'D'
+e = Neo4j::Node.new :name => 'E'
+f = Neo4j::Node.new :name => 'F'
+g = Neo4j::Node.new :name => 'G'
+Neo4j::Relationship.new(:friends, a, b)[:since] = 2008
+Neo4j::Relationship.new(:friends, a, c)[:since] = 2005
+Neo4j::Relationship.new(:friends, a, d)[:since] = 2003
+Neo4j::Relationship.new(:friends, c, b)[:since] = 2004
+Neo4j::Relationship.new(:friends, b, d)[:since] = 2001
+Neo4j::Relationship.new(:friends, b, e)[:since] = 2010
+Neo4j::Relationship.new(:friends, e, f)[:since] = 1998
+Neo4j::Relationship.new(:friends, e, g)[:since] = 2010
+
+Neo4j::Relationship.new(:recommend, a, d)
+Neo4j::Relationship.new(:recommend, a, c)
+Neo4j::Relationship.new(:recommend, c, g)
+</ruby>
+
+Creates this graph:
+
+  !large.png!
+
+You can traverse several relationship types at the same time:
+
+<ruby>
+a.outgoing(:friends).outgoing(:recommend).each{|node| puts node[:name]}
+</ruby>
+
+The example above prints B, C and D.
+
+h4. Filter with end_node
+
+The path end_node method returns the node it has traversed to.
+Example: Find all your friends friends friends that are recommended by someone (uses the node space from the example above).
+
+<ruby>
+a.outgoing(:friends).outgoing(:recommend).depth(3).filter{|path| path.end_node.rel?(:recommend, :incoming)}.each{|node| puts node[:name]}
+</ruby>
+
+This prints C, D and G. There is also a @start_node@ method on the @path@ paramenter.
+
+h4. Filter with last_relationships
+
+To only include nodes which has been friends before 2005 or is recommended by someone in my network (any depth).
+
+<ruby>
+ a.outgoing(:friends).outgoing(:recommend).depth(:all).filter do |path|
+  path.last_relationship.rel_type == 'recommend' ||                     
+  path.last_relationship[:since] < 2005                                 
+end.each {|node| puts node[:name]}
+</ruby>
+
+The following prints D, G and F.
+
+
+h4. Prune
+
+You can 'cut of' parts of the traversals.
+Let say you don't want to traverse past node B.
+
+<ruby>
+a.outgoing(:friends).outgoing(:recommend).depth(:all).prune{|path| path.end_node[:name] == 'B'}.each{|node| puts node[:name]}
+</ruby>
+
+The example above prints: B, C, D and G.
+
+h4. Traversing Incoming Relationships
+
+You can traverse both incoming and outgoing relationships.
+
+<ruby>
+a.outgoing(:recommend).incoming(:friends).depth(:all).each{|node| puts node[:name]}
+</ruby>
+
+The example above prints: D, C, B, G and E (not F).
+
+
