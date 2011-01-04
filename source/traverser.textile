@@ -214,3 +214,12 @@ a.outgoing(:recommend).incoming(:friends).depth(:all).
 The example above prints: D, C, B, G and E (not F).
 
 
+h4. Traversing any Relationship (expand)
+
+Instead of specifying which relationship should be traversed with @outgoing@ and @incoming@ you can use the @expand@ method
+to specify which relationship should be traversed.
+
+Example, traverse all relationship with property @age@ above 5:
+<ruby>
+some_node.expand { |n| n._rels.find_all { |r| r[:age] > 5 } }.depth(:all).to_a
+</ruby>

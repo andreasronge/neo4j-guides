@@ -124,13 +124,3 @@ rel = node1.rels(:friends).outgoing.first  # get the first relationship object
 rel[:since] = 1982
 </ruby>
 
-h3. Accessing/Traversing Nodes
-
-Example:
-<ruby>
-node.outgoing(:work).depth(4).filter{|path| path.length == 2}]
-node.outgoing(:work).depth(4).prune{|path| ...}
-</ruby>
-
-For more info about traversing see the java documetation of filter and prune: "JavaDoc":http://api.neo4j.org/current/org/neo4j/graphdb/traversal/TraversalDescription.html
-
