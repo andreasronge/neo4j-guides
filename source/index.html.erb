@@ -1,4 +1,4 @@
-<h2>Overview of Neo4j.rb 1.0.0.beta.24</h2>
+<h2>Overview of Neo4j.rb 1.0.0.beta.25</h2>
 
 Neo4j.rb is a graph database for JRuby
 It uses the powerful and mature Java libraries:
@@ -25,6 +25,7 @@ Notice that JRuby is a very good runtime to run Ruby/Rails application on:
 <li><a href="mapping.html">Ruby Class to Node & Relationship Mapping</a></li>
 <li><a href="rails3.html">Ruby on Rails</a></li>
 <li><a href="lucene.html">Indexing and Queries with Lucene</a></li>
+<li><a href="migrations.html">Migrations</a></li>
 
 <h2>Documentation and APIs</h2>
 
@@ -39,10 +40,13 @@ To install JRuby I recommend using <a href="http://rvm.beginrescueend.com/">RVM<
 <h2>Examples</h2>
 
 Here are some examples of what you can do:
-<li><a href="http://github.com/andreasronge/neo4j/tree/master/example/rules/">Rules</a></li>
-<li><a href="https://github.com/andreasronge/devise_example">Rails 3 and Devise Example</a></li>
-<li><a href="https://github.com/andreasronge/neo4j-perf">Performance Tests of Neo4j.java vs. Neo4j.rb</a></li>
+<li><a href="http://github.com/andreasronge/neo4j/tree/master/example/">Basic Examples</a></li>
+<li><a href="http://github.com/andreasronge/devise_example">Rails 3 and Devise Example</a></li>
+<li><a href="http://github.com/andreasronge/neo4j-perf">Performance Tests of Neo4j.java vs. Neo4j.rb</a></li>
 
+<h2>Configuration</h2>
+<li><a href="http://github.com/andreasronge/neo4j/blob/master/config/neo4j/config.yml">Default Configuration File</a></li>
+Also, check the <code>Neo4j::Config</code> class where you can override the defaults or provide your own configuration file.
 
 <h2>Found a bug in this guide ?</h2>
 Please fork the project <a href="https://github.com/andreasronge/neo4j-guides">neo4j-guides</a>

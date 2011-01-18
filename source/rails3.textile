@@ -480,3 +480,48 @@ You get this exception if there is already an neo4j db instance running.
 Only one write instance of the database is possible. If there is already a write instance running then a read only db will be created.
 Did you run the rails console before you did the first request to rails ?
 
+h4. Why can't I update nested models: node.nested << x; node.nested.save ?
+
+Let say you have the following class:
+
+<ruby>
+class Person < Neo4j::Rails::Model
+  has_one(:nested)
+end
+
+node = Person.create
+node.nested = Person.create
+node.save
+</ruby>
+
+Then you can't update the @node.nested@ 
+<ruby>
+node.nested[:some_property] = 'some value'
+node.nested.nested << other_node
+node.nested.save
+</ruby>
+
+Instead you must use a temporary variable, like this:
+
+<ruby>
+tmp = node.nested
+tmp[:some_property] = 'some value'
+tmp.nested << other_node
+tmp.save
+</ruby>
+
+The reason is that the @node.nested@ creates a new instance of a
+wrapped node.
+
+However, the following will work:
+<ruby>
+n = Person.create
+n.nested = Person.create
+n.nested[:name] = 'foo'
+n.save
+
+n.nested[:name] # => 'foo'
+</ruby>
+
+You do not need a temporary variable in this case since the relationship is not 
+persisted yet.

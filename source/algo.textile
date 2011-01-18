@@ -5,7 +5,6 @@ h2. Graph Algorithms
 * The @Neo4j::Algo@ methods behaves like the @Neo4j::Node.outgoing@ traversal methods. That means you can combine @outgoing@, @expand@ and @incoming@ method
 to specify which relationship should be traversed using the algorithm.
 endprologue.
-* Implemented in HEAD of upcomming 1.0.0.beta.25
 
 h3. All Paths
 
@@ -74,3 +73,40 @@ Example:
 <ruby>
 Neo4j::Algo.dijkstra_path(@x,@y).cost_evaluator{|rel,*| rel[:weight]}
 </ruby>
+
+
+h3. With Length Paths
+
+The @Neo4j::Algo.with_length_paths@ and @Neo4j::Algo.with_length_path@ methods returns an instance of Neo4j::Algo can find all paths of a certain length(depth) between two nodes.
+These returned paths cannot contain loops (i.e. a node cannot occur more than once in any returned path).
+Expects setting the depth parameter (the lenghto of the path) by the Algo#depth method.
+
+<ruby>
+  Neo4j::Relationship.new(:friends, @x, @y)  # length 1
+  Neo4j::Relationship.new(:friends, @x, @b)  # length 3 x->b->c->y
+  Neo4j::Relationship.new(:friends, @b, @c)  # length 2 x->b-y
+  Neo4j::Relationship.new(:friends, @b, @y)
+  Neo4j::Relationship.new(:friends, @c, @y)
+  Neo4j::Algo.with_length_paths(@x,@y).depth(1).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(2).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(3).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(4).size.#=> 0
+  Neo4j::Algo.with_length_path(@x,@y).depth(1) # include(@y)
+  Neo4j::Algo.with_length_path(@x,@y).depth(2) # include(@b,@y)
+  Neo4j::Algo.with_length_path(@x,@y).depth(3) # include(@b,@c,@y)
+</ruby>
+
+h3. A* Paths
+
+The @Neo4j::Algo.a_star_paths@ and @Neo4j::Algo.a_star_path@ returns an instance of Neo4j::Algo which uses the A* algorithm to find the cheapest path between two nodes.
+The definition of "cheap" is the lowest possible cost to get from the start node to the end node, where the cost is returned from lengthEvaluator and estimateEvaluator. These returned paths cannot contain loops (i.e. a node cannot occur more than once in any returned path).
+See "here":http://en.wikipedia.org/wiki/A*_search_algorithm for more information.
+
+The algorithm expacts an cost evaluator and estimate evaluator, see @Neo4j::Algo#cost_evaluator@ and @Neo4j::Algo#estimate_evaluator@
+
+Example:
+<ruby>
+    Neo4j::Algo.a_star_path(@x,@y).cost_evaluator{|rel,*| rel[:weight]}.estimate_evaluator{|node,goal| returns a float value}
+</ruby>
+
+The estimate_evaluator proc estimates the weight of the remaining path from one node to another.

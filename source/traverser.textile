@@ -221,5 +221,8 @@ to specify which relationship should be traversed.
 
 Example, traverse all relationship with property @age@ above 5:
 <ruby>
-some_node.expand { |n| n._rels.find_all { |r| r[:age] > 5 } }.depth(:all).to_a
+some_node.expand { |n| n._rels.find_all { |r| r[:age] > 5 } }.
+  depth(:all).to_a
+# use _rels since it can be perform a little bit better since it does not wrap the Java Relationships
+# with your own Ruby classes (if you have a Ruby class for that relationship).
 </ruby>
