@@ -2,15 +2,22 @@ h2. Migrations
 
 
 
-
 * By using migrations you can keep the code and the database in sync. There are two types of migrations : none lazy and lazy.
 In a none lazy migration the database is upgraded/downgraded all at once, while in lazy migrations the node/relationship is only upgraded/downgraded when the node or relationship is loaded.
 
 * A common usecase for migration is adding a lucene index on an existing database.
 
-* Implemented in upcomming 1.0.0.beta.27 (or git head)
-
 endprologue.
+
+h3. When do I need Migrations ?
+
+The nice thing about a schema free database like neo4j is that you
+normally don't need migrations.
+You need migrations if you already have a system in production and
+want to change the structure of that database without deleting it.
+So, if you don't have a system in production you simply delete the
+database from your local machine and add modify your Neo4j classes
+(e.g by adding timestamp properties or a new has_n relationship).
 
 h3. Global Migrations
 
@@ -147,6 +154,89 @@ end
 
 Each node has a version property which is changed when an migration is executed.
 The @up@ and @down@ blocks are evaluated in the context of the java node being loaded.
+
+h3. Rules and Functions
+
+Migrations (@Neo4j::MigrationMixin@) can also be used to add rules/functions on already existing nodes.
+
+h4. Rules
+
+Let say we have the following class and that we already have existing nodes in the database of class Person.
+
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+end
+</ruby>
+
+Now we want to be able to find all instances of class Person. Since the @Neo4j::NodeMixin@ does not include
+the rule @rule :all@ it is not possible by default to do that (unlike @Neo4j::Rails::Model which has this rule included).
+
+The first step is adding the rule, open the class and add the rule :all and the @MigrationMixin@.
+
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+  include Neo4j::MigrationMixin
+  rule :all
+end
+</ruby>
+
+We now need to write an migration to upgrade all existing nodes.
+
+<ruby>
+Person.migration 1, "add rule :all" do
+  up do
+    Neo4j.all_nodes.each do |node|
+      Person.trigger_rules(node)
+    end
+  end
+end
+
+# Now update all existing nodes
+Person.migrate!
+</ruby>
+
+
+h4. Functions
+
+Let say that we now have run the "add rule :all" migration from above.
+We now want to add the count function so that Neo4j.rb increase a property when a new node is created.
+This is for example needed when doing paging. Without this function neo4j will traverse all nodes in order to count them
+which could be very slow.
+
+First we open the Person class again and add the count function.
+<ruby>
+class Person
+  rule(:all, :functions => Neo4j::Functions::Count.new)
+end
+</ruby>
+
+We now need to write a migration in order to upgrade all person nodes using this function.
+
+<ruby>
+Person.migration 2, "add count function" do
+  up do
+    func = Person.add_function_for(:all, Neo4j::Functions::Count)
+    Person.all.each do |node|
+      func.call(node)
+    end
+  end
+end
+</ruby>
+
+This time there was no need to traverse every single node since we make use of the @all@ function that we added in the migration 1 above. 
+We can now make use the the Count function:
+
+<ruby>
+# return the number of Person nodes without traversing and counting them.
+Person.all.count
+</ruby>
+
+h3. Running Migration in a New Thread
+
+If you set the configuration property @migration_thread@ to true all migration will be run in a new thread.
+That means that you can still use the neo4j while the migration is taking place.
 
 h3. Transactions
 

@@ -11,10 +11,10 @@ A Lucene index can be declared on nodes and relationships and Neo4j::Model class
 Example:
 
 <ruby>
-  class Person
-    include Neo4j::NodeMixin
-    index :name
-  end
+class Person
+  include Neo4j::NodeMixin
+  index :name
+end
 </ruby>    
 
 After each transaction finishes the Person will be indexed.
@@ -38,7 +38,7 @@ Works as indexing on Neo4j::NodeMixin
 h3. Fulltext and Exact
 
 By default indexes are of type @:exact@ which is great for indexing keywords etc.
-To index each word in a text you should use a fulltext index. Fulltext uses white-space tokenizer in its analyzer. Add the type @:exact@ when you declare the index *and* in the find method.
+To index each word in a text you should use a fulltext index. Fulltext uses white-space tokenizer in its analyzer. Add the type @:fulltext@ (@:exact@ is default) when you declare the index *and* in the find method.
 
 Example:
 
@@ -60,18 +60,18 @@ each person can have several phone number nodes.
 
 Example:
 <ruby>
-  class Person
-     include Neo4j::NodeMixin
-     has_n :phones
-     index :name
-  end
+class Person
+  include Neo4j::NodeMixin
+  has_n :phones
+  index :name
+end
 </ruby>    
 
 <ruby>
-  class Phone
-     include Neo4j::NodeMixin
-     index :number
-  end   
+class Phone
+  include Neo4j::NodeMixin
+  index :number
+end   
 </ruby>    
 
 With the example above we can only query and find Phone nodes. If we want to query both the Person and Phone nodes we should use the ''via''
@@ -79,9 +79,9 @@ key word.
 
 Example
 <ruby>
-   class Phone  # forward declaration, needed below
-      include Neo4j::NodeMixin
-   end
+class Phone  # forward declaration, needed below
+   include Neo4j::NodeMixin
+end
 </ruby>    
 
 <ruby>
@@ -93,17 +93,17 @@ Example
 </ruby>    
 
 <ruby>
-   class Phone
-      has_n(:people).from(Person, :phones)  # several people can have the same phone number
-      index :number, :via => :people
-   end   
+class Phone
+   has_n(:people).from(Person, :phones)  # several people can have the same phone number
+   index :number, :via => :people
+end   
 </ruby>    
 
 We can now do a query on the Person class instead.
 
 Example
 <ruby>
-  Person.find('name: *smith AND phone: "040*")
+Person.find('name: *smith AND phone: "040*")
 </ruby>    
 
 *Gotchas*
@@ -117,11 +117,11 @@ You can specify that a class should use the same lucene indexx as another class.
 
 Example
 <ruby>
-  class Employee
-    property :employee_id
-    node_indexer Person
-    index :employee_id
-  end
+class Employee
+  property :employee_id
+  node_indexer Person
+  index :employee_id
+end
 </ruby>    
 
 The Employee and Person class now shares the same index. That means that you can search on indexes declared
@@ -204,11 +204,11 @@ Only @and@ queries are currently supported.
 h3. Date Queries
 
 <ruby>
-  class Person
-    property :born, :type => DateTime
-    index :born
-  end
-  Person.find(:born).between(Date.today, 5.years.ago)
+class Person
+  property :born, :type => DateTime
+  index :born
+end
+Person.find(:born).between(Date.today, 5.years.ago)
 </ruby>    
     
 Both @Date@ and @DateTime@ are supported.
@@ -247,14 +247,14 @@ If you want to index properties before the transaction commits you can do it you
 Example (from RSpec):
 
 <ruby>
-    new_node = Neo4j::Node.new
-    new_node[:name] = 'Kalle Kula'
-    new_node.add_index(:name)
-    new_node.rm_index(:name)
-    new_node[:name] = 'lala'
-    new_node.add_index(:name)
-    Neo4j::Node.find('name: lala').first.should == new_node
-    Neo4j::Node.find('name: "Kalle Kula"').first.should_not == new_node
+new_node = Neo4j::Node.new
+new_node[:name] = 'Kalle Kula'
+new_node.add_index(:name)
+new_node.rm_index(:name)
+new_node[:name] = 'lala'
+new_node.add_index(:name)
+Neo4j::Node.find('name: lala').first.should == new_node
+Neo4j::Node.find('name: "Kalle Kula"').first.should_not == new_node
 </ruby>    
 
 h3. Optimization
@@ -263,7 +263,7 @@ If you are looping thru a lot of nodes you might get better performance by not l
 around the Java nodes.
 
 <ruby>
-  Person.find('name: andreas', :type => :fulltext, :wrapped => false)
+Person.find('name: andreas', :type => :fulltext, :wrapped => false)
 </ruby>    
 
 When using the @:wrapped => false@ parameter the find method will return a Java @org.neo4j.graphdb.index.IndexHit@ instance

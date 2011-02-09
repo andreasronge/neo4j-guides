@@ -221,3 +221,8 @@ end
 
 Then a ruby object (of type Person in the example above) will not be created that wraps the Java Node 
 Instead it will use the java node object as an parameter as shown above.
+
+
+h3. Migrations
+
+See "Migrations":migrations.html

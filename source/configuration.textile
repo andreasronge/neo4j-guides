@@ -1,0 +1,44 @@
+h2. Configuration
+
+endprologue.
+
+
+h3. Neo4j.rb configuration
+
+The @Neo4j::Config@ class is used to configure neo4j. 
+It uses "this":https://github.com/andreasronge/neo4j/blob/master/config/neo4j/config.yml file as default.
+You can change or add any configuration property by using @Neo4j::Config[key]=value@.
+
+You can also load configuration from your own file, example:
+<ruby>
+Neo4j::Config.default_file='/var/neo4j/config.yaml'
+</ruby>
+
+h4. Neo4j Java Configuration
+
+The same YAML file is also used for the Java Neo4j configuration.
+See "here":http://wiki.neo4j.org/content/Configuration_Settings
+
+h3. Config Neo4j from Rails
+
+When using Neo4j.rb from rails you can use the normal rails configuration to set Neo4j configuration.
+
+
+Example @config/application.rb@ 
+
+<ruby>
+module Neo4jRailsExample
+  class Application < Rails::Application
+    ... 
+    # Configure sensitive parameters which will be filtered from the log file.
+    config.filter_parameters += [:password]
+    
+    # Neo4j configuration
+    config.neo4j.storage_path = "#{config.root}/db/neo4j-#{Rails.env}"
+  end
+end
+</ruby>
+
+h3. JRuby Configuration
+
+See "PerformanceTuning":http://kenai.com/projects/jruby/pages/PerformanceTuning

@@ -1,0 +1,107 @@
+h2. High Availability Cluster
+
+This page contains material copied from the "neo4j wiki":http://wiki.neo4j.org/content/High_Availability_Cluster It has been adapted to be used with Neo4j.rb.
+
+endprologue.
+
+h3. Introduction
+
+
+
+The Neo4j High Availability (HA) project has the following two goals:
+
+# Provide a fault-tolerant database architecture, where several Neo4j slave databases can be configured to be exact replicas of a single Neo4j master database. This allows the end-user system to be fully functional and both read and write to the database in the event of hardware failure.
+# Provide a horizontally scaling read-mostly architecture that enables the system to handle much more read load than a single Neo4j database.
+
+Neo4j HA uses a single master and multiple slaves. Both the master and the slaves can accept write requests. A slave handles a write by synchronizing with the master to preserve consistency. Updates to slaves are asynchronous so a write from one slave is not immediately visible on all other slaves. This is the only difference between HA and single node operation (all other ACID characteristics are the same).
+
+h3. Installation of ZooKeeper
+
+The "example/ha-cluster":http://github.com/andreasronge/neo4j/tree/master/example/ha-cluster example contains
+a complete configuration and setup for running ZooKeeper.
+
+You can also set up zookeeper yourself by using the following instructions:
+
+Go to "zookeer":http://www.apache.org/dyn/closer.cgi/hadoop/zookeeper/, select a mirror and grab the 3.3.2 release.
+
+Unpack somewhere and create three config files called server1.cfg, server2.cfg and server3.cfg in the conf directory:
+
+<pre>
+#server1.cfg
+tickTime=2000
+initLimit=10
+syncLimit=5
+ 
+dataDir=data/zookeeper1
+clientPort=2181
+ 
+server.1=localhost:2888:3888
+server.2=localhost:2889:3889
+server.3=localhost:2890:3890
+</pre>
+
+The other two config files will have a different dataDir and clientPort set but the other parameters identical to the first one:
+
+<pre>
+#server2.cfg
+#...
+dataDir=data/zookeeper2
+clientPort=2182
+#...
+ 
+#server3.cfg
+dataDir=data/zookeeper3
+clientPort=2183
+</pre>
+
+Create the data dirs:
+
+<pre>
+zookeeper-3.3.2$ mkdir -p data/zookeeper1 data/zookeeper2 data/zookeeper3
+Next we need to create a file in each data directory called "myid" that contains an id for each server equal to the number in "server.1" "server.2" and "server.3" from the configuration files.
+
+zookeeper-3.3.2$ echo '1' > data/zookeeper1/myid
+zookeeper-3.3.2$ echo '2' > data/zookeeper2/myid
+zookeeper-3.3.2$ echo '3' > data/zookeeper3/myid
+</pre>
+
+We are now ready to start the ZooKeeper instances:
+
+<pre>
+zookeeper-3.3.2$ java -cp lib/log4j-1.2.15.jar:zookeeper-3.3.2.jar org.apache.zookeeper.server.quorum.QuorumPeerMain conf/server1.cfg &
+zookeeper-3.3.2$ java -cp lib/log4j-1.2.15.jar:zookeeper-3.3.2.jar org.apache.zookeeper.server.quorum.QuorumPeerMain conf/server2.cfg &
+zookeeper-3.3.2$ java -cp lib/log4j-1.2.15.jar:zookeeper-3.3.2.jar org.apache.zookeeper.server.quorum.QuorumPeerMain conf/server3.cfg &
+</pre>
+
+For more information on ZooKeeper see "here":http://hadoop.apache.org/zookeeper/docs/r3.3.2/
+
+h3. Configure Neo4j.rb
+
+You must set the  @Neo4j::Config['ha.db']=true@ configuration in order to start a HA clustered database (HighlyAvailableGraphDatabase) instead of a local graph database.
+
+If the @'ha.db'@ configuration value is set to true it will also use the following configuration properties:
+
+<code>
+ha.db: true
+ha.machine_id: 2
+ha.server: 'localhost:6002'
+ha.zoo_keeper_servers: 'localhost:2181,localhost:2182,localhost:2183'
+</code>
+
+The default configuration can be found "here":http://github.com/andreasronge/neo4j/blob/master/config/neo4j/config.yml
+
+h3. Gotchas
+
+You should only write to slave nodes.
+You can check if a node is a slave or master by
+
+<code>
+Neo4j.management(org.neo4j.management.HighAvailability).is_master
+</code>
+
+You can also get this info from the jconsole or neo4j-shell and the hainfo command, check
+check the "monitoring page":monitoring.html
+
+
+For more information, check the "neo4j wiki":http://wiki.neo4j.org/content/High_Availability_Cluster
+
