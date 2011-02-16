@@ -210,6 +210,8 @@ p.children << child3
 p.children.size # == 3 # very efficient since it does not traverse in order to count all children
 </ruby>
 
+TIP: has_list is not available if you are using online backup or ha cluster, since it does not yet work with those.
+
 h3. Finding Nodes and Queries
 
 There are three ways of finding/querying nodes in Neo4j: 

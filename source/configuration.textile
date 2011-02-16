@@ -1,7 +1,33 @@
-h2. Configuration
+h2. Configuration and Backup
 
 endprologue.
 
+
+h3. Backup
+
+By setting the configuration @online_backup_enabled' to true 
+the Neo4j::OnlineBackup class will be available.
+This class is an alias of the java class @org.neo4j.backup.OnlineBackup@
+For more info check "this":http://docs.neo4j.org/chunked/stable/operations-backup.html
+
+
+
+IRB Example:
+
+<pre>
+> require 'neo4j'
+> Neo4j.config[:online_backup_enabled] = true                   
+> Neo4j::Transaction.run { Neo4j.ref_node[:ko] = 'fo'}          
+I, [2011-02-16T12:36:47.196000 #28375]  INFO -- : Enable remote shell at port port=9332
+I, [2011-02-16T12:36:47.207000 #28375]  INFO -- : Starting local Neo4j using db /home/andreas/projects/neo4j/lib/db
+Wed Feb 16 12:36:48 CET 2011: BackupServer communication server started and bound to 6362
+> Neo4j::OnlineBackup.from('localhost').full('/tmp/mynewbackup')
+Wed Feb 16 12:36:52 CET 2011: Client connected to localhost:6362
+Wed Feb 16 12:36:52 CET 2011: Opened a new channel to localhost/127.0.0.1:6362
+ => #<Java::OrgNeo4jBackup::OnlineBackup:0x1bd5f28> 
+</pre>
+
+You can also do an incremental: @Neo4j::OnlineBackup('localhost').incremental('location')@
 
 h3. Neo4j.rb configuration
 
