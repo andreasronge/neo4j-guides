@@ -433,6 +433,57 @@ h4. Deployment
 * "Tomcat/Trinidad":https://github.com/calavera/trinidad
 * "Glassfish App Server":http://www.scottlowe.eu/deploying-rails-3-with-jruby-15-daemonized-gl
 
+Trinidad needs the Java jar files in the lib folder.
+There is a script for doing this:
+<pre>
+neo4j-jars -local
+</pre>
+Just type @neo4j-jars@ for help
+
+If you forget to add those jar files to your rails project you may get the following error message:
+<pre>
+No index provider 'lucene' found
+</pre>
+
+h3. Backup
+
+See "Configuration & Backup":configuration.html
+
+Add the following line in your config/application.rb file:
+
+<pre>
+config.neo4j.online_backup_enabled = true
+</pre>
+
+Then add the correct jar files to the lib folder:
+
+<pre>
+neo4j-jars -backup
+</pre>
+
+To perform the backup
+<ruby>
+require 'neo4j'
+Neo4j.load_online_backup
+Neo4j::OnlineBackup('localhost').incremental('/var/backup')
+</ruby>
+
+h3. HA Cluster
+
+
+Add the following line in your config/application.rb file:
+
+<pre>
+config.neo4j['ha.db']=true
+</pre>
+
+Then add the correct jar files to the lib folder:
+
+<pre>
+cd YOUR_RAILS_ROOT
+neo4j-jars -ha
+</pre>
+
 h3. Integration with other Rails Gems
 
 h4. devise
@@ -471,8 +522,11 @@ h3. FAQ
 
 h4. Why do I get @ERROR IOError: Connection reset by peer@ ?
 
-It is a JRuby bug which will be solved in an upcoming JRuby release.
-However, this error is not shown when using Tomcat/Trinidad
+It's a JRuby bug which is solved in JRuby version >= 1.6
+
+h4. I get "No index provider 'lucene' found"
+
+See deployment above.
 
 h4. org.neo4j.kernel.impl.core.ReadOnlyDbException
 
