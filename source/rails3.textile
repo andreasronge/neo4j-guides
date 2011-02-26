@@ -109,7 +109,7 @@ class MyModel < Neo4j::Rails::Model
   # gives title "Mr" unless it is set specifically
   # ensures it is a maximum of 3 chars long
   # ensures it is never saved with a nil value
-  property :title, :default => "Mr", :length => 3, :null => false
+  property :title, :default => "Mr", :limit => 3, :null => false
 end
 </ruby>
 
