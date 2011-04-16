@@ -292,6 +292,23 @@ or using String#gsub
 	escaped = "http://neo4j.rubyforge.org/guides".gsub( /([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/ , "\\\1" )
 </ruby>
 
+h4. Fulltext Search
+
+An example of using the lucene full text search index:
+<ruby>
+class BlogEntry < Neo4j::Rails::Model
+  property :text
+  index :text, :type => :fulltext
+end
+
+e = BlogEntry.create(:text => 'some long text string')
+
+BlogEntry.find('text: long', :type => :fulltext) #=> e
+BlogEntry.all('text: long', :type => :fulltext).size #=> 1
+</ruby>
+
+Notice that you need to specify the @:fulltext@ configuration property for both declaring the index and searching.
+
 h4. Dynamic Finders
 
 If you declare an index you neo4j.rb will generate finder methods for you.
@@ -412,7 +429,7 @@ h4. Include Dependency to Neo4j
 
 Add the following line to your Gemfile
 <code>
-gem 'neo4j', '1.0.0.beta.24'
+gem 'neo4j', '1.0.0'
 </code>
 and remove all sql gems. Install the gems specified in your Gemfile @bundle install@
 
