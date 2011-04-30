@@ -25,61 +25,15 @@ IceCream.new.valid?  # => false
 IceCream.new(:flavour => "vanilla").valid?  # => true
 </ruby>
 
-The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called, just like ActiveRecord.
+The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new@) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called.
 
-
-h3. Neo4j::Rails::Transaction
-
-All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
-The Neo4j::Rails::Model and Neo4j::Rails::Relationship classes does create automatically create transaction if needed. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
-
-h4. Transaction and around_filter
-
-This class can be used as a filter in order to wrap methods in transactions.
-
-Example:
-<ruby>
-class UsersController < ApplicationController
-  around_filter Neo4j::Rails::Transaction, :only => [:create]
-</ruby>
-
-The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
-to signal for a rollback.
-
-Example:
-<ruby>
-class UsersController < ApplicationController
-   around_filter Neo4j::Rails::Transaction, :only => [:create, :update]
-
-   def update
-     #.. create, update delete some nodes/relationships
-     #.. something when wrong, rollback everyting
-     Neo4j::Rails::Transaction.current.fail
-   end
-</ruby>
-
-h4. Model#transaction
-
-Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
-
-Example:
-<ruby>
-class UsersController < ApplicationController
-  def update
-    Users.transaction do |tx|
-      #.. create, update delete some nodes/relationships
-      #.. something when wrong, rollback everyting
-      tx.fail
-    end
-  end
-</ruby>
 
 h3. Neo4j::Rails::Model
 
 A @Neo4j::Rails::Model@ object represent a "node":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html .For more information see the "Neo4j Mapping Guide":mapping.html.
 The @Neo4j::Rails::Model@ is Active Model compliant and does implement some Active Record method.
 
-h3. Callbacks
+h4. Callbacks
 
 The following callbacks are defined: *create* *save* *update* *destroy* *validate*
 See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html when they are called.
@@ -137,14 +91,12 @@ In order to get uniquess validation to work you *must* have an exact index on th
 
 h3. Neo4j::Rails::Relationship
 
-A @Neo4j::Rails::Relationship@ object represent a "relationship":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::RelationshipMixin":http://neo4j.rubyforge.org/classes/Neo4j/Relationship.html .For more information see the "Neo4j Mapping Guide":mapping.html. The @Neo4j::Rails::Relatioship@ is Active Model compliant and does implement some Active Record method.
+A @Neo4j::Rails::Relationship@ object represent a "relationship":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::RelationshipMixin":http://neo4j.rubyforge.org/classes/Neo4j/Relationship.html .For more information see the "Neo4j Mapping Guide":mapping.html. The @Neo4j::Rails::Relatioship@ is Active Model compliant and does implement some Active Record method. That means that things like Active Model validation and callbacks works, just like @Neo4j::Rails::Model@
+
 
 
 h4. Create with .outgoing(:reltype) <<
 
-There are several ways of creating relationships.
-
-Example, creating undeclared realtionship
 You do not need to declare a relationship with a has_n Neo4::Rails::Model class method.
 Instead you can at anytime add any time of relationship between two nodes.
 <ruby>
@@ -180,12 +132,12 @@ rel.save
 rel = Neo4j::Rails::Relationship.create(:type, n1, n2, :since => 1942, :foo => 'bar')
 </ruby>
 
-TIP: Of course you can also subclass the @Neo4j::Rails::Relationship@ class just like for @Neo4j::Rails::Model@ class to domain specific behavour (e.g. validations, callbacks, business logic etc.)
+TIP: You can of course also subclass the @Neo4j::Rails::Relationship@ class just like for @Neo4j::Rails::Model@ class to specify domain specific behavour (e.g. validations, callbacks, business logic etc.)
 
 
 h4. Create with a has_n/has_one accessor method
 
-The has_n and has_one class methods can generate some convinience method for creating and traversing relationships and nodes.
+The has_n and has_one class methods can generate some convenience method for creating and traversing relationships and nodes.
 Validation will only be performed on each nested node if the @validates_associated@ is specified, see below.
 
 <ruby>
@@ -251,8 +203,8 @@ end
 
 h4. Traversing Nodes
 
-You can access nodes with same method that creates relationship: @outgoing@, @incoming@ and tha has_n and has_one accessor methods.
-All these methods returns an object thats includes the Ruby Enumerable mixin (access to each, collect, find etc).
+You can access nodes with the same method that creates relationship: @outgoing@, @incoming@ and the has_n and has_one accessor methods.
+All these methods returns an object thats includes the Ruby Enumerable mixin (which means you can use each, collect, find etc).
 
 Example
 <ruby>
@@ -297,26 +249,140 @@ end
 If an validation error occurs the errors will be aggregated on the 'root' object
 (in the example above that is p1.errors).
 
+h4. Finding Relationships
 
-h4. Deleting Relationships
-
+The has_n accessor method allows you to find relationships.
 Example:
-
 <ruby>
-# Find the first relationship between node a and node b
-rel = a.rels(:friends).outgoing.to_other(b).first
+  p1 = Person.create(:name => 'p1')
+  p2 = Person.create(:name => 'p2')
+  p3 = Person.create(:name => 'p3')
 
-# Delete this relationship
-Neo4j::Transaction.run { rel.del }
-a.outgoing(:friends) # does now not include b
+  p1.friends << p2 << p3
+  p1.save
+
+  # find the relationship object between p1 and p3
+  rel = p1.friends.find(p3)
+  # set a property on this relationship
+  rel[:since] = 1998
+  rel.save
 </ruby>
 
-Since @del@ was run without  @save@ no validation will be performed.
+The find method also accepts a block (just the normal Ruby Enumerable#find method).
+
+You can also find relationship using the @friends_rels@ method or the @rels@ method.
+<ruby>
+  rel = p1.rels(:friends).find{|rel| rel.end_node == p3}
+</ruby>
+
+For more info about the rels method read "here":http://neo4j.rubyforge.org/guides/basic.html#accessing-relationships
+
+h4. destroy and delete
+
+The destroy and delete method works like the Active Record methods.
+
+<ruby>
+  rel = p1.rels(:friends).find{|rel| rel.end_node == p3}
+  rel.destroy
+
+  p1.friends.find(p2).delete
+</ruby>
+
+You can also delete the relationship object like this.
+
+<ruby>
+  p1.friends.delete(p2)
+</ruby>
+
+
+h4. delete_all and destroy_all
+
+You can destroy and delete all relationship in one go (just like Active Record).
+
+<ruby>
+  p1.friends.destroy_all
+</ruby>
 
 h4. has_list
 
 The @has_list@ is not wrapped in @Neo4j::Model@. That means that you have to create a transaction 
 when you want to modify the list, for more info see "Mapping nodes/relationships to Ruby classes":mapping.html#has_list
+
+
+h3. Mapping Nodes and Relationships
+
+You can subclass both the Neo4j::Rails::Model and Neo4j::Rails::Relationship classes and specify the relationship between those.
+Remember that you can also do this without any declaration at any time (just like for declaring properties or just setting them 
+with the [] operator).
+
+Let say you want to express the domain that an Actor has a Role to a Movie. 
+Example create three files and put them in the @app/model@ folder.
+
+*app/models/role.rb*
+<ruby>
+class Role < Neo4j::Rails::Relationship
+  property :title, :character
+  index :title
+
+  # Notice that you can add validation and callbacks in this class !
+end
+</ruby>
+
+*app/models/actor.rb*
+<ruby>
+class Actor < Neo4j::Rails::Model
+  include Neo4j::NodeMixin
+  property :name
+  has_n(:acted_in).to(Movie).relationship(Role)
+  index :name
+end
+</ruby>
+
+
+*app/models/movie.rb*
+<ruby>
+class Movie < Neo4j::Rails::Model
+  property :title
+  property :year
+
+  # defines a method for traversing incoming acted_in relationships from Actor
+  has_n(:actors).from(Actor, :acted_in)
+
+  index :title
+  index :year
+end
+</ruby>
+
+Now, when you create a relationship between actor and role it will be of type Role.
+Example:
+<ruby>
+an_actor = Actor.find(42)
+an_actor.acted_in << a_film
+an_actor.acted_in_rels.first #=> a Role object
+
+# or
+role = an_actor.acted_in.create(:title => 'The Matrix')
+role.character => 'neo'
+role.save
+</ruby>
+
+You can now also navigate the incoming direction since we declared @has_n(:actors).from(Actor, :acted_in)@
+<ruby>
+  matrix.actors.to_a #=> all the actors in that film
+</ruby>
+
+Neo4j.rb will prefix relationships when they are declared with to (@has_n(:frineds).to@). 
+Example:
+<ruby>
+actor = Actor.create
+actor.acted_in << movie1
+actor.outgoing(:acted_in) << movie2
+actor.outgoing(:acted_in) # only include movie2
+actor.outgoing(Actor.acted_in) # only include movie1
+</ruby>
+
+TIP: By not specifying which class the relationship is associated to (using the @to@ method above) gives you more freedom. If you instead just declared @Actor.has_n(:acted_in)@ then an actor can have an acted_in relationship to different classes. Example @an_actor.acted_in << Neo4j::Rails::Model.new() << Thingy.create. 
+
 
 h3. Querying
 
@@ -374,7 +440,7 @@ For more information about indexing and quering, see "Indexing and Quering with 
 
 h4. All
 
-The @all@ method will find a set of nodes or return an empty array if none are found.
+The @all@ method will find a set of nodes or relationship. If none is find it will return an empty array.
 
 <ruby>
 IceCream.all #=> [vanilla_sugar, vanilla_waffle]
@@ -400,6 +466,8 @@ or using String#gsub
 <ruby>
 	escaped = "http://neo4j.rubyforge.org/guides".gsub( /([\+\-\&\|\!\(\)\{\}\[\]\^\"\~\*\?\:\\])/ , "\\\1" )
 </ruby>
+
+TIP: The @all@ method also work for subclasses for Neo4j::Rails::Model (but as expected for subclasses of Neo4j::Rails::Relationship).
 
 h4. Fulltext Search
 
@@ -449,6 +517,20 @@ h4. Range Queries
 
 Does work on String, Fixnum, Float, Date and DateTime, see the "Lucene Queries":lucene.html
 
+h3. Timestamps
+
+If a @Neo4j::Rails::Model@ or a @Neo4j::Rails::Relationship@ class (or subclass) has the property @updated_at@ or @created_at@ then 
+it will be timestamped. This is all that is required.
+
+<ruby>
+class Role < Neo4j::Rails::Relationship
+  property :updated_at
+  property :created_at
+end
+</ruby>
+
+That's all you need to do. If you want to disable this behaviour check the configuration below.
+
 h3. API
 
 Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Model. Neo4j::Model includes 
@@ -458,6 +540,7 @@ Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Mode
 * ActiveModel::Dirty
 * ActiveModel::MassAssignmentSecurity
 * ActiveModel::Serializers::Xml
+* ActiveModel::Serializers::JSON
 * ActiveRecord::Timestamp (@created_at@ and/or @updated_at@)
 
 Methods:
@@ -466,18 +549,72 @@ class Neo4j::Model
   def valid?; end
   def save; end
   def save!; end
+  def persisted?; end
   def update_attributes(attributes); end
   def update_attributes!(attributes); end
   def destroy; end
+  def delete; end
+  def all; end
   def attributes=(attrs); end
   def self.all; end
+  def self.destroy_all; end
   def self.find(*); end
   def self.create(attributes); end
   def self.create!(attributes); end
   def self.transaction(&lock); end
   def self.accepts_nested_attributes_for(*); end
+  def self.has_n; end
+  def self.has_one; end
 end
 </ruby>
+
+
+h3. Neo4j::Rails::Transaction
+
+All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
+The Neo4j::Rails::Model and Neo4j::Rails::Relationship classes does automatically create transaction if needed. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
+
+h4. Transaction and around_filter
+
+This class can be used as a filter in order to wrap methods in one transactions.
+
+Example:
+<ruby>
+class UsersController < ApplicationController
+  around_filter Neo4j::Rails::Transaction, :only => [:create]
+</ruby>
+
+The @Neo4j::Rails::Transaction@ class can also be used to access the current running transaction in order
+to signal for a rollback.
+
+Example:
+<ruby>
+class UsersController < ApplicationController
+   around_filter Neo4j::Rails::Transaction, :only => [:create, :update]
+
+   def update
+     #.. create, update delete some nodes/relationships
+     #.. something when wrong, rollback everyting
+     Neo4j::Rails::Transaction.current.fail
+   end
+</ruby>
+
+h4. Model#transaction
+
+Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
+
+Example:
+<ruby>
+class UsersController < ApplicationController
+  def update
+    Users.transaction do |tx|
+      #.. create, update delete some nodes/relationships
+      #.. something when wrong, rollback everyting
+      tx.fail
+    end
+  end
+</ruby>
+
 
 h3. Rails Generators
 
