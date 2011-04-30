@@ -27,19 +27,13 @@ IceCream.new(:flavour => "vanilla").valid?  # => true
 
 The @new@ method does not create a new node in the database (unlike  @Neo4j::NodeMixin#new) but instead behaves like ActiveRecord the @new@ method. The node will be saved to the database when the @save@ method is called, just like ActiveRecord.
 
-TIP: The @Neo4j::Model@ includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html but overrides some methods. For more information see the "Neo4j Mapping Guide":mapping.html
 
-h3. Callbacks
-
-The following callbacks are defined: *create* *save* *update* *destroy*
-See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html when they are called.
-
-h3. Transactions
+h3. Neo4j::Rails::Transaction
 
 All write operations requires a transaction. Read operations like find,load or read properties does not require transactions.
-Some methods: @save@, @destroy@ and @update_attributes@ are automatically wrapped inside a transaction. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
+The Neo4j::Rails::Model and Neo4j::Rails::Relationship classes does create automatically create transaction if needed. If you need to write several operations in one operation use @Neo4j::Rails::Transaction@. You will also get better performance using a single transaction instead of several small transactions.
 
-h4. Neo4j::Rails::Transaction
+h4. Transaction and around_filter
 
 This class can be used as a filter in order to wrap methods in transactions.
 
@@ -64,6 +58,8 @@ class UsersController < ApplicationController
    end
 </ruby>
 
+h4. Model#transaction
+
 Notice that you can also use the @Model.transaction@ method to wrap a block of code in a transaction.
 
 Example:
@@ -78,6 +74,17 @@ class UsersController < ApplicationController
   end
 </ruby>
 
+h3. Neo4j::Rails::Model
+
+A @Neo4j::Rails::Model@ object represent a "node":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::NodeMixin":http://neo4j.rubyforge.org/classes/Neo4j/Mapping/NodeMixin.html .For more information see the "Neo4j Mapping Guide":mapping.html.
+The @Neo4j::Rails::Model@ is Active Model compliant and does implement some Active Record method.
+
+h3. Callbacks
+
+The following callbacks are defined: *create* *save* *update* *destroy* *validate*
+See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html when they are called.
+
+
 
 h4. Model.new
 
@@ -89,19 +96,17 @@ the ActiveRecord-style two-step @Model.new@ + @Model#save@ creation.
 h4. Model.save
 
 Saves the node if the validation was successful. It will create a new transaction if neccessarly.
-If the saved model that was *not* created by the @Model.new@ method (which means it exist in the database) and
-the validation fails then the transaction will be rolled back.
 Notice, also nested nodes will be saved (created by has_n, has_one, or outgoing).
+Validation can be skipped by @model.save( :validate => false )@
 
 h4. Model.update_attributes
 
-Updates the model with the given attributes and saves the model.
-Will create a new transaction if neccessarly which can be rollback by the @save@ method if the validation was
-not successful.
+Updates the model with the given attributes and saves the model if the validation is successful.
+Will create a new transaction if neccessarly.
 
 h4. Model.property
 
-The @Neo4j::Model#property@ method accept additional configuration parameters:, @:default@, @:length@ and @:null@.
+The @Neo4j::Model#property@ method accept additional configuration parameters:, @:default@, @:length@ and @:null@ and @:type@
 
 Example:
 <ruby>
@@ -110,12 +115,117 @@ class MyModel < Neo4j::Rails::Model
   # ensures it is a maximum of 3 chars long
   # ensures it is never saved with a nil value
   property :title, :default => "Mr", :limit => 3, :null => false
+  property :superuser, :foo, :type => :boolean  # both superuser and foo will be converted to true/false values
 end
 </ruby>
 
-h3. Nested Attributes
+h4. Validation
 
-Neo4j.rb supports "accepts_nested_attributes_for":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html
+All the normal validations work.
+Example:
+<ruby>
+class Person < Neo4j::Model
+  index :email
+  validates :email, :uniqueness => true
+  validates :password, :presence     => true,
+                   :confirmation => true,
+                   :length       => { :within => 6..40 }
+end
+</ruby>
+
+In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
+
+h3. Neo4j::Rails::Relationship
+
+A @Neo4j::Rails::Relationship@ object represent a "relationship":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::RelationshipMixin":http://neo4j.rubyforge.org/classes/Neo4j/Relationship.html .For more information see the "Neo4j Mapping Guide":mapping.html. The @Neo4j::Rails::Relatioship@ is Active Model compliant and does implement some Active Record method.
+
+
+h4. Create with .outgoing(:reltype) <<
+
+There are several ways of creating relationships.
+
+Example, creating undeclared realtionship
+You do not need to declare a relationship with a has_n Neo4::Rails::Model class method.
+Instead you can at anytime add any time of relationship between two nodes.
+<ruby>
+n1 = Neo4j::Rails::Model.new
+n2 = Neo4j::Rails::Model.new
+n1.outgoing(:friends) << n2
+n1.save
+</ruby>
+
+Notice that you can also create the samething on incoming relationship.
+The example above can also be written like this:
+
+<ruby>
+n2.incoming(:friends) << n1
+n2.wsave
+</ruby>
+
+Notice you must call *save* in order to persist the relationship do disk.
+
+h4. Create with Neo4j::Rails::Relationship
+
+The @outgoing@ method from the example above does not return a relationship object since it allows to chain several nodes with the << operator (creating several relationship in one line).
+If you want to set properties on the relationship it's more convinient to create it with the @Neo4j::Rails::Relationship@
+
+<ruby>
+# create a relationship with one property
+rel = Neo4j::Rails::Relationship.new(:type, n1, n2, :since => 1942)
+# add another property on the relationship
+rel[:foo] = "bar"
+# Don't forget to save it
+rel.save
+# or create and save it in one go
+rel = Neo4j::Rails::Relationship.create(:type, n1, n2, :since => 1942, :foo => 'bar')
+</ruby>
+
+TIP: Of course you can also subclass the @Neo4j::Rails::Relationship@ class just like for @Neo4j::Rails::Model@ class to domain specific behavour (e.g. validations, callbacks, business logic etc.)
+
+
+h4. Create with a has_n/has_one accessor method
+
+The has_n and has_one class methods can generate some convinience method for creating and traversing relationships and nodes.
+Validation will only be performed on each nested node if the @validates_associated@ is specified, see below.
+
+<ruby>
+class Person << Neo4j::Rails::Model
+  has_n(:friends)
+end
+
+p1 = Person.new  # or Person.create
+p2 = Person.new
+p1.friends << p2
+p1.save # => true
+</ruby>
+
+Notice that you can combine using @friends@ and the @outgoing@ / @incoming@ methods.
+These methods may all return both saved and unsaved nodes.
+
+Example:
+<ruby>
+a.friends << b
+a.outgoing(:friends).first # => nil
+a.save
+a.friends << c
+d.incoming(:friends) << a
+a.outgoing(:friends).to_a # =>[b,c,d]
+</ruby>
+
+TIP: Use @ModelClass.relationship@ when specifying relationship name. Instead of the example above write @a.outgoing(Person.friends)@. The reason is that the relationship is prefixed if it is specified with a @to@ node. Example @Person.has_n(:friends).to(Person)@
+
+h4. Create with friends.build and friends.create
+
+Just like Active Record you can create relationship like this:
+
+<ruby>
+a.friends.build(property_hash)
+a.friends.create(property_hash)
+</ruby>
+
+h4. Create with  Nested Attributes
+
+Neo4j.rb supports "accepts_nested_attributes_for":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html which can be used to create relationship between nodes.
 
 The following configuration option are available
 
@@ -139,57 +249,56 @@ end
 </ruby>
 
 
-h3. Validation
+h4. Traversing Nodes
 
-All the normal validations work.
-Example:
+You can access nodes with same method that creates relationship: @outgoing@, @incoming@ and tha has_n and has_one accessor methods.
+All these methods returns an object thats includes the Ruby Enumerable mixin (access to each, collect, find etc).
+
+Example
 <ruby>
-class Person < Neo4j::Model
-  index :email
-  validates :email, :uniqueness => true
-  validates :password, :presence     => true,
-                   :confirmation => true,
-                   :length       => { :within => 6..40 }
-end
+m = Member.find(42)
+m.outgoing(:posts).find_all{|post| post.keyword == 'ruby'}
+# or
+m.posts.find_all{|post| post.keyword == 'ruby'}
 </ruby>
 
-In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
+h4. Traversing with depth > 1
 
-h3. Specifing Relationships (has_n/has_one/has_list)
+You can do complex traverals using the @incoming@ @outgoing@ methods, see "here":http://neo4j.rubyforge.org/guides/traverser.html
+A common pattern is to first use a lucene query and from that do a traversal to find a search result.
 
-The @Neo4j::Model@ includes the @Neo4j::NodeMixin@
-See "Mapping nodes/relationships to Ruby classes":mapping.html
+TIP: Notice when traversing nodes of depth > 1 (@node.outgoing(:foo).depth(2)@) only persisted nodes will be returned. Using the outgoing or incoming method without a depth (@node.outgoing(:foo)@) it will return both persisted and unsaved nodes.
 
-TIP: Only a limited set of traversal method is available before the node is saved. E.g. methods like @node.outgoing(:work).depth(4).filter{|path| path.length == 2}@ is only possible if node is saved. 
+h4. Accessing Relationships
 
-h4. Saving Relationships and Validation 
-
-Unlike using Neo4j::NodeMixin you have to save relationships in order to make them persist (like ActiveRecord). All the nested nodes will be saved when the save method is called and validation will be performed on each nested node.
+The has_one and has_n method also generate accessors for getting the relationship objects.
 
 <ruby>
-p1 = Person.new  # or Person.create
-p2 = Person.new
-p1.friends << p2
-p1.save # => true if validation was successful for both p1 and p2
+m = Member.find(42)
+m.posts_rels.to_a #=> an array of all type Neo4j::Rails::Relationship (or subclass of that).
+m.avatar_rel #=> an object of  type Neo4j::Rails::Relationship (or subclass of that).
+</ruby>
+
+You can also access any relationship using the rels and rel method, see "here":http://neo4j.rubyforge.org/guides/basic.html#accessing-relationships
+
+h4. Validation
+
+Validation of relationships and nodes for the friends relationship above will not be performed unless @validates_associated@ is specified.
+Example:
+<ruby>
+class Person
+  property :name
+  validates_presence_of :name
+  has_n :friends
+  validates_associated :friends
+end
 </ruby>
 
 If an validation error occurs the errors will be aggregated on the 'root' object
 (in the example above that is p1.errors).
 
-The @outgoing@ method will not return unsaved relationships.
-
-Example:
-<ruby>
-a.friends << b
-a.outgoing(:friends).first # => nil
-a.save
-a.outgoing(:friends).first # => b
-</ruby>
-
 
 h4. Deleting Relationships
-
-Deleting a relationship does not require a @save@. Instead you have to create an transaction.
 
 Example:
 
