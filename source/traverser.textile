@@ -17,7 +17,7 @@ For example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java
 However if you traverse fewer nodes then there is less difference between Java and Ruby.
 For more information check the "neo4j-perf github project":http://github.com/andreasronge/neo4j-perf
 
-h4. Tweeking Performance
+h4. Tweaking Performance
 
 You can increase the performance by not loading the Ruby wrapper around Java nodes.
 
