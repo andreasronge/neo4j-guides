@@ -331,7 +331,6 @@ end
 *app/models/actor.rb*
 <ruby>
 class Actor < Neo4j::Rails::Model
-  include Neo4j::NodeMixin
   property :name
   has_n(:acted_in).to(Movie).relationship(Role)
   index :name
