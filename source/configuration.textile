@@ -1,7 +1,30 @@
-h2. Configuration and Backup
+h2. Upgrade, Configuration and Backup
 
 endprologue.
 
+
+h3. Upgrade to a new Neo4j version
+
+Some of the neo4j.rb releases includes a new version of the java neo4j library which requires a upgrade of the database since it has a different format.
+
+* Version 1.2.x uses Neo4j java library 1.4.1
+* Version 1.1.x uses Neo4j java library 1.3
+* Version 1.0.x uses Neo4j java library 1.3.M03
+
+See "Upgrade to 1.4":http://docs.neo4j.org/chunked/1.4/deployment-upgrading.html
+
+h4. How to upgrade for rails application
+
+# stop the server
+# type @rails console@
+# type in the console: @Neo4j.shutdown@
+The reason is that you must make sure that it shutsdown cleanly.
+# Change your dependency to Neo4j in the Gemfile, e.g.
+ @gem 'neo4j', '1.2.0'@
+# type: @bundle update neo4j@
+# type: @rails console@
+# In the rails console: @Neo4j::Config[:allow_store_upgrade] = 'true'@
+# In the rails console: @Neo4j.start@
 
 h3. Backup
 
