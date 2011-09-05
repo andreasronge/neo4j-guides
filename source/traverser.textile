@@ -11,7 +11,7 @@ h3. Performance
 Neo4j is very efficient and can easily traverse 100.000 nodes/relationships of any depth.
 Ruby is much slower then Java, so you will always get better performance implementing
 traverser filters in Java. However, compared to traversing relationships in SQL Neo4j.rb 
-is still several maginutes faster (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/Blarko/Entries/2010/3/29_MySQL_vs._Neo4j_on_a_Large-Scale_Graph_Traversal.html ).
+is still several maginutes faster (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/2011/02/18/mysql-vs-neo4j-on-a-large-scale-graph-traversal/ ).
 
 For example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java but in JRuby it takes about 4 seconds.
 However if you traverse fewer nodes then there is less difference between Java and Ruby.
