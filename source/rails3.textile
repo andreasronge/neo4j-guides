@@ -89,6 +89,11 @@ end
 
 In order to get uniquess validation to work you *must* have an exact index on the property, as shown above (*index :email*)
 
+h4. ActiveModel::Observing
+
+*Only supported in upcoming 1.2.2 of neo4j.rb (or git head)*
+Check the following example of how the Rails Observer works in neo4j.rb "Example":http://github.com/endeepak/neo4j-observers-example
+
 h3. Neo4j::Rails::Relationship
 
 A @Neo4j::Rails::Relationship@ object represent a "relationship":http://neo4j.rubyforge.org/guides/basic.html. It includes the "Neo4j::RelationshipMixin":http://neo4j.rubyforge.org/classes/Neo4j/Relationship.html .For more information see the "Neo4j Mapping Guide":mapping.html. The @Neo4j::Rails::Relatioship@ is Active Model compliant and does implement some Active Record method. That means that things like Active Model validation and callbacks works, just like @Neo4j::Rails::Model@
@@ -537,6 +542,7 @@ Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Mode
 * ActiveModel::Conversions
 * ActiveModel::Callbacks
 * ActiveModel::Dirty
+* ActiveModel::Observing (git head or >= 1.2.2)
 * ActiveModel::MassAssignmentSecurity
 * ActiveModel::Serializers::Xml
 * ActiveModel::Serializers::JSON
@@ -564,6 +570,12 @@ class Neo4j::Model
   def self.accepts_nested_attributes_for(*); end
   def self.has_n; end
   def self.has_one; end
+
+  # git head or >= 1.2.2
+  def self.find!(*); end 
+  def self.find_or_create_by(attrs = {}, &block); end
+  def self.find_or_create_by!(attrs = {}, &block); end
+  def self.find_or_initialize_by(attrs = {}, &block); end
 end
 </ruby>
 
@@ -750,16 +762,22 @@ h3. Integration with other Rails Gems
 
 h4. devise
 
-See the "devise-neo4j gem":http://github.com/benjackson/devise-neo4j and
+See the "devise-neo4j gem":http://github.com/benjackson/devise-neo4j and (old)
 "devise_example":http://github.com/andreasronge/devise_example
+
+h4. carrierwave-neo4j
+
+See "http://github.com/reu/carrierwave-neo4j":https://github.com/reu/carrierwave-neo4j
+
+h4. paperclip
+
+See "http://github.com/l4u/neo4jrb-paperclip":http://github.com/l4u/neo4jrb-paperclip
 
 h4. will_paginate
 
-First you need to include the will_paginate gem, edit your Gemfile
-<pre>
-  gem "will_paginate", "~> 3.0.pre2"
-</pre>
-and add in the config/application.rb file
+The neo4j gem includes the will_paginate gem
+
+Add in the config/application.rb file
 <pre>
   require 'will_paginate'
 </pre>
@@ -796,8 +814,13 @@ You get this exception if there is already an neo4j db instance running.
 Only one write instance of the database is possible. If there is already a write instance running then a read only db will be created.
 Did you run the rails console before you did the first request to rails ?
 
+h4. Does neo4j have an Identity Map ?
+
+No, not yet. Read more about it here: "the identity map":http://guides.rubyonrails.org/3_1_release_notes.html#identity-map
+
 h4. Why can't I update nested models: node.nested << x; node.nested.save ?
 
+Because neo4j does not have an identity map, see above.
 Let say you have the following class:
 
 <ruby>
