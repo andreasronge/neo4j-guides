@@ -37,6 +37,7 @@ h4. Callbacks
 
 The following callbacks are defined: *create* *save* *update* *destroy* *validate*
 See the "rails documentation":http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html when they are called.
+See also "Neo4j Observers":http://neo4j.rubyforge.org/classes/Neo4j/Rails/Observer.html
 
 
 
@@ -542,11 +543,12 @@ Many of the familiar API methods from ActiveRecord are duplicated in Neo4j::Mode
 * ActiveModel::Conversions
 * ActiveModel::Callbacks
 * ActiveModel::Dirty
-* ActiveModel::Observing (git head or >= 1.2.2)
 * ActiveModel::MassAssignmentSecurity
 * ActiveModel::Serializers::Xml
 * ActiveModel::Serializers::JSON
 * ActiveRecord::Timestamp (@created_at@ and/or @updated_at@)
+* "Neo4j::Rails::Compositions":http://neo4j.rubyforge.org/classes/Neo4j/Rails/Compositions/ClassMethods.html (similar to ActiveRecord Composistions)
+* "Neo4j::Rails::Observer":http://neo4j.rubyforge.org/classes/Neo4j/Rails/Observer.html (similar to ActiveRecord Observers)
 
 Methods:
 <ruby>
@@ -571,7 +573,6 @@ class Neo4j::Model
   def self.has_n; end
   def self.has_one; end
 
-  # git head or >= 1.2.2
   def self.find!(*); end 
   def self.find_or_create_by(attrs = {}, &block); end
   def self.find_or_create_by!(attrs = {}, &block); end

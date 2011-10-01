@@ -1,7 +1,38 @@
-h2. Upgrade, Configuration and Backup
+h2. Multitenancy, Upgrade, Configuration and Backup
 
 endprologue.
 
+h3. Multitenancy
+
+You can split the graph database (and the lucene database) into separated parts by setting the reference node.
+
+Example:
+
+<ruby>
+a = User.all[0] # could be any Neo4j node object
+b = User.all[1]
+Neo4j.threadlocal_ref_node = a  # store this in the current thread
+ 
+Product.create(:name=>'p')
+Product.all.size #=> 1
+Product.find('name: p') #=> the product p
+
+Neo4j.threadlocal_ref_node = b
+Product.all.size #=> 0
+Product.find('name: p') #=> nil
+</ruby>
+
+If you want to share data between different users, example:
+<ruby>
+class Shared < Neo4j::Rails::Model
+  property :foo
+  ref_node { Neo4j.default_ref_node }
+end
+</ruby>
+
+Multitenency is supported for both Neo4j::NodeMixin and Neo4j::Rails::Model
+
+TIP: In Neo4j there is just one reference node. Neo4j.rb has support for having more than one reference node. Instead of returning the reference node from the Java API, neo4j.rb uses the thread local storage where the user can have his own node as a reference node. By doing that the lucene files will also be prefixed so that the lucene database is also split.
 
 h3. Upgrade to a new Neo4j version
 
