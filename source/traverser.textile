@@ -43,15 +43,17 @@ Notice that @Neo4j::Node@ and @Neo4j::Relationships@ really are the Java objects
 
 h3. Traversals
 
-An neo4j traversal is created using the incoming and outgoing method on the @Neo4j::Node@.
+An neo4j traversal is created using methods like #incoming and #outgoing method on the @Neo4j::Node@.
 These methods are also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
+All the traversal methods such as #outgoing, #filter, #depth can be combined and chained.
+Check the Java Documentation for a more detailed info - "http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html":http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html
 
 TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these example, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block, or use the (Rails) Neo4j::Model instead which will create transactions automatically for you.
 
 
-h4. Ruby Enumerable and Traversals
+h4. Traversing Ruby Enumerable and Traversals
 
-The @outgoing@ and @incoming@ returns an object which includes the "Ruby Enumerable":http://ruby-doc.org/core/classes/Enumerable.html mixin.
+The result of a traversal returns object which includes the "Ruby Enumerable":http://ruby-doc.org/core/classes/Enumerable.html mixin.
 This means that you can use any of the Enumerable method on traversals. 
 
 Example:
@@ -66,7 +68,10 @@ a.outgoing(:friends).find{|node| node[:name} == 'foo'}
 a.outgoing(:friends).collect{|node| node[:name}} 
 </ruby>
 
-h4. Depth One Traversal
+
+h3. Simple Traversals
+
+h4. #outgoing and depth 1
 
 The following code:
 <ruby>
@@ -85,7 +90,7 @@ To find @b@ and @c@:
 a.outgoing(:friends)
 </ruby>
 
-h4. Depth N Traversal
+h4. #outgoing and depth N
 
 Let say we have the following node space:
 
@@ -110,7 +115,7 @@ a.outgoing(:friends).depth(2).each {|node| puts node[:name]}
 
 The above example prints: B, C, D, E
 
-h4. Filter length
+h4. #filter
 
 In the example above let say we only want to include the friends friends nodes (D and E) and
 not nodes at depth one.
@@ -123,9 +128,9 @@ a.outgoing(:friends).depth(2).
 
 The above example prints: D, E
 
-h4. Traversing Several Relationships
+h3. Advanced Traversals
 
-The following example:
+In the following examples we are going to use a more complex graph which is created by the following code snippet:
 
 <ruby>
 a = Neo4j::Node.new :name => 'A'
@@ -153,6 +158,20 @@ Creates this graph:
 
   !large.png!
 
+h4. The path parameter
+
+Several traversal methods uses a "path":http://api.neo4j.org/1.4/org/neo4j/graphdb/Path.html parmeter for guiding the traversal.
+The following methods are defined on the path object.
+
+* #end_node - Returns the end node of this path.
+* #last_relationship - Returns the last Relationship in this path.
+* #length - Returns the length of this path.
+* #nodes -  Returns all the nodes in this path.
+* #relationships - Returns all the relationships in between the nodes which this path consists of.
+* #start_node - Returns the start node of this path.
+
+h4. Using several #incoming and #outgoing
+
 You can traverse several relationship types at the same time:
 
 <ruby>
@@ -162,8 +181,87 @@ a.outgoing(:friends).outgoing(:recommend).
 
 The example above prints B, C and D.
 
-h4. Filter with end_node
+You can traverse both incoming and outgoing relationships.
 
+<ruby>
+a.outgoing(:recommend).incoming(:friends).depth(:all).
+   each{|node| puts node[:name]}
+</ruby>
+
+The example above prints: D, C, B, G and E (not F).
+
+h4. #unique
+
+This value specifies which paths will be traversed and if the same path should be traversed more then once.
+
+The following values are possible:
+
+* :node_global :: A node cannot be traversed more than once (default)
+* :node_path :: For each returned node there 's a unique path from the start node to it.
+* :node_recent :: This is like :node_global, but only guarantees uniqueness among the most recent visited nodes, with a configurable count.
+* :none :: No restriction (the user will have to manage it).
+* :rel_global :: A relationship cannot be traversed more than once, whereas nodes can.
+* :rel_path :: No restriction (the user will have to manage it).
+* :rel_recent :: Same as for :node_recent, but for relationships.
+
+See http://docs.neo4j.org/chunked/snapshot/examples-uniqueness-of-paths-in-traversals.html or the example below.
+
+h4. #eval_paths
+
+Instead of specifying which relationships should be traversed and which nodes should be returned you can supply the traversal with a code block.
+The code block gets an Path argument (see above) and should return one of the following values:
+* :exclude_and_continue
+* :exclude_and_prune
+* :include_and_continue
+* :include_and_prune
+
+Example:
+<ruby>
+  b.eval_paths{|path| puts path; :exclude_and_continue}.depth(2).to_a
+</ruby>
+
+will print:
+<code>
+(2)
+(2)--[friends,4]-->(4)
+(2)--[friends,5]-->(5)
+(2)<--[friends,0]--(1)
+(2)<--[friends,3]--(3)
+(2)--[friends,5]-->(5)--[friends,6]-->(6)
+(2)--[friends,5]-->(5)--[friends,7]-->(7)
+</code>
+and return zero nodes since we always return :exclude_and_continue.
+
+If we instead change the uniqueness to :node_path (:node_global is default)
+<ruby>
+b.eval_paths{|path| puts path; :exclude_and_continue}.depth(2).unique(:node_path).to_a.size
+</ruby>
+
+It will print the following paths:
+<code>
+(2)
+(2)--[friends,4]-->(4)
+(2)--[friends,5]-->(5)
+(2)<--[friends,0]--(1)
+(2)<--[friends,3]--(3)
+(2)--[friends,4]-->(4)<--[friends,2]--(1)
+(2)--[friends,4]-->(4)<--[recommend,8]--(1)
+(2)--[friends,5]-->(5)--[friends,6]-->(6)
+(2)--[friends,5]-->(5)--[friends,7]-->(7)
+(2)<--[friends,0]--(1)--[friends,1]-->(3)
+(2)<--[friends,0]--(1)--[friends,2]-->(4)
+(2)<--[friends,0]--(1)--[recommend,8]-->(4)
+(2)<--[friends,0]--(1)--[recommend,9]-->(3)
+(2)<--[friends,3]--(3)<--[friends,1]--(1)
+(2)<--[friends,3]--(3)--[recommend,10]-->(7)
+(2)<--[friends,3]--(3)<--[recommend,9]--(1)
+</code>
+
+Notice that we same thing can be accomplish using the #filter and #prune methods, see below.
+
+h4. #filter
+
+Instead of using the #eval_paths method you can just specify which nodes should be included in the traversal result.
 The path end_node method returns the node it has traversed to.
 Example: Find all your friends friends friends that are recommended by someone (uses the node space from the example above).
 
@@ -174,8 +272,6 @@ a.outgoing(:friends).outgoing(:recommend).depth(3).
 </ruby>
 
 This prints C, D and G. There is also a @start_node@ method on the @path@ paramenter.
-
-h4. Filter with last_relationships
 
 To only include nodes which has been friends before 2005 or is recommended by someone in my network (any depth).
 
@@ -189,7 +285,7 @@ To only include nodes which has been friends before 2005 or is recommended by so
 The following prints D, G and F.
 
 
-h4. Prune
+h4. #prune
 
 You can 'cut of' parts of the traversals.
 Let say you don't want to traverse past node B.
@@ -201,20 +297,9 @@ a.outgoing(:friends).outgoing(:recommend).depth(:all).
 </ruby>
 
 The example above prints: B, C, D and G.
+You can also implement this using :exclude_and_prune or :include_and_prune in the :expand_paths block.
 
-h4. Traversing Incoming Relationships
-
-You can traverse both incoming and outgoing relationships.
-
-<ruby>
-a.outgoing(:recommend).incoming(:friends).depth(:all).
-   each{|node| puts node[:name]}
-</ruby>
-
-The example above prints: D, C, B, G and E (not F).
-
-
-h4. Traversing any Relationship (expand)
+h4. #expand
 
 Instead of specifying which relationship should be traversed with @outgoing@ and @incoming@ you can use the @expand@ method
 to specify which relationship should be traversed.
