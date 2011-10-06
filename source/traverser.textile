@@ -46,14 +46,15 @@ h3. Traversals
 An neo4j traversal is created using methods like #incoming and #outgoing method on the @Neo4j::Node@.
 These methods are also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
 All the traversal methods such as #outgoing, #filter, #depth can be combined and chained.
-Check the Java Documentation for a more detailed info - "http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html":http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html
+By default the start node is not included in the result. If you want to included the start node:  @node.outgoing(:foo).include_start_node@
+Check the Java Documentation for a more detailed info - "http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html":http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html or the RDoc API "Neo4j::Node#outgoing":http://neo4j.rubyforge.org/classes/Neo4j/Traversal.html
 
 TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these example, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block, or use the (Rails) Neo4j::Model instead which will create transactions automatically for you.
 
 
-h4. Traversing Ruby Enumerable and Traversals
+h4. Ruby Enumerable and Traversals
 
-The result of a traversal returns object which includes the "Ruby Enumerable":http://ruby-doc.org/core/classes/Enumerable.html mixin.
+The result of a traversal returns an object which includes the "Ruby Enumerable":http://ruby-doc.org/core/classes/Enumerable.html mixin.
 This means that you can use any of the Enumerable method on traversals. 
 
 Example:
@@ -221,6 +222,7 @@ Example:
 </ruby>
 
 will print:
+<pre>
 <code>
 (2)
 (2)--[friends,4]-->(4)
@@ -230,6 +232,7 @@ will print:
 (2)--[friends,5]-->(5)--[friends,6]-->(6)
 (2)--[friends,5]-->(5)--[friends,7]-->(7)
 </code>
+</pre>
 and return zero nodes since we always return :exclude_and_continue.
 
 If we instead change the uniqueness to :node_path (:node_global is default)
@@ -238,7 +241,7 @@ b.eval_paths{|path| puts path; :exclude_and_continue}.depth(2).unique(:node_path
 </ruby>
 
 It will print the following paths:
-<code>
+<pre>
 (2)
 (2)--[friends,4]-->(4)
 (2)--[friends,5]-->(5)
@@ -255,9 +258,8 @@ It will print the following paths:
 (2)<--[friends,3]--(3)<--[friends,1]--(1)
 (2)<--[friends,3]--(3)--[recommend,10]-->(7)
 (2)<--[friends,3]--(3)<--[recommend,9]--(1)
-</code>
-
-Notice that we same thing can be accomplish using the #filter and #prune methods, see below.
+</pre>
+Notice that we same thing can be accomplished using the #filter and #prune methods, see below.
 
 h4. #filter
 
