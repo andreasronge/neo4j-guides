@@ -1,3 +1,4 @@
+When used from rails the thread context is automtically clean after each request
 h2. Multitenancy, Upgrade, Configuration and Backup
 
 endprologue.
@@ -30,7 +31,10 @@ class Shared < Neo4j::Rails::Model
 end
 </ruby>
 
+When used from rails the thread context variable Neo4j.threadlocal_ref_node is automtically reset after each request (Rack Middleware). The same is true for lucene connections.
+
 Multitenency is supported for both Neo4j::NodeMixin and Neo4j::Rails::Model
+
 
 TIP: In Neo4j there is just one reference node. Neo4j.rb has support for having more than one reference node. Instead of returning the reference node from the Java API, neo4j.rb uses the thread local storage where the user can have his own node as a reference node. By doing that the lucene files will also be prefixed so that the lucene database is also split.
 
