@@ -283,6 +283,20 @@ You can also find relationship using the @friends_rels@ method or the @rels@ met
 
 For more info about the rels method read "here":http://neo4j.rubyforge.org/guides/basic.html#accessing-relationships
 
+h4. Finding all Relationships between two nodes
+
+The following example returns all relationships between a and b.
+<ruby>
+a.rels.to_other(b)
+</ruby>
+
+To only find the friends relationships between those nodes:
+<ruby>
+a.rels(:friends).to_other(b)
+</ruby>
+
+Notice, in neo4j.rb version < 1.7 you have to use the Neo4j::Node api (a._java_node.rels).
+
 h4. destroy and delete
 
 The destroy and delete method works like the Active Record methods.
@@ -300,13 +314,18 @@ You can also delete the relationship object like this.
   p1.friends.delete(p2)
 </ruby>
 
-
 h4. delete_all and destroy_all
 
 You can destroy and delete all relationship in one go (just like Active Record).
 
 <ruby>
   p1.friends.destroy_all
+</ruby>
+
+To destroy all relationships:
+<ruby>
+p1.rels.destroy_all
+p1.rels(:friends).delete_all # no callbacks, and only the friends relationships
 </ruby>
 
 h4. has_list
@@ -817,11 +836,13 @@ Did you run the rails console before you did the first request to rails ?
 
 h4. Does neo4j have an Identity Map ?
 
-No, not yet. Read more about it here: "the identity map":http://guides.rubyonrails.org/3_1_release_notes.html#identity-map
+Yes but it is disabled by default. Read more about it here: "the identity map":http://guides.rubyonrails.org/3_1_release_notes.html#identity-map
+and "Neo4j::IdentityMap":http://neo4j.rubyforge.org/Neo4j/IdentityMap.html
+
 
 h4. Why can't I update nested models: node.nested << x; node.nested.save ?
 
-Because neo4j does not have an identity map, see above.
+Because you have not enabled identity map, see above.
 Let say you have the following class:
 
 <ruby>

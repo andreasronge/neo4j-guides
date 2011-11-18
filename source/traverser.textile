@@ -1,12 +1,53 @@
 h2. Traversing Relationships and Nodes
 
 Traversing nodes and relationships are one of the key benefits of using Neo4j.
-
+In neo4j.rb there are two different ways of traversing: either use the 
+Neo4j traversals which uses the Ruby Enumerable API or use the Neo4j cypher query language.
 
 endprologue.
 
 
-h3. Performance
+h3. Cypher
+
+See the "Neo4j docs":http://docs.neo4j.org/annotated/#cypher-query-lang
+Use the Neo4j.query method to run a cypher query.
+
+Example:
+<ruby>
+  result = Neo4j.query("START n=node(0) RETURN n")
+</ruby>
+
+The result return value implements the Ruby Enumerable returning hash values:
+<ruby>
+  result.first['n'].neo_id  # => 0 (reference node)
+</ruby>
+
+You can also find which columns are available, example:
+<ruby>
+  result.columns.first #=> 'n'
+</ruby>
+
+Parameters are also
+<ruby>
+   Neo4j.query("START n=relationship({rel}) RETURN n", 'rel' => @some_relationship.neo_id)
+</ruby>
+
+For cypher queries with lucene starting points you need the name of the index. 
+<ruby>
+class Person
+  include Neo4j::NodeMixin
+  property :name
+  index :name
+end
+
+Person.index_names[:exact] => "Person-exact"
+</ruby>
+
+You may get much better performance using cypher compared to using the Neo4j.rb traversals since it is executed in Java. Notice cypher support is available from neo4j.rb version >= 1.7
+
+h3. Neo4j.rb Traversal 
+
+h4. Performance
 
 Neo4j is very efficient and can easily traverse 100.000 nodes/relationships of any depth.
 Ruby is much slower then Java, so you will always get better performance implementing
@@ -19,9 +60,24 @@ For more information check the "neo4j-perf github project":http://github.com/and
 
 h4. Tweaking Performance
 
-You can increase the performance by not loading the Ruby wrapper around Java nodes.
+It could be very expensive to create Ruby wrappers around every native Neo4j java node.
+You can avoid this by
 
-*Using the Java iterator directly*
+# Not using the Neo4j::NodeMixin
+# Loading the raw java objects (e.g. use the _rels and _node, _load methods) instead of Ruby instances.
+# Using Identity Map (see "Neo4j::IdentityMap":http://neo4j.rubyforge.org/Neo4j/IdentityMap.html )
+# Traversing without loading wrapper objects (using the raw method, see below) 
+# Use the pacer gem, see below.
+# Use the Cypher Query language, see above.
+
+*Examples*
+
+
+<ruby>
+person.outgoing(:friends).depth(:all).raw.to_a
+</ruby>
+
+or using the java iterator directly
 
 <ruby>
 folder.incoming(:parent_folder).
@@ -40,8 +96,7 @@ For more info, check "RDoc":http://neo4j.rubyforge.org/classes/Neo4j/NodeRelatio
 @Neo4j::Relationship._end_node@ and @Neo4j::Relationship._start_node@ returns Neo4j::Node objects.
 Notice that @Neo4j::Node@ and @Neo4j::Relationships@ really are the Java objects.
 
-
-h3. Traversals
+h4. Traversals
 
 An neo4j traversal is created using methods like #incoming and #outgoing method on the @Neo4j::Node@.
 These methods are also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
@@ -70,9 +125,16 @@ a.outgoing(:friends).collect{|node| node[:name}}
 </ruby>
 
 
-h3. Simple Traversals
+As shown in the example above the traversal returns Neo4j nodes. If you instead want to get the path objects.
 
-h4. #outgoing and depth 1
+<ruby>
+a.outgoing(:frineds).paths.to_a
+</ruby>
+
+
+h4. outgoing, incoming, filters
+
+h5. #outgoing and depth 1
 
 The following code:
 <ruby>
@@ -91,7 +153,8 @@ To find @b@ and @c@:
 a.outgoing(:friends)
 </ruby>
 
-h4. #outgoing and depth N
+
+h5. #outgoing and depth N
 
 Let say we have the following node space:
 
@@ -116,7 +179,7 @@ a.outgoing(:friends).depth(2).each {|node| puts node[:name]}
 
 The above example prints: B, C, D, E
 
-h4. #filter
+h5. #filter
 
 In the example above let say we only want to include the friends friends nodes (D and E) and
 not nodes at depth one.
@@ -129,7 +192,7 @@ a.outgoing(:friends).depth(2).
 
 The above example prints: D, E
 
-h3. Advanced Traversals
+h4. Advanced Traversals
 
 In the following examples we are going to use a more complex graph which is created by the following code snippet:
 
@@ -159,7 +222,7 @@ Creates this graph:
 
   !large.png!
 
-h4. The path parameter
+h5. The path parameter
 
 Several traversal methods uses a "path":http://api.neo4j.org/1.4/org/neo4j/graphdb/Path.html parmeter for guiding the traversal.
 The following methods are defined on the path object.
@@ -191,7 +254,7 @@ a.outgoing(:recommend).incoming(:friends).depth(:all).
 
 The example above prints: D, C, B, G and E (not F).
 
-h4. #unique
+h5. #unique
 
 This value specifies which paths will be traversed and if the same path should be traversed more then once.
 
@@ -206,6 +269,7 @@ The following values are possible:
 * :rel_recent :: Same as for :node_recent, but for relationships.
 
 See http://docs.neo4j.org/chunked/snapshot/examples-uniqueness-of-paths-in-traversals.html or the example below.
+See also the example of generating a HTML view of a node space below.
 
 h4. #eval_paths
 
@@ -261,7 +325,7 @@ It will print the following paths:
 </pre>
 Notice that we same thing can be accomplished using the #filter and #prune methods, see below.
 
-h4. #filter
+h5. #filter
 
 Instead of using the #eval_paths method you can just specify which nodes should be included in the traversal result.
 The path end_node method returns the node it has traversed to.
@@ -287,7 +351,7 @@ To only include nodes which has been friends before 2005 or is recommended by so
 The following prints D, G and F.
 
 
-h4. #prune
+h5. #prune
 
 You can 'cut of' parts of the traversals.
 Let say you don't want to traverse past node B.
@@ -301,7 +365,7 @@ a.outgoing(:friends).outgoing(:recommend).depth(:all).
 The example above prints: B, C, D and G.
 You can also implement this using :exclude_and_prune or :include_and_prune in the :expand_paths block.
 
-h4. #expand
+h5. #expand
 
 Instead of specifying which relationship should be traversed with @outgoing@ and @incoming@ you can use the @expand@ method
 to specify which relationship should be traversed.
@@ -313,3 +377,70 @@ some_node.expand { |n| n._rels.find_all { |r| r[:age] > 5 } }.
 # use _rels since it can be perform a little bit better since it does not wrap the Java Relationships
 # with your own Ruby classes (if you have a Ruby class for that relationship).
 </ruby>
+
+h5. #depth_first and #breadth_first
+
+You can set which order you should traverse.
+
+* traverse depth first, visiting each node before visiting its child nodes, example: @node.outgoing(:foo).depth_first(:pre)@
+* traverse depth first, visiting each node after visiting its child nodes, example @node.outgoing(:foo).depth_first(:post)@
+* traverse breadth first, visiting each node before visiting its child nodes, example @node.outgoing(:foo).breadth_first(:pre)@
+* traverse breadth first, visiting each node after visiting its child nodes, example @node.outgoing(:foo).breadth_first(:post)@
+
+Available in Neo4j.rb >= 1.7
+
+h4. Example
+
+Here is an example of producing a HTML tree from the node space above.
+It traverse the graph depth first.
+
+<ruby>
+def show_tree(parent)
+  s = ""
+
+  prev_path = nil
+  prev_level = -1
+  parent._java_node.outgoing(:friends).outgoing(:recommend).unique(:node_path).include_start_node.raw.paths.depth_first(:pre).depth(:all).to_a.each do |path|
+    n = path.end_node
+    level = path.length
+    # same level then close the previous HTML element
+    curr = prev_level
+    while curr >= level
+      curr -= 1
+      s << "#{space_indent(curr)}</ul>\n"
+    end
+    s << "#{space_indent(level)}<ul><li>name: #{n[:name]}</li>\n"
+    prev_level = level
+  end
+  prev_level.downto(0) {|level| s << "#{space_indent(level)}</ul>\n"}
+  s
+end
+
+def space_indent(level)
+  level.times.inject(""){|s, _| s + "  "}
+end
+
+puts show_tree(a)
+</ruby>
+
+Notice that we get all the paths instead of the nodes when traversing in the example above.
+
+h3. Pacer
+
+It might be both faster and easier to express search traversals using the pacer gem, see "pacer":https://github.com/pangloss/pacer
+
+<ruby>
+require 'neo4j'
+require 'pacer-neo4j'
+Neo4j.start
+g = Pacer.neo4j('/home/andreas/myrails_project/db/neo4j-development')
+g.v.count #=> 1175734 
+g.e.count #=> 8269064 
+
+g.search_manual_indices = true
+g.v('email'=>'arikan@gmail.com')  # using lucene
+
+friends.out_e(:friend).in_v(:type => 'person').except(friends).except(person).most_frequent(0...10)
+
+</ruby>
+
