@@ -1,4 +1,4 @@
-<h2>Overview of Neo4j.rb 1.2.6</h2>
+<h2>Overview of Neo4j.rb 1.3.0</h2>
 
 Neo4j.rb is a graph database for JRuby
 It uses the powerful and mature Java libraries:
@@ -6,12 +6,23 @@ It uses the powerful and mature Java libraries:
 <li><a href="http://www.neo4j.org">Neo4j</a> for for persistence and traversal of the graph</li>
 <li><a href="http://lucene.apache.org/java/docs/index.html">Apache Lucene</a> for querying and indexing.</li>
 
-<h4>Not using JRuby, using C Ruby ?</h4>
+<h4>Neo4j.rb Architecture</h4>
+The neo4j.rb consists of a three layers API:
 
-Check the <a href="http://wiki.neo4j.org/content/Using_the_Neo4j_Server_with_Ruby">REST API</a>. Either use the neography gem or simply use the rest-client gem.
-<br/>
-Notice that JRuby is a very good runtime to run Ruby/Rails application on:
-<a href="http://www.infoq.com/interviews/Yehuda-Katz-on-Rails-3.x">"Today, jruby is the best ruby implementation" - Yehuda Katz</a>
+Layer 1. For interacting with the basic building blocks of the graph database (node, properties and relationship), see Neo4j::Node and Neo4j::Relationship classes.
+Layer 2. A binding API to Ruby objects, see Neo4j::NodeMixin and Neo4j::RelationshipMixin modules.
+Layer 3. An implementation of the Rails Active Model and a subset of the Active Record API, see Neo4j::Rails::Model class.
+
+Notice that you can always access the lower layers if you want to do some more advanced. You can also access the Java API directly.
+
+<h4>Neo4j.rb Architecture</h4>
+The neo4j.rb consists of a three layers API:
+
+Layer 1. For interacting with the basic building blocks of the graph database (node, properties and relationship), see Neo4j::Node and Neo4j::Relationship classes.
+Layer 2. A binding API to Ruby objects, see Neo4j::NodeMixin and Neo4j::RelationshipMixin modules.
+Layer 3. An implementation of the Rails Active Model and a subset of the Active Record API, see Neo4j::Rails::Model class.
+
+Notice that you can always access the lower layers if you want to do some more advanced. You can even access the Java API directly.
 
 <h2>Guides</h2>
 
@@ -40,7 +51,8 @@ Notice that JRuby is a very good runtime to run Ruby/Rails application on:
 <li><a href="http://www.slideshare.net/andreasronge/neo4jrb">An Neo4j.rb presentation (using Neo4j.rb version 0.4.6)</a></li>
 <li><a href="http://blog.jayway.com/2011/03/02/neo4j-rb-1-0-0-and-rails-3">Neo4j 1.0.0 and Rails 3</a></li>
 <li><a href="http://blogs.neotechnology.com/peter/2010/04/cool-spatial-algos-with-neo4j-part1-routing-with-a.html">Cool spatial algos with Neo4j: Part 1 - Routing with A* in Ruby</a></li>
-
+<li><a href="http://blog.vivekprahlad.com/versioning-rails-models-with-neojrb">Neo4j::Rails::Versioning</a></li>
+<li><a href="http://blog.vivekprahlad.com/multitenancy-with-neo4jrb">Multitenancy</a></li>
 
 <h2>Installation</h2>
 <code>gem install neo4j</code><br/>

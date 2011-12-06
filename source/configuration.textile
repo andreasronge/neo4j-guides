@@ -33,8 +33,9 @@ end
 
 When used from rails the thread context variable Neo4j.threadlocal_ref_node is automtically reset after each request (Rack Middleware). The same is true for lucene connections.
 
-Multitenency is supported for both Neo4j::NodeMixin and Neo4j::Rails::Model
+Multitenency is supported for both Neo4j::NodeMixin and Neo4j::Rails::Model.
 
+For more information - http://blog.vivekprahlad.com/multitenancy-with-neo4jrb.
 
 TIP: In Neo4j there is just one reference node. Neo4j.rb has support for having more than one reference node. Instead of returning the reference node from the Java API, neo4j.rb uses the thread local storage where the user can have his own node as a reference node. By doing that the lucene files will also be prefixed so that the lucene database is also split.
 
@@ -42,24 +43,34 @@ h3. Upgrade to a new Neo4j version
 
 Some of the neo4j.rb releases includes a new version of the java neo4j library which requires a upgrade of the database since it has a different format.
 
+* Version 1.3.0 uses Neo4j java library 1.5.0
 * Version 1.2.x uses Neo4j java library 1.4.1
 * Version 1.1.x uses Neo4j java library 1.3
 * Version 1.0.x uses Neo4j java library 1.3.M03
 
-See "Upgrade to 1.4":http://docs.neo4j.org/chunked/1.4/deployment-upgrading.html
+Also, see "Upgrade Neo4j":http://docs.neo4j.org/chunked/snapshot/deployment-upgrading.html
 
 h4. How to upgrade for rails application
 
-# stop the server
+Make sure that you have shutdown the server cleanly. If not sure do this:
+# Make sure the server is not running
 # type @rails console@
 # type in the console: @Neo4j.shutdown@
-The reason is that you must make sure that it shutsdown cleanly.
+
+Run the script (after installing the new version of neo4j, gem install neo4j)
+
+  neo4j-upgrade <location of db>
+
+If you rather do this manually:
 # Change your dependency to Neo4j in the Gemfile, e.g.
- @gem 'neo4j', '1.2.0'@
+ @gem 'neo4j', '1.3.0'@
 # type: @bundle update neo4j@
 # type: @rails console@
 # In the rails console: @Neo4j::Config[:allow_store_upgrade] = 'true'@
 # In the rails console: @Neo4j.start@
+
+Notice, in the neo4j.rb release 1.3.0 the filenames of the lucene indices was changed.
+The neo4j-upgrade script will handle this and rename the lucene files.
 
 h3. Backup
 
