@@ -32,7 +32,7 @@ Parameters are also
    Neo4j.query("START n=relationship({rel}) RETURN n", 'rel' => @some_relationship.neo_id)
 </ruby>
 
-For cypher queries with lucene starting points you need the name of the index. 
+For cypher queries with lucene starting points you need the name of the index file. 
 <ruby>
 class Person
   include Neo4j::NodeMixin
@@ -43,7 +43,7 @@ end
 Person.index_names[:exact] => "Person-exact"
 </ruby>
 
-You may get much better performance using cypher compared to using the Neo4j.rb traversals since it is executed in Java. Notice cypher support is available from neo4j.rb version >= 1.7
+You may get much better performance using cypher compared to using the Neo4j.rb traversals since it is executed in Java. Notice cypher support is available from neo4j.rb version >= 1.3.0
 
 h3. Neo4j.rb Traversal 
 
