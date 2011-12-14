@@ -1,6 +1,14 @@
-h2. Multitenancy, Upgrade, Configuration and Backup
+h2. Multitenancy, Upgrade, Admin, Configuration and Backup
 
 endprologue.
+
+
+h3. The Admin Console and Visualization
+
+If you want to have the same admin console as in the neo4j server you can use the neo4j-admin gem.
+Check the "neo4j-admin gem":https://github.com/andreasronge/neo4j-admin
+
+Here is another console the "neo-viz gem":https://github.com/AmanziTel/neo-viz
 
 h3. Multitenancy
 
