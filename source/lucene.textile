@@ -31,6 +31,8 @@ The full lucene query syntax is available, see "here":http://lucene.apache.org/j
   Person.find('name: andreas').first #=> andreas
 </ruby>    
 
+TIP: You can only query the index after the transaction commits, unless you manage the indexing yourself, see below.
+
 h4. Neo4j::RelationshipMixin
 
 Works as indexing on Neo4j::NodeMixin
@@ -54,6 +56,8 @@ Example:
 </ruby>    
 
 h3. Indexing Related Nodes (Shared Index)
+
+This feature is experimental, use it with care !
 
 Two or more classes can share the same index. For example, let say we have two classes Person and Phone and
 each person can have several phone number nodes.
@@ -110,6 +114,7 @@ Person.find('name: *smith AND phone: "040*")
 
 # You can only index incoming relationship
 # You must declare both direction with to and from in a has_n or has_one.
+# This is experimental, use it with care !
 
 h3. Reuse an Indexer (Shared Index)
 
@@ -193,13 +198,20 @@ Person.find(:born => Date.today - 5 .. Date.today)
  
 h3. Compound Queries
 
+Example:
 <ruby>
-  Person.find(:name => 'foo').and(:age).between(10,20)
-  # same as
-  Person.find(:name => 'foo', :age => 10..20)
+Person.find(:name => 'foo').and(:age).between(10,20)
+# same as
+Person.find(:name => 'foo', :age => 10..20)
 </ruby>    
 
-Only @and@ queries are currently supported.
+Another example:
+
+<ruby>
+Vehicle.find(:wheels => 2).or(:wheels => 4).not(:name => 'old bike')
+</ruby>
+
+Only @and@ @not@ and @or@ queries are currently supported.
 
 h3. Date Queries
 
@@ -230,11 +242,11 @@ You can add your own lucene indexing configuration in the Neo4j::Config and use 
 
 <ruby>
 
-  Neo4j::Config[:lucene][:my_index_type] = ...
+Neo4j::Config[:lucene][:my_index_type] = ...
   
-  class Person
-     index :name, :type => :my_index_type
-  end
+class Person
+   index :name, :type => :my_index_type
+end
 </ruby>    
 
 

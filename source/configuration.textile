@@ -1,4 +1,3 @@
-When used from rails the thread context is automtically clean after each request
 h2. Multitenancy, Upgrade, Configuration and Backup
 
 endprologue.
@@ -137,3 +136,64 @@ end
 h3. JRuby Configuration
 
 See "PerformanceTuning":http://kenai.com/projects/jruby/pages/PerformanceTuning
+
+h3. Development and Testing configuration
+
+h4. Travis
+
+Neo4j.rb is using the "travis CI":http://travis-ci.org/#!/andreasronge/neo4j/
+
+
+h4. Faster RSpecs
+
+h5. Linux
+
+You can create a RAM disk with 500MB like this: (the mount command needs to be issued as root)
+
+<pre>
+mkdir -p /tmp/neo4j_testing
+mount -t tmpfs -o size=500M tmpfs /tmp/neo4j_testing
+</pre>
+
+h5. Mac
+
+You can create a 550MB RAM disk like this:
+
+<pre>
+diskutil erasevolume HFS+ "ramdisk" `hdiutil attach -nomount ram://1165430`
+</pre>
+
+This will create a RAM disk under /Volumes/ramdisk
+
+For both of these, in your spec_helper, you'll have to change the Neo4j config to use the RAM disk.
+<pre>
+Neo4j::Config[:storage_path] = /path/to/ram/disk
+</pre>
+You can use umount to unmount the ram disk on both platforms.
+
+For more info, check "this":http://groups.google.com/group/neo4jrb/browse_thread/thread/b22fdebdc3a4b5ea
+
+h4. Using RSpec and Guard
+
+The flow for testing with this PR would be:
+
+# Start the guard: bundle exec guard
+# It'll run all specs.
+# Got to you spec and start adding/changing.
+# Save spec/related implementation file.
+# The spec will be executed automatically.
+
+If you want to concentrate on a single spec/example group, just add the <tt>:focus</tt> tag and only this spec will be executed by guard:
+
+<ruby>
+it "should do something", :focus do
+  do_something
+end
+</ruby>
+
+Additionally the following are included:
+
+default <tt>.rspec</tt> config is added to make it easier to see the spec results with colours.
+Growl 1.3 notifications (Mac only for now).
+
+For more info, check "this pull request":https://github.com/andreasronge/neo4j/pull/85
