@@ -6,6 +6,8 @@ endprologue.
 
 h3. Introduction
 
+This feature is only available in the neo4j-enterprise edition
+Please add a dependency to the neo4j-enteprise gem and require it (in upcomming 2.0.0 release)
 
 
 The Neo4j High Availability (HA) project has the following two goals:
