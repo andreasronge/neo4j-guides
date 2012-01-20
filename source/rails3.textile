@@ -111,12 +111,12 @@ n1.outgoing(:friends) << n2
 n1.save
 </ruby>
 
-Notice that you can also create the samething on incoming relationship.
+Notice that you can also create the something on incoming relationship.
 The example above can also be written like this:
 
 <ruby>
 n2.incoming(:friends) << n1
-n2.wsave
+n2.save
 </ruby>
 
 Notice you must call *save* in order to persist the relationship do disk.
@@ -155,6 +155,9 @@ p2 = Person.new
 p1.friends << p2
 p1.save # => true
 </ruby>
+
+Relationship of same class is assumed by default.  For relationships between different classes, see "Mapping nodes/relationships to Ruby classes":mapping.html#has_list
+
 
 Notice that you can combine using @friends@ and the @outgoing@ / @incoming@ methods.
 These methods may all return both saved and unsaved nodes.
