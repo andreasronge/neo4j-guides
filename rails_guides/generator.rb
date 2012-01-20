@@ -152,7 +152,7 @@ module RailsGuides
 
       header =~ /h2\.(.*)/
       puts "body #{body}" if $1.nil?
-      page_title = "Neo4j Guides: #{$1.strip}"
+      page_title = "#{$1.strip} | Neo4j Guides"
 
       header = textile(header)
 

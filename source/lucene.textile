@@ -118,7 +118,7 @@ Person.find('name: *smith AND phone: "040*")
 
 h3. Reuse an Indexer (Shared Index)
 
-You can specify that a class should use the same lucene indexx as another class.
+You can specify that a class should use the same lucene index as another class.
 
 Example
 <ruby>

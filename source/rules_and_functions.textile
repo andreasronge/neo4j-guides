@@ -109,19 +109,20 @@ class NewsStory
 end
 </ruby>
 
-When a node change rule group @young@ it will trigger incoming relationship @readers@ (defined by has_n :readers).
+When a node in the @young@ rule group changes it will trigger the incoming relationship @readers@ (defined by has_n :readers).
+<!-- What happens if :trigger is omitted? Why would it not still work? -->
 <ruby>
-    user  = Reader.new :age => 200
-    story = NewsStory.new 
-    story.readers << user
+user  = Reader.new :age => 200
+story = NewsStory.new 
+story.readers << user
 
-    # create a new transaction so that it can trigger rules
-    NewsStory.young_readers #  should NOT include story
+# create a new transaction so that it can trigger rules
+NewsStory.young_readers #  should NOT include story
 
-    user[:age] = 2
-    # create a new transaction so that it can trigger rules
+user[:age] = 2
+# create a new transaction so that it can trigger rules
 
-    NewsStory.young_readers # should include story
+NewsStory.young_readers # should include story
 </ruby>
 
 h3. Functions
@@ -159,9 +160,7 @@ Person.count(:old)
 
 </ruby>
 
-TIP: Neo4j/Rails Neo4j::Model already includes one rule: <pre>rule(:all, functions => Count.new)</pre>. That
-means when calling the count method on the Person.all.count it will not traverse and count all nodes, instead
-it will read the count function value on the rule node, which is much faster.
+TIP: Neo4j/Rails Neo4j::Model already includes one rule: <pre>rule(:all, functions => Count.new)</pre>. The count method on the @Person.all.count@ will not traverse and count all nodes. Instead, it will read the count function value on the rule node, which is much faster.
 
 h4. Sum
 
