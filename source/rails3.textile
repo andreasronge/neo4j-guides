@@ -183,7 +183,7 @@ a.friends.build(property_hash)
 a.friends.create(property_hash)
 </ruby>
 
-h4. Create with  Nested Attributes
+h4. Create with Nested Attributes
 
 Neo4j.rb supports "accepts_nested_attributes_for":http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html which can be used to create relationship between nodes.
 
@@ -204,6 +204,7 @@ class Member < Neo4j::Model
 
   accepts_nested_attributes_for :avatar, :allow_destroy => true
   accepts_nested_attributes_for :posts, :reject_if => proc { |attributes| attributes[:title].blank? }
+  # when creating, pass in: {:avatar_attributes => {:key => 'value'} }
 end
 
 </ruby>

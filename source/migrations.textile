@@ -63,9 +63,8 @@ In the example above there is only one version for the whole database.
 Example
 
 <ruby>
-class Person
-  include Neo4j::NodeMixin # does also work for Neo4j::Rails::Model
-  include Neo4j::MigrationMixin 
+class Person < Neo4j::Rails::Model
+  include Neo4j::Migrations::NodeMixin
 
   rule(:all)
 end
@@ -96,7 +95,7 @@ The @all.each_raw@ method will return all node instances of type Person as Java 
 
 h4. Add Index
 
-You can add lucene indexes with the @Neo4j::MigrationMixin@.
+You can add lucene indexes with the @Neo4j::Migrations::NodeMixin@.
 
 Here is an example:
 <ruby>
@@ -129,9 +128,8 @@ The example above can also be run as lazy migration. i.e. perform the upgrade/do
 The following example demonstrates this feature:
 
 <ruby>
-class Person
-  include Neo4j::NodeMixin # does also work for Neo4j::Rails::Model
-  include Neo4j::LazyMigrationMixin
+class Person < Neo4j::Rails::Model
+  include Neo4j::Migrations::LazyNodeMixin
 end
   
 Person.migration 1, :split_name do
@@ -157,7 +155,7 @@ The @up@ and @down@ blocks are evaluated in the context of the java node being l
 
 h3. Rules and Functions
 
-Migrations (@Neo4j::MigrationMixin@) can also be used to add rules/functions on already existing nodes.
+Migrations (@Neo4j::Migrations::NodeMixin@) can also be used to add rules/functions on already existing nodes.
 
 h4. Rules
 
@@ -175,9 +173,8 @@ the rule @rule :all@ it is not possible by default to do that (unlike @Neo4j::Ra
 The first step is adding the rule, open the class and add the rule :all and the @MigrationMixin@.
 
 <ruby>
-class Person
-  include Neo4j::NodeMixin
-  include Neo4j::MigrationMixin
+class Person < Neo4j::Rails::Model 
+  include Neo4j::Migrations::NodeMixin
   rule :all
 end
 </ruby>
