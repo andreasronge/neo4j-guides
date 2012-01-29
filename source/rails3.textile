@@ -91,7 +91,6 @@ In order to get uniquess validation to work you *must* have an exact index on th
 
 h4. ActiveModel::Observing
 
-*Only supported in upcoming 1.2.2 of neo4j.rb (or git head)*
 Check the following example of how the Rails Observer works in neo4j.rb "Example":http://github.com/endeepak/neo4j-observers-example
 
 h3. Neo4j::Rails::Relationship
