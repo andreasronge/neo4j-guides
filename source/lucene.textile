@@ -213,6 +213,9 @@ Vehicle.find(:wheels => 2).or(:wheels => 4).not(:name => 'old bike')
 
 Only @and@ @not@ and @or@ queries are currently supported.
 
+TIP: For Neo4j::Rails::Model compound queries are only available on @Neo4j::Rails::Model#all@ query method.
+
+
 h3. Date Queries
 
 <ruby>
