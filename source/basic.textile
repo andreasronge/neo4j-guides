@@ -34,6 +34,8 @@ Neo4j::Transaction.run do
 end
 </ruby>
 
+Neo4j::Rails::Model#transaction is a convenient wrapper for this.
+
 TIP: The Neo4j::Transaction returns a Java "org.neo4j.graph.Transaction":http://api.neo4j.org/current/org/neo4j/graphdb/Transaction.html for more info see "Neo4j Transactions":http://wiki.neo4j.org/content/Transactions
 
 h3. Properties
@@ -95,6 +97,12 @@ node1.rels(:friends) # => all relationship of type friends, both incoming and ou
 node1.rels(:friends).outgoing # => all outgoing relationship of type friends
 node1.rel(:both, :best_friend)  # => returns one relationship, nil or throws an exception if there are more the two relationship from this node
 node1.rel(:incoming, :best_friend)
+</ruby>
+
+Note that _rels takes different arguments from rels!
+
+<ruby>
+	node1.rels(:both, :friends)
 </ruby>
 
 h3. Finding Relationships between two nodes
