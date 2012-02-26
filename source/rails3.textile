@@ -259,61 +259,65 @@ If an validation error occurs the errors will be aggregated on the 'root' object
 
 h4. Finding Relationships
 
-The has_n accessor method allows you to find relationships.
+The @has_n/has_one@ declaration creates accessors for both nodes and relationships.
+For has_n relationships the name of the accessor is @<name>_rels@ and for has_one it is
+@<name>_rel@.
+Both accessors for nodes and relationships returns objects that includes the "Ruby Enumerable mixin":http://ruby-doc.org/core-1.9.3/Enumerable.html.
+
 Example:
 <ruby>
-  p1 = Person.create(:name => 'p1')
-  p2 = Person.create(:name => 'p2')
-  p3 = Person.create(:name => 'p3')
+p1 = Person.create(:name => 'p1')
+p2 = Person.create(:name => 'p2')
+p3 = Person.create(:name => 'p3')
 
-  p1.friends << p2 << p3
-  p1.save
+p1.friends << p2 << p3
+p1.save
 
-  # find the relationship object between p1 and p3
-  rel = p1.friends.find(p3)
-  # set a property on this relationship
-  rel[:since] = 1998
-  rel.save
+# set the since property for all relationships between p1 and p2, and p1 and p3:
+p1.friends_rels.each{|r| r[:since] = 1998; r.save!}
+p1.friends_rels.first[:since] # => 1998
 </ruby>
 
-The find method also accepts a block (just the normal Ruby Enumerable#find method).
+You can also use the @rels@ method for accessing relationships:
 
-You can also find relationship using the @friends_rels@ method or the @rels@ method.
 <ruby>
-  rel = p1.rels(:friends).find{|rel| rel.end_node == p3}
+  rel = p1.rels(Person.friends).find{|rel| rel.end_node == p3}
 </ruby>
 
 For more info about the rels method read "here":http://neo4j.rubyforge.org/guides/basic.html#accessing-relationships
 
-h4. Finding all Relationships between two nodes
+h4. Finding All Relationships Between Two Nodes
 
 The following example returns all relationships between a and b.
 <ruby>
 a.rels.to_other(b)
 </ruby>
 
+The relationship accessor method also allows you to find the relationships between two nodes using the @to_other@ method (just like the @#rels@ method).
 To only find the friends relationships between those nodes:
 <ruby>
-a.rels(:friends).to_other(b)
-</ruby>
+# find all relationships object between p1 and p3, using the has_n accessor
+p1.friends_rels.to_other(p3)
 
-Notice, in neo4j.rb version < 1.7 you have to use the Neo4j::Node api (a._java_node.rels).
+# not using the has_n accessor
+a.rels(Person.friends).to_other(b)
+</ruby>
 
 h4. destroy and delete
 
 The destroy and delete method works like the Active Record methods.
 
 <ruby>
-  rel = p1.rels(:friends).find{|rel| rel.end_node == p3}
-  rel.destroy
+rel = p1.rels(:friends).find{|rel| rel.end_node == p3}
+rel.destroy
 
-  p1.friends.find(p2).delete
+p1.friends.find(p2).delete
 </ruby>
 
 You can also delete the relationship object like this.
 
 <ruby>
-  p1.friends.delete(p2)
+p1.friends.delete(p2)
 </ruby>
 
 h4. delete_all and destroy_all
@@ -321,7 +325,7 @@ h4. delete_all and destroy_all
 You can destroy and delete all relationship in one go (just like Active Record).
 
 <ruby>
-  p1.friends.destroy_all
+p1.friends.destroy_all
 </ruby>
 
 To destroy all relationships:
