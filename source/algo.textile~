@@ -1,0 +1,106 @@
+h2. Graph Algorithms
+
+* Neo4j comes with some graph algorithms included. Since Neo4j.rb wraps algorithms implemented in Java, they should perform well.
+* All the @Neo4j::Algo@ methods come in two versions: @some_algorithm_paths@ and @some_algorithm_path@. The first one returns all paths found, the second one returns only the first path found.
+* The @Neo4j::Algo@ methods behave like the @Neo4j::Node.outgoing@ traversal methods. That means you can combine @outgoing@, @expand@ and @incoming@ methods to specify which relationship should be traversed using the algorithm.
+endprologue.
+
+h3. All Paths
+
+The @Neo4j::Algo.all_paths@ and @Neo4j::Algo.all_path@ methods return an algorithm which can find all available paths between two nodes. These returned paths can contain loops (i.e. a node can occur more than once in any returned path).
+
+Example: nodes in the first path with relationship friends found between node_a and node_b:
+<ruby>
+Neo4j::Algo.all_paths(node_a, node_b).outgoing(:friends).first.nodes
+# same as (notice paths and path !)
+Neo4j::Algo.all_path(node_a, node_b).outgoing(:friends).nodes
+
+</ruby>
+
+Example: nodes in the first path with relationship friends and depth 1 found between node_a and node_b:
+<ruby>
+Neo4j::Algo.all_paths(node_a,node_b).outgoing(:friends).depth(1).first
+
+</ruby>
+
+Example: return the length of the first path of relationship :friends found between node_a and node_b:
+<ruby>
+  Neo4j::Algo.all_paths(node_a,node_b).outgoing(:friends).first.length
+
+</ruby>
+
+Example: return the relationships of the first path of any relationship found between node_a and node_b:
+<ruby>
+  # singular: all_path - return the first path found
+  Neo4j::Algo.all_path(node_a,node_b).rels
+
+</ruby>
+
+
+h3. All Simple Paths
+
+
+The @Neo4j::Algo#all_simple_paths@ and @Neo4j::Algo#all_simple_path@ methods return an algorithm which can find all simple paths between two nodes. These returned paths cannot contain loops (i.e. a node cannot occur more than once in any returned path).
+
+
+h3. Shortest Paths
+
+The @Neo4j::Algo.shortest_paths@ and @Neo4j::Algo.shortest_path@ methods find all the shortest paths (paths where Path.length() is the shortest) between two nodes. These returned paths also cannot contain loops.
+
+Example, using the expand method just for fun
+<ruby>
+Neo4j::Algo.shortest_path(node_a,node_b).expand{|node| node._rels(:outgoing, :friends)}
+# same as
+Neo4j::Algo.shortest_path(node_a,node_b).outgoing(:friends)
+</ruby>
+
+
+Example, shortest path with two relationships:
+<ruby>
+ Neo4j::Algo.shortest_path(node_a,node_b).outgoing(:friends).outgoing(:knows)
+</ruby>
+
+h3. Dijkstra Paths
+
+The @Neo4j::Algo.dijkstra_paths@ and @Neo4j::Algo.dijkstra_path@ methods returns the Dijkstra algorithm to find the cheapest path between two nodes. In this case, "cheap" means the lowest possible cost to get from the start node to the end node. Cost is returned from cost_evaluator. These returned paths cannot contain loops.
+See "here":http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm for more information.
+    
+Example:
+<ruby>
+Neo4j::Algo.dijkstra_path(@x,@y).cost_evaluator{|rel,*| rel[:weight]}
+</ruby>
+
+
+h3. With Length Paths
+
+The @Neo4j::Algo.with_length_paths@ and @Neo4j::Algo.with_length_path@ methods return an instance of Neo4j::Algo can find all paths of a certain length (depth) between two nodes. These returned paths cannot contain loops. Expects setting the depth parameter (the length of the path) by the Algo#depth method.
+
+<ruby>
+  Neo4j::Relationship.new(:friends, @x, @y)  # length 1
+  Neo4j::Relationship.new(:friends, @x, @b)  # length 3 x->b->c->y
+  Neo4j::Relationship.new(:friends, @b, @c)  # length 2 x->b-y
+  Neo4j::Relationship.new(:friends, @b, @y)
+  Neo4j::Relationship.new(:friends, @c, @y)
+  Neo4j::Algo.with_length_paths(@x,@y).depth(1).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(2).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(3).size #=> 1
+  Neo4j::Algo.with_length_paths(@x,@y).depth(4).size.#=> 0
+  Neo4j::Algo.with_length_path(@x,@y).depth(1) # include(@y)
+  Neo4j::Algo.with_length_path(@x,@y).depth(2) # include(@b,@y)
+  Neo4j::Algo.with_length_path(@x,@y).depth(3) # include(@b,@c,@y)
+</ruby>
+
+h3. A* Paths
+
+The @Neo4j::Algo.a_star_paths@ and @Neo4j::Algo.a_star_path@ methods return an instance of Neo4j::Algo which uses the A* algorithm to find the cheapest path between two nodes.
+The definition of "cheap" is the lowest possible cost to get from the start node to the end node, where the cost is returned from lengthEvaluator and estimateEvaluator. These returned paths cannot contain loops.
+See "here":http://en.wikipedia.org/wiki/A*_search_algorithm for more information.
+
+The algorithm expacts an cost evaluator and estimate evaluator, see @Neo4j::Algo#cost_evaluator@ and @Neo4j::Algo#estimate_evaluator@
+
+Example:
+<ruby>
+    Neo4j::Algo.a_star_path(@x,@y).cost_evaluator{|rel,*| rel[:weight]}.estimate_evaluator{|node,goal| returns a float value}
+</ruby>
+
+The estimate_evaluator proc estimates the weight of the remaining path from one node to another.

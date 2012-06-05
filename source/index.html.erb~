@@ -1,0 +1,72 @@
+<h2>Overview of Neo4j.rb</h2>
+
+Neo4j.rb is a graph database for JRuby, using:
+
+<li><a href="http://www.neo4j.org">Neo4j</a> for for persistence and traversal of the graph</li>
+<li><a href="http://lucene.apache.org/java/docs/index.html">Apache Lucene</a> for querying and indexing.</li>
+
+<h4>Neo4j.rb Architecture</h4>
+The neo4j.rb consists of a three layers API:
+
+<p/>
+<li>Layer 1. For interacting with the basic building blocks of the graph database, see Neo4j::Node and Neo4j::Relationship classes.</li>
+<li>Layer 2. A binding API to Ruby objects, see Neo4j::NodeMixin and Neo4j::RelationshipMixin modules.</li>
+<li>Layer 3. An implementation of the Rails Active Model and a subset of the Active Record API, see Neo4j::Rails::Model and Neo4j::Rails::Relationship classes.</li>
+
+<p/>
+<br/>
+
+Notice that you can always access the lower layers if you want to do some more advanced. You can also access the Java API directly.
+
+<h2>Guides</h2>
+
+<li><a href="why_graph_db.html">Why using a Graph Database or Neo4j.rb ?</a></li>
+<li><a href="basic.html">Nodes, Properties & Relationships</a></li>
+<li><a href="traverser.html">Traversing Node and Relationships</a></li>
+<li><a href="algo.html">Included algorithms like shortest path</a></li>
+<li><a href="rules_and_functions.html">Rules and Functions</a></li>
+<li><a href="mapping.html">Ruby Class to Node & Relationship Mapping</a></li>
+<li><a href="rails3.html">Ruby on Rails</a></li>
+<li><a href="lucene.html">Indexing and Queries with Lucene</a></li>
+<li><a href="migrations.html">Migrations</a></li>
+<li><a href="batch_insert.html">Batch Insert</a></li>
+<li><a href="configuration.html">Multitenency, Config, Backup...</a></li>
+<li><a href="monitoring.html">Monitoring and Remote Access</a></li>
+<li><a href="ha_cluster.html">HA Cluster</a></li>
+
+
+<h2>Documentation and APIs</h2>
+
+<li><a href="http://neo4j.rubyforge.org/">RDoc API</a></li>
+<li><a href="http://docs.neo4j.org/">The Neo4j Manual</a></li>
+<li><a href="http://neo4j.tw/">Neo4j Chinese Resources</a></li>
+
+<h2>Blogs & Presentations</h2>
+<li><a href="http://www.slideshare.net/andreasronge/neo4jrb">An Neo4j.rb presentation (using Neo4j.rb version 0.4.6)</a></li>
+<li><a href="http://blog.jayway.com/2011/03/02/neo4j-rb-1-0-0-and-rails-3">Neo4j 1.0.0 and Rails 3</a></li>
+<li><a href="http://blogs.neotechnology.com/peter/2010/04/cool-spatial-algos-with-neo4j-part1-routing-with-a.html">Cool spatial algos with Neo4j: Part 1 - Routing with A* in Ruby</a></li>
+<li><a href="http://blog.vivekprahlad.com/versioning-rails-models-with-neojrb">Neo4j::Rails::Versioning</a></li>
+<li><a href="http://blog.vivekprahlad.com/multitenancy-with-neo4jrb">Multitenancy</a></li>
+
+<h2>Installation</h2>
+<code>gem install neo4j</code><br/>
+To install JRuby I recommend using <a href="http://rvm.beginrescueend.com/">RVM</a>.
+
+<h2>Development</h2>
+
+<li><a href="configuration.html#development-and-testing-configuration">Travis, RSpec, Guards etc</a></li>
+
+<h2>Examples</h2>
+
+Here are some examples of what you can do:
+<li><a href="http://github.com/andreasronge/kvitter">Kvitter - parse and create a graph from Twitter tweets</a></li>
+<li><a href="http://github.com/andreasronge/neo4j/tree/master/example/">Basic Examples</a></li>
+<li><a href="http://github.com/andreasronge/devise_example">Rails 3 and Devise Example</a></li>
+<li><a href="http://github.com/andreasronge/neo4j-perf">Performance Tests of Neo4j.java vs. Neo4j.rb</a></li>
+
+<h2>Configuration</h2>
+<li><a href="http://github.com/andreasronge/neo4j/blob/master/config/neo4j/config.yml">Default Configuration File</a></li>
+Also, check the <code>Neo4j::Config</code> class where you can override the defaults or provide your own configuration file.
+
+<h2>Found a bug in this guide ?</h2>
+Please fork the project <a href="https://github.com/andreasronge/neo4j-guides">neo4j-guides</a>
