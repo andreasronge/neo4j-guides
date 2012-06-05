@@ -8,14 +8,14 @@ h3. Introduction
 Neo4j has a batch insert mode that drops support for transactions and concurrency in favor of insertion speed. This is useful when you have a big dataset that needs to be loaded once. 
 In our experience, the batch inserter will typically inject data around five times faster than running in normal transactional mode.
 
-TIP: Be aware that BatchInserter's intended use is for initial import of data. It is non-thread safe, non-transactional, and failure to properly invoke shutdown results in corrupt database files.
+TIP: Be aware that the BatchInserter is intended use is for initial import of data. It is non thread safe, non transactional and failure to successfully invoke shutdown (properly) results in corrupt database files.
 
 h3. Nodes/Properties and Relationships
 
 The "Neo4j::Batch::Inserter":http://neo4j.rubyforge.org/classes/Neo4j/Batch/Inserter.html has a simple
-API for creating nodes, properties, relationships and lucene indexes.
+API for creating nodes,properties,relationships and lucene indexes.
 
-Example:
+Example
 <ruby>
 inserter = Neo4j::Batch::Inserter.new(storage, config)
 node_a = inserter.create_node('name' => 'andreas')
@@ -29,7 +29,7 @@ The property hash keys should be strings.
 
 h3. NodeMixin/RelationshipMixin and Model
 
-The @Inserter#create_node@ takes the class you want to index as an extra parameter. This can be both a relationship or a node class.
+The @Inserter#create_node@ takes an extra parameter, the class you want to index. This can be both a relationship or a node class.
 
 Example:
 
@@ -43,7 +43,7 @@ node_a = inserter.create_node({'name' => 'andreas'}, Person)
 node_c = inserter.create_node({'name' => 'craig', Person)
 </ruby>
 
-This will add the Neo4j.rb internal property @_classname@, which is needed to map nodes to Ruby classes.
+This will add the Neo4j.rb internal property @_classname@ which is needed to map nodes to Ruby classes.
 
 Creating relationships using the RelationshipMixin works in a similar way.
 
@@ -66,14 +66,14 @@ node_c = inserter.create_node({'name' => 'craig'}, Person)'
 inserter.create_rel(Person.friends, node_a, node_b, :since => '2009')
 </ruby>
 
-This creates a relationship of type 'Person#friend' from node_a to node_b.
+This create a relationship of type 'Person#friend' from node_a to node_b.
 Notice the @Person.friends@ class method was generated because of the @has_n(:friends).to(Person)@ above.
-Using a declared has_n(x).to(y) relationship will add a prefix on the relationships ('Person#friends').
+Using a declared has_n(x).to(y) relationship will add a prefix on the relationships ('Person#friends')
 
 h3. Index, Neo4j::Node
 
-The "Neo4j::Batch::Inserter":http://neo4j.rubyforge.org/classes/Neo4j/Batch/Inserter.html automatically
-creates lucene indexes if you have declared them.
+The "Neo4j::Batch::Inserter":http://neo4j.rubyforge.org/classes/Neo4j/Batch/Inserter.html does automatically
+create lucene index if you have declared them.
 
 Example:
 
@@ -126,9 +126,9 @@ node_b = inserter.index_query('name: craig').first
 h3. Shutdown
 
 It is important to call the @Neo4j::Batch::Inserter#shutdown@ after using the inserter.
-Failing to invoke the shutdown method may corrupt the store!
+Failing to invoke the shutdown method may corrupt the store !
 
-Example:
+Example
 
 <ruby>
 inserter = Neo4j::Batch::Inserter.new
