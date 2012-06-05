@@ -1,14 +1,13 @@
 h2. Graph Algorithms
 
-* Neo4j comes included with some graph algorithms. Since Neo4j.rb simply wraps algorithms implemented in Java they should have good performence.
-* All the @Neo4j::Algo@ methods comes in two versions: @some_algorithm_paths@ and @some_algorithm_path@. The first one returns all paths found, the second one returns only the first path found.
-* The @Neo4j::Algo@ methods behaves like the @Neo4j::Node.outgoing@ traversal methods. That means you can combine @outgoing@, @expand@ and @incoming@ method
-to specify which relationship should be traversed using the algorithm.
+* Neo4j comes with some graph algorithms included. Since Neo4j.rb simply wraps algorithms implemented in Java, they should have good performance.
+* All the @Neo4j::Algo@ methods come in two versions: @some_algorithm_paths@ and @some_algorithm_path@. The first one returns all paths found, the second one returns only the first path found.
+* The @Neo4j::Algo@ methods behave like the @Neo4j::Node.outgoing@ traversal methods. That means you can combine @outgoing@, @expand@ and @incoming@ methods to specify which relationship should be traversed using the algorithm.
 endprologue.
 
 h3. All Paths
 
-The @Neo4j::Algo.all_paths@ and @Neo4j::Algo.all_path@ methods returns an algorithm which can find all available paths between two nodes. 
+The @Neo4j::Algo.all_paths@ and @Neo4j::Algo.all_path@ methods return an algorithm which can find all available paths between two nodes. 
 These returned paths can contain loops (i.e. a node can occur more than once in any returned path).
 
 Example: nodes in the first path with relationship friends found between node_a and node_b:

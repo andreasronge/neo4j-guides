@@ -1,29 +1,28 @@
 <h2>Overview of Neo4j.rb</h2>
 
-Neo4j.rb is a graph database for JRuby
-It uses the powerful and mature Java libraries:
+Neo4j.rb is a graph database for JRuby which uses two Java libraries:
 
 <li><a href="http://www.neo4j.org">Neo4j</a> for for persistence and traversal of the graph</li>
 <li><a href="http://lucene.apache.org/java/docs/index.html">Apache Lucene</a> for querying and indexing.</li>
 
 <h4>Neo4j.rb Architecture</h4>
-The neo4j.rb consists of a three layers API:
+The neo4j.rb API has three layers:
 
 <p/>
-<li>Layer 1. For interacting with the basic building blocks of the graph database, see Neo4j::Node and Neo4j::Relationship classes.</li>
-<li>Layer 2. A binding API to Ruby objects, see Neo4j::NodeMixin and Neo4j::RelationshipMixin modules.</li>
+<li>Layer 1. For interacting with the basic building blocks of the graph database (see the Neo4j::Node and Neo4j::Relationship classes).</li>
+<li>Layer 2. A binding API for Ruby objects, (Neo4j::NodeMixin and Neo4j::RelationshipMixin modules).</li>
 <li>Layer 3. An implementation of the Rails Active Model and a subset of the Active Record API, see Neo4j::Rails::Model and Neo4j::Rails::Relationship classes.</li>
 
 <p/>
 <br/>
 
-Notice that you can always access the lower layers if you want to do some more advanced. You can also access the Java API directly.
+Notice that you can always access the lower layers if you want to do something more advanced. You can also access the Java API directly.
 
 <h2>Guides</h2>
 
-<li><a href="why_graph_db.html">Why using a Graph Database or Neo4j.rb ?</a></li>
+<li><a href="why_graph_db.html">Why use Neo4j.rb, or any Graph Database?</a></li>
 <li><a href="basic.html">Nodes, Properties & Relationships</a></li>
-<li><a href="traverser.html">Traversing Node and Relationships</a></li>
+<li><a href="traverser.html">Traversing Nodes and Relationships</a></li>
 <li><a href="algo.html">Included algorithms like shortest path</a></li>
 <li><a href="rules_and_functions.html">Rules and Functions</a></li>
 <li><a href="mapping.html">Ruby Class to Node & Relationship Mapping</a></li>
@@ -31,9 +30,9 @@ Notice that you can always access the lower layers if you want to do some more a
 <li><a href="lucene.html">Indexing and Queries with Lucene</a></li>
 <li><a href="migrations.html">Migrations</a></li>
 <li><a href="batch_insert.html">Batch Insert</a></li>
-<li><a href="configuration.html">Multitenency, Config, Backup...</a></li>
+<li><a href="configuration.html">Multitenancy, Config, Backup...</a></li>
 <li><a href="monitoring.html">Monitoring and Remote Access</a></li>
-<li><a href="ha_cluster.html">HA Cluster</a></li>
+<li><a href="ha_cluster.html">High-Availabilty (HA) Cluster</a></li>
 
 
 <h2>Documentation and APIs</h2>
