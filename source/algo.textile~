@@ -92,7 +92,8 @@ The @Neo4j::Algo.with_length_paths@ and @Neo4j::Algo.with_length_path@ methods r
 
 h3. A* Paths
 
-The @Neo4j::Algo.a_star_paths@ and @Neo4j::Algo.a_star_path@ methods return an instance of Neo4j::Algo which uses the A* algorithm to find the cheapest path between two nodes. The definition of "cheap" is the lowest possible cost to get from the start node to the end node, where the cost is returned from lengthEvaluator and estimateEvaluator. These returned paths cannot contain loops.
+The @Neo4j::Algo.a_star_paths@ and @Neo4j::Algo.a_star_path@ methods return an instance of Neo4j::Algo which uses the A* algorithm to find the cheapest path between two nodes.
+The definition of "cheap" is the lowest possible cost to get from the start node to the end node, where the cost is returned from lengthEvaluator and estimateEvaluator. These returned paths cannot contain loops.
 See "here":http://en.wikipedia.org/wiki/A*_search_algorithm for more information.
 
 The algorithm expacts an cost evaluator and estimate evaluator, see @Neo4j::Algo#cost_evaluator@ and @Neo4j::Algo#estimate_evaluator@

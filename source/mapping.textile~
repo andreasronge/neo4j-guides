@@ -36,7 +36,7 @@ Adding new types of properties and relationships can also be done without
 declaring those properties/relationships by using the operator '[]' on @Neo4j::NodeMixin@ and the
 '<<' on the @Neo4j::NodeTraverser@
 
-By using the NodeMixin and declaring properties and indices, all instances of the Person class can now be stored in 
+By using the NodeMixin and by declaring properties and indices, all instances of the Person class can now be stored in 
 the Neo4j node space and be retrieved/queried by traversing the node space or performing Lucene queries.
 
 A Lucene index will be updated when the name or salary property changes.
@@ -44,7 +44,7 @@ A Lucene index will be updated when the name or salary property changes.
 
 h3. Creating a node
 
-Creating a Person node instance:
+Creating a Person node instance
 
 <ruby>
   person = Person.new
@@ -68,7 +68,7 @@ You can also set this (or any property) when you create the node:
 
 h4. Properties and the [] operator
 
-Specifying which attributes should be available on a node is not required. Any attributes can be
+Notice that it is not required to specify which attributes should be available on a node. Any attributes can be
 set using the [] operator. Declared properties set an expectation, not an requirement. It can be used for documenting your model objects and
 catching typos.
 
@@ -78,7 +78,7 @@ Example:
 </ruby>      
 
 So, why declare properties in the class at all?  By declaring a property in the class, you get the sexy dot notation. Also, when using Neo4j.rb from Ruby on Rails you sometimes need to declare properties on your models to get  *accepts_nested_attributes_for* and *ActiveModel::MassAssignmentSecurity* working.
-Declaring a property is not required in order to use an index on that property (as in Neo4j.rb version <= 0.4.6).
+It is not required to declare an property in order to use an index on that property (as in Neo4j.rb version <= 0.4.6).
 
 h4. Properties as a hash
 
@@ -113,7 +113,7 @@ h3. Mapping -  one to many, many to many
 
 Use **to** and **from** with has_n to specify which direction the generated method should traverse.
 
-Example:
+Example
 
 <ruby>
 class Role
@@ -180,7 +180,7 @@ star_wars_3.incoming("Movie#directed").should include(lucas)
 h4. has_list
 
 The @has_list@ class method is used to create an ordered and/or indexed list of
-nodes. It could be an alternative of using range queries with Lucene.
+nodes. It could be an alternative of using range quieres with Lucene.
 It uses the "timeline":http://api.neo4j.org/current/org/neo4j/index/timeline/Timeline.html feature of the Java Neo4j API.
 
 Example:
@@ -210,7 +210,7 @@ p.children << child3
 p.children.size # == 3 # very efficient since it does not traverse in order to count all children
 </ruby>
 
-TIP: has_list is not available if you are using an online backup or ha cluster, since it does not yet work with those.
+TIP: has_list is not available if you are using online backup or ha cluster, since it does not yet work with those.
 
 h3. Finding Nodes and Queries
 

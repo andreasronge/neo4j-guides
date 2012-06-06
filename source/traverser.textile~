@@ -51,16 +51,18 @@ h4. Performance
 
 Neo4j is very efficient and can easily traverse 100.000 nodes/relationships of any depth.
 Ruby is much slower then Java, so you will always get better performance implementing
-traverser filters in Java. However, Neo4j.rb is also several magnitudes faster than SQL queries (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/2011/02/18/mysql-vs-neo4j-on-a-large-scale-graph-traversal/ ).
+traverser filters in Java. Neo4j.rb is also several magnitudes faster than SQL queries (e.g. >1000 ggr times faster for large data set, see "here":http://markorodriguez.com/2011/02/18/mysql-vs-neo4j-on-a-large-scale-graph-traversal/ ).
+
+PICK UP FROM HERE, BKUNG
 
 For example, on my laptop I can traverse 500.000 nodes in 0.5 secondes with Java but in JRuby it takes about 4 seconds.
-However, traversing fewer nodes minimizes the difference between Java and Ruby.
+However if you traverse fewer nodes then there is less difference between Java and Ruby.
 For more information check the "neo4j-perf github project":http://github.com/andreasronge/neo4j-perf
 
 h4. Tweaking Performance
 
 It could be very expensive to create Ruby wrappers around every native Neo4j java node.
-You can avoid this by:
+You can avoid this by
 
 # Not using the Neo4j::NodeMixin
 # Loading the raw java objects (e.g. use the _rels and _node, _load methods) instead of Ruby instances.
@@ -76,7 +78,7 @@ You can avoid this by:
 person.outgoing(:friends).depth(:all).raw.to_a
 </ruby>
 
-Or by using the java iterator directly:
+or using the java iterator directly
 
 <ruby>
 folder.incoming(:parent_folder).
@@ -90,20 +92,20 @@ folder.incoming(:parent_folder).
 *Using Java Neo4j::Relationships*
 
 The @Neo4j::Node#:_rels@ and @Neo4j::Node#_rel@ returns @Neo4j::Relationship@ instead of your own Ruby wrapper class.
-For more info, check "the RDoc.":http://neo4j.rubyforge.org/classes/Neo4j/NodeRelationship.html
+For more info, check "RDoc":http://neo4j.rubyforge.org/classes/Neo4j/NodeRelationship.html
 
-@Neo4j::Relationship._end_node@ and @Neo4j::Relationship._start_node@ return Neo4j::Node objects.
+@Neo4j::Relationship._end_node@ and @Neo4j::Relationship._start_node@ returns Neo4j::Node objects.
 Notice that @Neo4j::Node@ and @Neo4j::Relationships@ really are the Java objects.
 
 h4. Traversals
 
-A neo4j traversal is created using methods like #incoming and #outgoing on the @Neo4j::Node@.
+An neo4j traversal is created using methods like #incoming and #outgoing method on the @Neo4j::Node@.
 These methods are also available on the @Neo4j::NodeMixin@ and @Neo4j::Model@.
-All the traversal methods, such as #outgoing, #filter, and #depth can be combined and chained.
-By default, the start node is not included in the result. If you want to include the start node:  @node.outgoing(:foo).include_start_node@
-Check the Java Documentation for more detailed info - "http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html":http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html or the RDoc API "Neo4j::Node#outgoing":http://neo4j.rubyforge.org/classes/Neo4j/Traversal.html
+All the traversal methods such as #outgoing, #filter, #depth can be combined and chained.
+By default the start node is not included in the result. If you want to included the start node:  @node.outgoing(:foo).include_start_node@
+Check the Java Documentation for a more detailed info - "http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html":http://docs.neo4j.org/chunked/snapshot/tutorials-java-embedded-traversal.html or the RDoc API "Neo4j::Node#outgoing":http://neo4j.rubyforge.org/classes/Neo4j/Traversal.html
 
-TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these examples, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block or use the (Rails) Neo4j::Model instead, which will create transactions automatically for you.
+TIP: In all the code examples here, I have skipped creating Transactions. If you want to try these example, wrap the write operations (such as creating nodes and relationships) in a @Neo4j::Transaction.run{}@ block, or use the (Rails) Neo4j::Model instead which will create transactions automatically for you.
 
 
 h4. Ruby Enumerable and Traversals
@@ -124,7 +126,7 @@ a.outgoing(:friends).collect{|node| node[:name}}
 </ruby>
 
 
-As shown in the example above, the traversal returns Neo4j nodes. If you want to get the path objects instead, you can do something like:
+As shown in the example above the traversal returns Neo4j nodes. If you instead want to get the path objects.
 
 <ruby>
 a.outgoing(:frineds).paths.to_a
@@ -180,8 +182,8 @@ The above example prints: B, C, D, E
 
 h5. #filter
 
-Say we only want to include the friends friends nodes (D and E) from the example above, and
-not nodes at depth one:
+In the example above let say we only want to include the friends friends nodes (D and E) and
+not nodes at depth one.
 
 <ruby>
 a.outgoing(:friends).depth(2).
@@ -193,7 +195,7 @@ The above example prints: D, E
 
 h4. Advanced Traversals
 
-The following examples use a more complex graph, which is created by the following code snippet:
+In the following examples we are going to use a more complex graph which is created by the following code snippet:
 
 <ruby>
 a = Neo4j::Node.new :name => 'A'
@@ -223,8 +225,8 @@ Creates this graph:
 
 h5. The path parameter
 
-Several traversal methods uses a "path":http://api.neo4j.org/1.4/org/neo4j/graphdb/Path.html parmeter to guide the traversal.
-The following methods are defined on the path object:
+Several traversal methods uses a "path":http://api.neo4j.org/1.4/org/neo4j/graphdb/Path.html parmeter for guiding the traversal.
+The following methods are defined on the path object.
 
 * #end_node - Returns the end node of this path.
 * #last_relationship - Returns the last Relationship in this path.
@@ -244,14 +246,14 @@ a.outgoing(:friends).outgoing(:recommend).
 
 The example above prints B, C and D.
 
-You can traverse both incoming and outgoing relationships:
+You can traverse both incoming and outgoing relationships.
 
 <ruby>
 a.outgoing(:recommend).incoming(:friends).depth(:all).
    each{|node| puts node[:name]}
 </ruby>
 
-The above example prints: D, C, B, G and E (not F).
+The example above prints: D, C, B, G and E (not F).
 
 h5. #unique
 
@@ -267,12 +269,12 @@ The following values are possible:
 * :rel_path :: No restriction (the user will have to manage it).
 * :rel_recent :: Same as for :node_recent, but for relationships.
 
-See "this document":http://docs.neo4j.org/chunked/snapshot/examples-uniqueness-of-paths-in-traversals.html or below for more examples of uniqueness.
+See http://docs.neo4j.org/chunked/snapshot/examples-uniqueness-of-paths-in-traversals.html or the example below.
 See also the example of generating a HTML view of a node space below.
 
 h4. #eval_paths
 
-Instead of specifying which relationships should be traversed and which nodes should be returned, you can supply the traversal with a code block.
+Instead of specifying which relationships should be traversed and which nodes should be returned you can supply the traversal with a code block.
 The code block gets an Path argument (see above) and should return one of the following values:
 * :exclude_and_continue
 * :exclude_and_prune
@@ -298,7 +300,7 @@ will print:
 </pre>
 and return zero nodes since we always return :exclude_and_continue.
 
-If we change the uniqueness to :node_path (:node_global is default) instead:
+If we instead change the uniqueness to :node_path (:node_global is default)
 <ruby>
 b.eval_paths{|path| puts path; :exclude_and_continue}.depth(2).unique(:node_path).to_a.size
 </ruby>
@@ -322,7 +324,7 @@ It will print the following paths:
 (2)<--[friends,3]--(3)--[recommend,10]-->(7)
 (2)<--[friends,3]--(3)<--[recommend,9]--(1)
 </pre>
-Notice that the same thing can be accomplished using the #filter and #prune methods. See below.
+Notice that we same thing can be accomplished using the #filter and #prune methods, see below.
 
 h5. #filter
 
@@ -338,7 +340,7 @@ a.outgoing(:friends).outgoing(:recommend).depth(3).
 
 This prints C, D and G. There is also a @start_node@ method on the @path@ paramenter.
 
-To only include nodes who have been friends since before 2005, or have been recommended by someone in my network (any depth), you can do something like:
+To only include nodes which has been friends before 2005 or is recommended by someone in my network (any depth).
 
 <ruby>
  a.outgoing(:friends).outgoing(:recommend).depth(:all).filter do |path|
@@ -352,8 +354,8 @@ The following prints D, G and F.
 
 h5. #prune
 
-You can 'cut off' parts of the traversals.
-Let say you don't want to traverse past node B:
+You can 'cut of' parts of the traversals.
+Let say you don't want to traverse past node B.
 
 <ruby>
 a.outgoing(:friends).outgoing(:recommend).depth(:all).
@@ -373,13 +375,13 @@ Example, traverse all relationship with property @age@ above 5:
 <ruby>
 some_node.expand { |n| n._rels.find_all { |r| r[:age] > 5 } }.
   depth(:all).to_a
-# use _rels since it does not wrap the Java Relationships and performs better
+# use _rels since it can be perform a little bit better since it does not wrap the Java Relationships
 # with your own Ruby classes (if you have a Ruby class for that relationship).
 </ruby>
 
 h5. #depth_first and #breadth_first
 
-You can set traversal order:
+You can set which order you should traverse.
 
 * traverse depth first, visiting each node before visiting its child nodes, example: @node.outgoing(:foo).depth_first(:pre)@
 * traverse depth first, visiting each node after visiting its child nodes, example @node.outgoing(:foo).depth_first(:post)@
@@ -391,7 +393,7 @@ Available in Neo4j.rb >= 1.7
 h4. Example
 
 Here is an example of producing a HTML tree from the node space above.
-It traverses the graph depth first.
+It traverse the graph depth first.
 
 <ruby>
 def show_tree(parent)
@@ -426,7 +428,7 @@ Notice that we get all the paths instead of the nodes when traversing in the exa
 
 h3. Pacer
 
-It might be faster and easier to express search traversals using "the pacer gem.":https://github.com/pangloss/pacer
+It might be both faster and easier to express search traversals using the pacer gem, see "pacer":https://github.com/pangloss/pacer
 
 <ruby>
 require 'neo4j'

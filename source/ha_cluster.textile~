@@ -24,7 +24,7 @@ a complete configuration and setup for running ZooKeeper.
 
 You can also set up zookeeper yourself by using the following instructions:
 
-Go to "zookeeper":http://www.apache.org/dyn/closer.cgi/hadoop/zookeeper/, select a mirror and grab the 3.3.2 release.
+Go to "zookeer":http://www.apache.org/dyn/closer.cgi/hadoop/zookeeper/, select a mirror and grab the 3.3.2 release.
 
 Unpack somewhere and create three config files called server1.cfg, server2.cfg and server3.cfg in the conf directory:
 
@@ -42,7 +42,7 @@ server.2=localhost:2889:3889
 server.3=localhost:2890:3890
 </pre>
 
-The other two config files will have a different dataDir and clientPort set, but the other parameters are identical to the first one:
+The other two config files will have a different dataDir and clientPort set but the other parameters identical to the first one:
 
 <pre>
 #server2.cfg
@@ -56,7 +56,7 @@ dataDir=data/zookeeper3
 clientPort=2183
 </pre>
 
-Create the data directories:
+Create the data dirs:
 
 <pre>
 zookeeper-3.3.2$ mkdir -p data/zookeeper1 data/zookeeper2 data/zookeeper3
@@ -99,7 +99,7 @@ The default configuration can be found "here":http://github.com/andreasronge/neo
 
 h3. Chef and Vagrant Scripts
 
-Check out "this cookbook.":https://github.com/akollegger/ha-ops/tree/master/with-chef
+Check "this cookbook":https://github.com/akollegger/ha-ops/tree/master/with-chef
 
 h3. Gotchas
 
@@ -110,8 +110,9 @@ You can check if a node is a slave or master by
 Neo4j.management(org.neo4j.management.HighAvailability).is_master
 </code>
 
-You can also get this info from the jconsole or neo4j-shell and the hainfo command, check the "monitoring page":monitoring.html
+You can also get this info from the jconsole or neo4j-shell and the hainfo command, check
+check the "monitoring page":monitoring.html
 
 
-For more information, check the "neo4j wiki.":http://wiki.neo4j.org/content/High_Availability_Cluster
+For more information, check the "neo4j wiki":http://wiki.neo4j.org/content/High_Availability_Cluster
 
