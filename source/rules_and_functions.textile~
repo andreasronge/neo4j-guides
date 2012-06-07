@@ -6,13 +6,13 @@ h3. Rules
 
 Rules can be used to group a set of nodes. Rules and functions are very fast for read operations.
 The grouping of nodes take place when you update, insert, delete a node, relationship or property.
-So, if you use much more read operations than write operations, using rules and function might give you better performance compared to using lucene queries or traversals.
+So, if you don't use write operations but mostly read operations using rules and function might give you better performance compared to using lucene queries or traversals.
 
 Example of rule groups: all nodes of a class, all nodes with property x == y, all nodes with relationship type z == q.
 
 h4. Find all nodes of a class
 
-Notice this rule is always included when using @Neo4j::Model@
+Notice this rules is always included when using @Neo4j::Model@
 
 <ruby>
 class Person
@@ -21,7 +21,7 @@ class Person
 end
 </ruby>
 
-You can then find all nodes of the class Person.
+You can then find all node of the class Person.
 <ruby>
 Person.all.each {|p| puts p}
 </ruby>
@@ -35,7 +35,7 @@ end
 
 Employee.all # only the employee subclass nodes
 
-TIP: When a node is created or deleted, it will add or remove a relationship (@all@ in the example above) to the rule node. Every node class has its own rule node which in turn has a relationship to the @Neo4j.ref_node@. When finding all the nodes of a rule group, Neo4j.rb simply traverses the relationships from the rule node with the same name as the rule group.
+TIP: When a node is created or deleted it will add or remove a relationship (@all@ in the example above) to the rule node. Every node class has it's own rule node which in turn has a relationship to the @Neo4j.ref_node@. When finding all the nodes of a rule group Neo4j.rb simply traverse the relationships from the rule node with the same name as the rule group.
 
 h4. Rule Groups
 
@@ -49,10 +49,10 @@ class Reader
 end
 </ruby>
 
-The rule group @old@ will contain all nodes that evaluate the given proc to @true@. The proc will be called 
-when a node or relationship is created, deleted, or updated.
+The rule group @old@ will contain all nodes that evaluates the given proc to @true@. The proc will be called 
+when a node or relationship is created, deleted, updated.
 
-To find all nodes of class @Reader@ with property @age > 10@:
+To find all nodes of class @Reader@ with property @age > 10@ 
 <ruby>
 Reader.old  # returns an Enumerable object
 </ruby>
@@ -72,7 +72,7 @@ TIP: Notice that you must commit the transaction in order to trigger the Rules, 
 
 h4. Chaining Rules
 
-You can combine rules:
+You can combine rules, example
 <ruby>
 class NewsStory
   include Neo4j::NodeMixin
@@ -109,7 +109,7 @@ class NewsStory
 end
 </ruby>
 
-When a node in the @young@ rule group changes, it will trigger the incoming relationship @readers@ (defined by has_n :readers).
+When a node in the @young@ rule group changes it will trigger the incoming relationship @readers@ (defined by has_n :readers).
 <!-- What happens if :trigger is omitted? Why would it not still work? -->
 <ruby>
 user  = Reader.new :age => 200
@@ -129,12 +129,12 @@ h3. Functions
 
 Each rule group can have a set of functions.
 
-TIP: This is only available in upcoming 1.0.0.beta.24 release (or latest from github)
+TIP: This is only available in upcoming 1.0.0.beta.24 release (or latest from git hub)
 
 
 h4. Counting
 
-To count all nodes:
+To count all nodes 
 <ruby>
 class Person
   include Neo4j::NodeMixin
@@ -148,7 +148,7 @@ Person.all.count # => 1
 Person.count(:all)
 </ruby>
 
-To count only a subset:
+To count only a subset.
 
 <ruby>
 class Person
@@ -164,7 +164,7 @@ TIP: Neo4j/Rails Neo4j::Model already includes one rule: <pre>rule(:all, functio
 
 h4. Sum
 
-The following function will sum the age of every people in the rule group @old@:
+The following function will sum the age of every people in the rule group @old@
 
 <ruby>
 class Person
@@ -180,8 +180,8 @@ Person.old.sum(:age)
 
 h4. Creating your own Rule Function
 
-In order to create your own rule function, inherit from the @Neo4j::Functions::Function@ class and implement the @update@ and @function_name@ method.
-Here is the implementation of the @sum@ function:
+Inherit from the @Neo4j::Functions::Function@ class, and implement the @update@ and @function_name@ method.
+Here is the implementation of the @sum@ function
 
 <ruby>
     class Sum < Function
@@ -219,7 +219,7 @@ end
 </ruby>
 
 Then a ruby object (of type Person in the example above) will not be created that wraps the Java Node 
-Instead it will use the java node object as a parameter as shown above.
+Instead it will use the java node object as an parameter as shown above.
 
 
 h3. Migrations

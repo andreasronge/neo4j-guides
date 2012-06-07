@@ -1,6 +1,10 @@
-h2. Nodes, Properties, and Relationships
+h2. Nodes, Properties and Relationships
 
-The Neo4j node space consists of three basic elements: nodes, relationships that connect nodes, and properties, which are attached to both nodes and relationships. All relationships have a type. For example, if the node space represents a social network, a relationship type could be *knows*, as in one friend *knows* another. Much of the meaning of a node space is encoded in the relationship types of the application. 
+The Neo4j node space consists of three basic elements: nodes, relationships that connect nodes and properties attached
+to both nodes and relationships. All relationships have a type, for example if the node space represents
+a social network, a relationship type could be *knows*. If a relationship of the type *knows* connects two nodes,
+that probably represents two people that know each other. A lot of the semantics, the meaning, of a node space
+is encoded in the relationship types of the application. 
 
 endprologue.
 
@@ -17,11 +21,12 @@ Neo4j::Transaction.run do
 end
 </ruby>
 
-TIP: <code>Neo4j::Node.new</code> returns a Java Neo4j "org.neo4j.graphdb.Node object,":http://api.neo4j.org/current/org/neo4j/graphdb/Node.html which has been modified to "feel" more like ruby.
+TIP: The <code>Neo4j::Node.new</code> does actually return a Java Neo4j "org.neo4j.graphdb.Node":http://api.neo4j.org/current/org/neo4j/graphdb/Node.html object which has been modified to fell more rubyish.
 
 h3. Transactions
 
-All Neo4j write operation must be wrapped in a transaction as shown above. For example:
+All Neo4j write operation must be wrapped in a transaction as shown above.
+Here is one way of creating transaction:
 
 <ruby>
 Neo4j::Transaction.run do
@@ -31,11 +36,11 @@ end
 
 Neo4j::Rails::Model#transaction is a convenient wrapper for this.
 
-TIP: The Neo4j::Transaction returns a Java "org.neo4j.graph.Transaction.":http://api.neo4j.org/current/org/neo4j/graphdb/Transaction.html For more information, see "Neo4j Transactions.":http://wiki.neo4j.org/content/Transactions
+TIP: The Neo4j::Transaction returns a Java "org.neo4j.graph.Transaction":http://api.neo4j.org/current/org/neo4j/graphdb/Transaction.html for more info see "Neo4j Transactions":http://wiki.neo4j.org/content/Transactions
 
 h3. Properties
 
-Example of setting properties:
+Example of setting properties.
 
 <ruby>
 Neo4j::Node.new :name=>'foo', :age=>123, :hungry => false, 4 => 3.14
@@ -48,10 +53,10 @@ node[4] = 3.14
 node[:age] #  => 123
 </ruby>
 
-Properties can be of a primitive value (@Fixnum@, @Float@, @TrueClass@, @FalseClass@, @String) and arrays of those primitive values. Also, @Date@ and @DateTime@ can be saved if you declared them, see Type Conversion below.
+Properties can be of a primitive value (@Fixnum@, @Float@, @TrueClass@, @FalseClass@, @String) and arrays of those primitive values.
+Also, @Date@ and @DateTime@ is also possible to save if you declared it, see Type Conversion below.
 
-
-WARNING: *Array Gotchas 1* all items in an array must be of the same type. *Array Gotchas 2* You can't change just one item in an array (they are mutable). You have to create a new array each time you add, remove, change one item.
+WARNING: *Array Gotchas 1* all items in an array must be of the same type. *Array Gotchas 2* you can not change one item in the array (they are mutable), you have to create a new array each time you add, remove, change one item.
 
 h4. Type Conversion
 
@@ -64,8 +69,8 @@ class Person
 end
 </ruby>
 
-The :born property will be marshalled into a Java long value automatically since there is a default
-registered type conversion for DateTime. This default can be found in the @Neo4j::Config@ object under the key @conversions@.
+The born property will be marshalled into a Java long value automatically since there is (by default) a
+registered type conversion for DateTime in the @Neo4j::Config@ object under the key @conversions@.
 
 You can add your own conversion if you want to save a Ruby object with a property.
 
@@ -83,7 +88,7 @@ node1.outgoing(:friends) << node2
 
 h3. Accessing Relationships
 
-Example of getting relationships:
+Example of getting relationships
 
 <ruby>
 node1.rels # => an Enumerable of all incoming and outgoing relationship of any type
@@ -111,7 +116,7 @@ node_a.rels(:friends).outgoing.to_other(node_b)  # => an enumerable of relations
 
 h3. Deleting Relationships between two nodes
 
-You can combine the **to_other** method with **del** to delete relationships between two nodes (see above):
+You can combine the **to_other** method with **del** to delete relationships between two nodes (see above)
 
 <ruby>
 node_a.rels.to_other(node_b).del  # => an enumerable of all relationship between those two nodes
@@ -120,7 +125,7 @@ node_a.rels(:friends).outgoing.to_other(node_b).del  # => an enumerable of relat
 
 h3. Properties on Relationships
 
-Example of setting properties on relationships:
+Example of setting properties on relationships
 
 <ruby>
 rel = node1.rels(:friends).outgoing.first  # get the first relationship object 

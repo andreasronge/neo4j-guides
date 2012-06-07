@@ -1,0 +1,47 @@
+h2. Monitoring and Remote Access
+
+
+endprologue.
+
+h3. Programmatic Access
+
+By using the @Neo4j.management@ method you can get information about a running neo4j instance.
+
+Example:
+
+<ruby>
+  Neo4j.management.get_number_of_node_ids_in_use
+  Neo4j.management.getNumberOfPropertyIdsInUse
+  Neo4j.management.getNumberOfRelationshipIdsInUse
+  Neo4j.management.get_number_of_relationship_type_ids_in_use
+
+  # Example Neo4j HA Cluster Info
+  Neo4j.management(org.neo4j.management.HighAvailability).isMaster
+</ruby>
+
+The following monitoring classes are available, "http://api.neo4j.org/current/org/neo4j/management/package-summary.html":http://api.neo4j.org/current/org/neo4j/management/package-summary.html
+
+h3. Using the JConsole
+
+You can remotely access information of a running db instance or a cluster using the
+jconsole java tool, check "Monitoring_and_Deployment":http://wiki.neo4j.org/content/Monitoring_and_Deployment
+and "operations-monitoring":http://docs.neo4j.org/chunked/milestone/operations-monitoring.html
+
+h3. Using neo4j-shell
+
+The neo4j.rb gem comes included with the neo4j-shell bin script.
+To get remote access to a running neo4j instance you must enable the configuration 
+
+Remote access is only available if the configuraiton property @enable_remote_shell@ is defined.
+It is defined by default to @port=9332@
+
+Example, to configure the port.
+<ruby>
+Neo4j::Config['enable_remote_shell'] = "port=9999"
+#
+</ruby>
+
+To run the neo4j shell program:
+<code>
+neo4j-shell -port 9332
+</code>

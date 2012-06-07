@@ -25,22 +25,22 @@ Neo4j::Transaction.run do
 end
 </ruby>    
 
-The full lucene query syntax is available. See "this page.":http://lucene.apache.org/java/3_0_2/queryparsersyntax.html
+The full lucene query syntax is available, see "here":http://lucene.apache.org/java/3_0_2/queryparsersyntax.html
 
 <ruby>
   Person.find('name: andreas').first #=> andreas
 </ruby>    
 
-TIP: You can only query the index after the transaction commits, unless you manage the indexing yourself. See below.
+TIP: You can only query the index after the transaction commits, unless you manage the indexing yourself, see below.
 
 h4. Neo4j::RelationshipMixin
 
-Works as indexing on Neo4j::NodeMixin.
+Works as indexing on Neo4j::NodeMixin
 
 h3. Fulltext and Exact
 
 By default indexes are of type @:exact@ which is great for indexing keywords etc.
-To index each word in a text, you should use a fulltext index. Fulltext uses white-space tokenizer in its analyzer. Add the type @:fulltext@ (@:exact@ is default) when you declare the index *and* in the find method.
+To index each word in a text you should use a fulltext index. Fulltext uses white-space tokenizer in its analyzer. Add the type @:fulltext@ (@:exact@ is default) when you declare the index *and* in the find method.
 
 Example:
 
@@ -57,7 +57,7 @@ Example:
 
 h3. Indexing Related Nodes (Shared Index)
 
-This feature is experimental, so use it with care!
+This feature is experimental, use it with care !
 
 Two or more classes can share the same index. For example, let say we have two classes Person and Phone and
 each person can have several phone number nodes.
@@ -81,7 +81,7 @@ end
 With the example above we can only query and find Phone nodes. If we want to query both the Person and Phone nodes we should use the ''via''
 key word.
 
-Example:
+Example
 <ruby>
 class Phone  # forward declaration, needed below
    include Neo4j::NodeMixin
@@ -153,7 +153,7 @@ Person.find('email: *@gmail.com').asc(:email, :age) # sort by ascending order em
 Person.find('email: *@gmail.com').asc(:name, :age).desc(:email)
 </ruby>    
 
-By default, fields are sorted as Strings. If you want to sort as integer (Fixnum) you have to declare the type first. See below.
+By default fields are sorted as Strings. If you want to sort as integer (Fixnum) you have to declare the type first, see below.
 
 h3. Numerical Fields
 
@@ -232,14 +232,15 @@ The DateTime values will automatically be converted into UTC timezone.
 h3. Type Conversion
 
 Neo4j has support for converting DateTime and Date to Java long values.
-You can create your own type conversion; read about "TypeConverters.":http://neo4j.rubyforge.org/classes/Neo4j/TypeConverters.html
+You can create your own type conversion, read:
+"TypeConverters":http://neo4j.rubyforge.org/classes/Neo4j/TypeConverters.html
 
 h2. Performance and Configurations
 
 h3. Lucene Configuration 
 
 It is possible to create your own lucene configuration.
-See the configuration for a fulltext example and exact indexing in the Neo4j::Config[:lucene]
+Example, see the configuration for fulltext and exact indexing in the Neo4j::Config[:lucene]
 You can add your own lucene indexing configuration in the Neo4j::Config and use it with the index keyword.
 
 <ruby>
@@ -273,7 +274,7 @@ Neo4j::Node.find('name: "Kalle Kula"').first.should_not == new_node
 
 h3. Optimization
 
-If you are looping through a lot of nodes, you might get better performance by not loading the Ruby wrappers
+If you are looping thru a lot of nodes you might get better performance by not loading the Ruby wrappers
 around the Java nodes.
 
 <ruby>
@@ -281,5 +282,5 @@ Person.find('name: andreas', :type => :fulltext, :wrapped => false)
 </ruby>    
 
 When using the @:wrapped => false@ parameter the find method will return a Java @org.neo4j.graphdb.index.IndexHit@ instance
-(which works like an Ruby Enumerable so you can use the normal each, collect etc.. methods).
+(which works like an Ruby Enumerable so you can use the normal each, collect etc.. methods)
 
