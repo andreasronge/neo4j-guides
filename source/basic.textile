@@ -87,17 +87,12 @@ Example of getting relationships:
 
 <ruby>
 node1.rels # => an Enumerable of all incoming and outgoing relationship of any type
-node1.rel?  # => true if there are any relationship of any type
-node1.rels(:friends) # => all relationship of type friends, both incoming and outgoing
-node1.rels(:friends).outgoing # => all outgoing relationship of type friends
+node1.rel?(:both, :friends)  # => true if there is any (incoming, outgoing) relationship of type friends
+node1.rel?(:outgoing, :friends)
+node1.rels(:both, :friends) # => all relationship of type friends, both incoming and outgoing
+node1.rels(:outgoing, :friends) # => all outgoing relationship of type friends
 node1.rel(:both, :best_friend)  # => returns one relationship, nil or throws an exception if there are more the two relationship from this node
 node1.rel(:incoming, :best_friend)
-</ruby>
-
-Note that _rels takes different arguments from rels!
-
-<ruby>
-	node1.rels(:both, :friends)
 </ruby>
 
 h3. Finding Relationships between two nodes
