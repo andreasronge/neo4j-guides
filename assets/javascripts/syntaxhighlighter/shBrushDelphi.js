@@ -14,8 +14,7 @@
  * @license
  * Dual licensed under the MIT and GPL licenses.
  */
-;(function()
-{
+;((() => {
 	// CommonJS
 	typeof(require) != 'undefined' ? SyntaxHighlighter = require('shCore').SyntaxHighlighter : null;
 
@@ -52,4 +51,4 @@
 
 	// CommonJS
 	typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
-})();
+}))();
